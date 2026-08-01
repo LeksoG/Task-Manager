@@ -230,6 +230,20 @@ svg { display: block; }
 .tf { padding: 13px 16px; font-size: 15px; text-align: center; }
 .tcap { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #6E6E77; margin: 0 0 6px 4px; }
 
+.gt.noglow .lightfield { display: none; }
+.gt.noglow .veil { background: linear-gradient(180deg, rgba(20,20,24,.5), #08080A 60%); }
+.gt.still *, .gt.still *::before, .gt.still *::after { animation-duration: .001ms !important; transition-duration: .09s !important; }
+.gt.compact .card { padding: 11px 13px 11px 17px; }
+.gt.compact .tnote { display: none; }
+.gt.compact .meta { margin-top: 7px; }
+.gt.compact .rowwrap { margin-bottom: 8px; }
+.gt.compact .tname { font-size: 15px; }
+
+.dtgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tf { padding: 14px 10px; font-size: 15px; text-align: center; min-height: 50px; }
+.tf::-webkit-date-and-time-value { text-align: center; margin: 0; }
+.tf::-webkit-datetime-edit { text-align: center; }
+.tf::-webkit-calendar-picker-indicator { opacity: .4; filter: invert(1); }
 .confirmscrim { position: absolute; inset: 0; z-index: 14; background: rgba(0,0,0,.68);
   -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); animation: fade .28s ease both; }
 .confirm { position: absolute; left: 22px; right: 22px; top: 50%; z-index: 15; border-radius: 30px; padding: 26px 22px 22px;
@@ -465,46 +479,88 @@ const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
 /*  state                                                              */
 /* ================================================================== */
 const ALERT_DEFAULTS = {
-  vibrate: true, second: false, overdue: false, highOnly: false,
+  overdue: false, highOnly: false,
   briefing: false, briefTime: "08:00", quiet: false, quietFrom: "22:00", quietTo: "07:00"
+};
+const PREF_DEFAULTS = {
+  glow: true, motion: true, compact: false,
+  confirmDelete: true, hideDone: false, startView: "today"
 };
 const state = {
   tasks: [], view: "today", query: "", searching: false, drawer: false,
   perm: "default", defaultRemind: 15, selDate: startOfDay(new Date()).getTime(), loaded: false,
-  alerts: Object.assign({}, ALERT_DEFAULTS), lastBrief: 0
+  alerts: Object.assign({}, ALERT_DEFAULTS), prefs: Object.assign({}, PREF_DEFAULTS), lastBrief: 0
 };
+
+function applyPrefs() {
+  const p = state.prefs;
+  app.classList.toggle("noglow", !p.glow);
+  app.classList.toggle("still", !p.motion);
+  app.classList.toggle("compact", !!p.compact);
+}
 
 const $ = (id) => document.getElementById(id);
 const app = $("app"), scroller = $("scroller"), drawer = $("drawer"), scrim = $("scrim");
 
 /* -------- storage -------- */
+/* Writes go to every backend available, so a task can't vanish because one of
+   them is missing here; reads take the first backend that answers. */
+const KEY = "glasstasks:v1";
+const store = {
+  async get() {
+    if (window.storage && window.storage.get) {
+      try { const r = await window.storage.get(KEY); if (r && r.value != null) return r.value; } catch (e) {}
+    }
+    try { const v = window.localStorage.getItem(KEY); if (v != null) return v; } catch (e) {}
+    return null;
+  },
+  async set(v) {
+    if (window.storage && window.storage.set) { try { await window.storage.set(KEY, v); } catch (e) {} }
+    try { window.localStorage.setItem(KEY, v); } catch (e) {}
+  }
+};
+
 async function load() {
   try {
-    const r = await window.storage.get("glasstasks:v1");
-    const d = JSON.parse(r.value);
+    const d = JSON.parse(await store.get());
     state.tasks = d.tasks || [];
     if (typeof d.defaultRemind === "number") state.defaultRemind = d.defaultRemind;
-    if (d.view) state.view = d.view;
     if (d.alerts) state.alerts = Object.assign({}, ALERT_DEFAULTS, d.alerts);
+    if (d.prefs) state.prefs = Object.assign({}, PREF_DEFAULTS, d.prefs);
     if (d.lastBrief) state.lastBrief = d.lastBrief;
+    state.view = state.prefs.startView === "last" ? (d.view || "today") : state.prefs.startView;
   } catch (e) { /* first run */ }
   state.loaded = true;
   try { if ("Notification" in window) state.perm = Notification.permission; } catch (e) {}
+  applyPrefs();
   renderAll();
 }
-let saveTimer = null;
+
+function snapshot() {
+  return JSON.stringify({
+    tasks: state.tasks, defaultRemind: state.defaultRemind, view: state.view,
+    alerts: state.alerts, prefs: state.prefs, lastBrief: state.lastBrief
+  });
+}
+
+let saveTimer = null, dirty = false;
 function save() {
   if (!state.loaded) return;
+  dirty = true;
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    try {
-      await window.storage.set("glasstasks:v1", JSON.stringify({
-        tasks: state.tasks, defaultRemind: state.defaultRemind, view: state.view,
-        alerts: state.alerts, lastBrief: state.lastBrief
-      }));
-    } catch (e) { console.error("Could not save", e); }
-  }, 300);
+  saveTimer = setTimeout(flush, 250);
 }
+function flush() {
+  if (!state.loaded || !dirty) return;
+  dirty = false;
+  clearTimeout(saveTimer);
+  store.set(snapshot());
+}
+/* leaving the app must never lose the last edit */
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
+window.addEventListener("pagehide", flush);
+window.addEventListener("blur", flush);
+setInterval(flush, 5000);
 
 /* ================================================================== */
 /*  derived                                                            */
@@ -646,6 +702,7 @@ function allScreen() {
     if (n === 1) return g.Tomorrow.push(t);
     g.Later.push(t);
   });
+  if (state.prefs.hideDone) g.Completed = [];
   const keys = Object.keys(g).filter((k) => g[k].length);
   if (!keys.length) return emptyHTML("Nothing here yet", "Add a task and set the time it needs to be done.");
   return keys.map((k, gi) => headHTML(k, g[k].length, k === "Overdue") + rowsHTML(g[k], gi)).join("");
@@ -734,10 +791,10 @@ function focusScreen() {
 }
 
 function settingsScreen() {
-  const c = counts(), a = state.alerts;
+  const c = counts(), a = state.alerts, p = state.prefs;
   const on = state.perm === "granted";
-  const sw = (key, title, sub) =>
-    '<button class="srow' + (a[key] ? " on" : "") + '" data-act="alert" data-key="' + key + '">' +
+  const sw = (grp, key, title, sub) =>
+    '<button class="srow' + (grp[key] ? " on" : "") + '" data-act="' + (grp === a ? "alert" : "pref") + '" data-key="' + key + '">' +
     '<div class="stxt"><b>' + title + '</b><small>' + sub + '</small></div>' +
     '<span class="switch"><i></i></span></button>';
 
@@ -747,29 +804,40 @@ function settingsScreen() {
     (on ? "Alerts arrive on this device" : "Tap to allow alerts on this device") +
     '</small></div><span class="pillbadge ' + (on ? "on" : "off") + '">' + (on ? "On" : "Off") + '</span></button>';
 
-  out += '<div class="label">How alerts behave</div>';
-  out += sw("vibrate", "Vibrate", "Buzz the phone when an alert fires");
-  out += sw("second", "Second alert at start time", "For tasks reminded early, ping again when they begin");
-  out += sw("overdue", "Nudge when overdue", "One follow-up 15 minutes after a task is missed");
-  out += sw("highOnly", "High priority only", "Silence alerts for medium and low tasks");
-
-  out += '<div class="label">Daily briefing</div>';
-  out += sw("briefing", "Morning summary", "One alert listing everything due that day");
+  out += '<div class="label">Alerts</div>';
+  out += sw(a, "overdue", "Nudge when overdue", "One follow-up 15 minutes after a task is missed");
+  out += sw(a, "highOnly", "High priority only", "Silence alerts for medium and low tasks");
+  out += sw(a, "briefing", "Morning summary", "One alert listing everything due that day");
   out += '<div class="collapse' + (a.briefing ? " open" : "") + '"><div>' +
-    '<div class="tcap">Send at</div><div class="timegrid" style="grid-template-columns:1fr">' +
-    '<input class="field tf" type="time" data-act="atime" data-key="briefTime" value="' + a.briefTime + '"></div></div></div>';
-
-  out += '<div class="label">Quiet hours</div>';
-  out += sw("quiet", "Hold alerts overnight", "Anything due in this window waits until it ends");
-  out += '<div class="collapse' + (a.quiet ? " open" : "") + '"><div><div class="timegrid">' +
+    '<div class="tcap">Send at</div>' +
+    '<input class="field tf" type="time" data-act="atime" data-key="briefTime" value="' + a.briefTime + '" style="margin-bottom:8px">' +
+    '</div></div>';
+  out += sw(a, "quiet", "Quiet hours", "Alerts landing in this window wait until it ends");
+  out += '<div class="collapse' + (a.quiet ? " open" : "") + '"><div><div class="dtgrid" style="margin-bottom:8px">' +
     '<div><div class="tcap">From</div><input class="field tf" type="time" data-act="atime" data-key="quietFrom" value="' + a.quietFrom + '"></div>' +
     '<div><div class="tcap">Until</div><input class="field tf" type="time" data-act="atime" data-key="quietTo" value="' + a.quietTo + '"></div>' +
     '</div></div></div>';
 
-  out += '<div class="label">Storage</div><div class="panel glass" style="padding:16px"><div class="nextcard"><div style="flex:1">' +
+  out += '<div class="label">Appearance</div>';
+  out += sw(p, "glow", "Ambient glow", "The drifting light behind the glass");
+  out += sw(p, "compact", "Compact rows", "Tighter cards, notes hidden in lists");
+  out += sw(p, "motion", "Motion", "Animated transitions and gestures");
+
+  out += '<div class="label">Behaviour</div>';
+  out += sw(p, "confirmDelete", "Confirm before deleting", "Ask first when a task is swiped away");
+  out += sw(p, "hideDone", "Hide completed in All tasks", "Finished work stays in its own screen");
+
+  out += '<div class="label">Opens on</div><div class="chiprow">' +
+    [["last", "Last used"], ["focus", "Focus"], ["today", "Today"], ["upcoming", "Upcoming"], ["all", "All tasks"]]
+      .map((o) => '<button class="qchip' + (p.startView === o[0] ? " on" : "") +
+        '" data-act="start" data-v="' + o[0] + '">' + o[1] + '</button>').join("") + '</div>';
+
+  out += '<div class="label">Data</div><div class="panel glass" style="padding:16px;margin-top:0"><div class="nextcard"><div style="flex:1">' +
     '<div class="tname" style="font-size:15px">' + state.tasks.length + ' tasks saved</div>' +
     '<div class="tnote" style="margin-top:2px">' + c.done + ' completed &middot; kept on this device</div></div></div></div>' +
-    (c.done ? '<button class="ghost" data-act="clearDone">Clear ' + c.done + ' completed</button>' : '');
+    '<button class="ghost" data-act="backup">Copy a backup to the clipboard</button>' +
+    (c.done ? '<button class="ghost" data-act="clearDone">Clear ' + c.done + ' completed</button>' : '') +
+    '<button class="ghost" data-act="erase" style="color:#FF7A6E">Erase everything</button>';
   return out;
 }
 
@@ -948,6 +1016,36 @@ scroller.addEventListener("click", (e) => {
     state.alerts[act.dataset.key] = !state.alerts[act.dataset.key];
     save(); renderScreen(true); return;
   }
+  if (kind === "pref") {
+    state.prefs[act.dataset.key] = !state.prefs[act.dataset.key];
+    applyPrefs(); save(); renderScreen(true); return;
+  }
+  if (kind === "start") { state.prefs.startView = act.dataset.v; save(); renderScreen(true); return; }
+  if (kind === "backup") {
+    const text = snapshot();
+    try {
+      navigator.clipboard.writeText(text).then(
+        () => showToast("Backup copied", state.tasks.length + " tasks copied as text \u2014 paste it somewhere safe."),
+        () => showToast("Couldn't copy", "This browser blocked clipboard access.")
+      );
+    } catch (e) { showToast("Couldn't copy", "This browser blocked clipboard access."); }
+    return;
+  }
+  if (kind === "erase") {
+    openConfirm({
+      title: "Erase everything?",
+      text: "All <b>" + state.tasks.length + " tasks</b> and every setting will be wiped from this device.",
+      yes: "Erase everything",
+      no: "Cancel",
+      onYes: () => {
+        state.tasks = []; state.alerts = Object.assign({}, ALERT_DEFAULTS);
+        state.prefs = Object.assign({}, PREF_DEFAULTS); state.lastBrief = 0;
+        applyPrefs(); save(); flush(); renderAll();
+        showToast("Everything erased", "The app is back to a clean slate.");
+      }
+    });
+    return;
+  }
 });
 
 scroller.addEventListener("input", (e) => {
@@ -1041,7 +1139,6 @@ function deliver(title, body) {
     if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body: body });
     else showToast(title, body);
   } catch (e) { showToast(title, body); }
-  if (state.alerts.vibrate) { try { navigator.vibrate && navigator.vibrate([28, 60, 28]); } catch (e) {} }
 }
 
 function fireDue() {
@@ -1062,11 +1159,6 @@ function fireDue() {
           (t.remind === 0 ? "starting now" : "starts at " + fmtTime(new Date(dueMs))));
         t.notified = true; t.held = false; changed = true;
       } else { t.notified = true; changed = true; }
-    }
-
-    if (a.second && !muted && !quiet && t.remind > 0 && !t.notified2 && now >= dueMs && now < dueMs + 300000) {
-      deliver(t.title, "Starting now");
-      t.notified2 = true; changed = true;
     }
 
     if (a.overdue && !muted && !quiet && !t.nudged && now >= dueMs + 900000 && now < dueMs + 86400000) {
@@ -1097,30 +1189,34 @@ setInterval(() => { if (!document.querySelector(".sheet") && !state.drawer) rend
 /* ================================================================== */
 /*  editor sheet                                                       */
 /* ================================================================== */
-let pendingDelete = null;
-function confirmDelete(id, after) {
-  const t = state.tasks.filter((x) => x.id === id)[0];
-  if (!t) return;
-  pendingDelete = { id: id, after: after || null };
+let pendingConfirm = null;
+function openConfirm(o) {
+  pendingConfirm = o.onYes;
   $("confirmHost").innerHTML =
     '<div class="confirmscrim" id="cScrim"></div>' +
     '<div class="confirm glass">' +
-      '<div class="cicon">' + ico("trash", 24) + '</div>' +
-      '<h3>Delete this task?</h3>' +
-      '<p><b>' + esc(t.title) + '</b> will be removed for good. This can\'t be undone.</p>' +
-      '<button class="cdanger" id="cYes">Delete task</button>' +
-      '<button class="ghost" id="cNo">Keep it</button>' +
+      '<div class="cicon">' + ico(o.icon || "trash", 24) + '</div>' +
+      '<h3>' + o.title + '</h3><p>' + o.text + '</p>' +
+      '<button class="cdanger" id="cYes">' + o.yes + '</button>' +
+      '<button class="ghost" id="cNo">' + (o.no || "Keep it") + '</button>' +
     '</div>';
   $("cScrim").addEventListener("click", closeConfirm);
   $("cNo").addEventListener("click", closeConfirm);
-  $("cYes").addEventListener("click", () => {
-    const d = pendingDelete;
-    closeConfirm();
-    removeTask(d.id);
-    if (d.after) d.after();
+  $("cYes").addEventListener("click", () => { const f = pendingConfirm; closeConfirm(); if (f) f(); });
+}
+function closeConfirm() { $("confirmHost").innerHTML = ""; pendingConfirm = null; }
+
+function confirmDelete(id, after) {
+  const t = state.tasks.filter((x) => x.id === id)[0];
+  if (!t) return;
+  if (!state.prefs.confirmDelete) { removeTask(id); if (after) after(); return; }
+  openConfirm({
+    title: "Delete this task?",
+    text: "<b>" + esc(t.title) + "</b> will be removed for good. This can't be undone.",
+    yes: "Delete task",
+    onYes: () => { removeTask(id); if (after) after(); }
   });
 }
-function closeConfirm() { $("confirmHost").innerHTML = ""; pendingDelete = null; }
 
 let draft = null;
 const quicks = [
@@ -1170,7 +1266,10 @@ function openSheet(task) {
       '<div class="segbar" id="segbar"' + d(3) + '>' + segs + '</div>' +
       '<div class="label"' + d(4) + '>Due</div>' +
       '<div class="chiprow" id="quickRow"' + d(4) + '>' + qc + '</div>' +
-      '<input class="field" id="fDue" type="datetime-local"' + d(5) + ' style="margin-top:8px" value="' + draft.due + '">' +
+      '<div class="dtgrid"' + d(5) + ' style="margin-top:8px">' +
+        '<div><div class="tcap">Date</div><input class="field tf" id="fDate" type="date" value="' + draft.due.slice(0, 10) + '"></div>' +
+        '<div><div class="tcap">Time</div><input class="field tf" id="fTime" type="time" value="' + draft.due.slice(11, 16) + '"></div>' +
+      '</div>' +
       '<div class="collapse" id="remindWrap"><div>' +
         '<div class="label">Remind me</div><div class="chiprow" id="remindRow">' + rc + '</div>' +
         '<div style="font-size:12px;color:#8E8E97;margin:8px 6px 0" id="remindLabel"></div>' +
@@ -1186,7 +1285,8 @@ function openSheet(task) {
   $("sheetClose").addEventListener("click", closeSheet);
   $("fTitle").addEventListener("input", (e) => { draft.title = e.target.value; $("fSave").disabled = !draft.title.trim(); });
   $("fNote").addEventListener("input", (e) => { draft.note = e.target.value; });
-  $("fDue").addEventListener("input", (e) => { draft.due = e.target.value; syncSheet(); });
+  $("fDate").addEventListener("input", composeDue);
+  $("fTime").addEventListener("input", composeDue);
   $("segbar").addEventListener("click", (e) => {
     const b = e.target.closest(".seg"); if (!b) return;
     draft.priority = b.dataset.p; syncSheet();
@@ -1195,7 +1295,7 @@ function openSheet(task) {
     const b = e.target.closest(".qchip"); if (!b) return;
     if (b.dataset.q === "clear") draft.due = "";
     else { const dt = quicks[Number(b.dataset.q)].make(); dt.setSeconds(0, 0); draft.due = toLocalInput(dt.toISOString()); }
-    $("fDue").value = draft.due; syncSheet();
+    syncSheet();
   });
   $("remindRow").addEventListener("click", (e) => {
     const b = e.target.closest(".qchip"); if (!b) return;
@@ -1206,7 +1306,20 @@ function openSheet(task) {
   if (!task) setTimeout(() => $("fTitle").focus(), 320);
 }
 
+function composeDue() {
+  const dv = $("fDate").value, tv = $("fTime").value;
+  if (!dv && !tv) draft.due = "";
+  else {
+    const today = toLocalInput(new Date().toISOString()).slice(0, 10);
+    draft.due = (dv || today) + "T" + (tv || "09:00");
+  }
+  syncSheet();
+}
+
 function syncSheet() {
+  const dEl = $("fDate"), tEl = $("fTime");
+  if (dEl && dEl.value !== draft.due.slice(0, 10)) dEl.value = draft.due.slice(0, 10);
+  if (tEl && tEl.value !== draft.due.slice(11, 16)) tEl.value = draft.due.slice(11, 16);
   const pk = Object.keys(PRIORITIES);
   const idx = pk.indexOf(draft.priority);
   $("segind").style.transform = "translateX(" + idx * 100 + "%)";
@@ -1256,6 +1369,7 @@ scroller.addEventListener("scroll", syncFab, { passive: true });
 /*  boot                                                               */
 /* ================================================================== */
 settle(false, true);
+applyPrefs();
 renderAll();
 load();
 </script>
