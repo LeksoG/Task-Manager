@@ -4,6 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
 <title>Tasks</title>
+<meta name="theme-color" content="#C81E14" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGNUE0RSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0M4MUUxNCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE1IiBmaWxsPSJ1cmwoI2cpIi8+PHBhdGggZD0iTTE5IDMzLjUgMjggNDIuNSA0NiAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGNUE0RSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0M4MUUxNCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE1IiBmaWxsPSJ1cmwoI2cpIi8+PHBhdGggZD0iTTE5IDMzLjUgMjggNDIuNSA0NiAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600&display=swap');
 
@@ -203,6 +206,45 @@ svg { display: block; }
   padding: 24px 14px calc(22px + env(safe-area-inset-bottom));
   transition: transform .46s cubic-bezier(.32,.72,0,1); will-change: transform; touch-action: pan-y; }
 .edge { position: absolute; left: 0; top: 0; bottom: 0; width: 24px; z-index: 7; touch-action: pan-y; }
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 20px; }
+.bicon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; color: #fff; flex: 0 0 auto;
+  background: linear-gradient(150deg, #FF5A4E, #C81E14);
+  box-shadow: 0 7px 18px rgba(200,30,20,.42), inset 0 1px 0 rgba(255,255,255,.38); }
+.bname { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 17px; letter-spacing: -.025em; }
+
+.srow { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 24px;
+  margin-bottom: 8px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.09);
+  transition: background .3s ease, transform .3s cubic-bezier(.32,.72,0,1), border-color .3s ease; }
+.srow:active { transform: scale(.985); }
+.srow.on { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.16); }
+.srow .stxt { flex: 1; min-width: 0; }
+.srow b { font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 14.5px; letter-spacing: -.01em; display: block; }
+.srow small { display: block; color: #8E8E97; font-size: 11.5px; margin-top: 3px; line-height: 1.35; }
+.switch { position: relative; flex: 0 0 auto; width: 46px; height: 28px; border-radius: 999px;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.12); transition: background .35s ease, border-color .35s ease; }
+.switch i { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 999px; background: #E6E6EA;
+  transition: transform .42s cubic-bezier(.32,.72,0,1), background .35s ease; }
+.srow.on .switch { background: #FFFFFF; border-color: #FFFFFF; }
+.srow.on .switch i { transform: translateX(18px); background: #08080A; }
+.timegrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 2px 2px 10px; }
+.tf { padding: 13px 16px; font-size: 15px; text-align: center; }
+.tcap { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #6E6E77; margin: 0 0 6px 4px; }
+
+.confirmscrim { position: absolute; inset: 0; z-index: 14; background: rgba(0,0,0,.68);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); animation: fade .28s ease both; }
+.confirm { position: absolute; left: 22px; right: 22px; top: 50%; z-index: 15; border-radius: 30px; padding: 26px 22px 22px;
+  text-align: center; animation: cpop .46s cubic-bezier(.32,.72,0,1) both; }
+@keyframes cpop { from { opacity: 0; transform: translateY(-50%) scale(.88) } to { opacity: 1; transform: translateY(-50%) scale(1) } }
+.confirm .cicon { width: 56px; height: 56px; border-radius: 999px; margin: 0 auto 16px; display: grid; place-items: center;
+  color: #FF6A5E; background: rgba(255,90,78,.13); border: 1px solid rgba(255,90,78,.3); }
+.confirm h3 { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 600; letter-spacing: -.025em; margin: 0 0 9px; }
+.confirm p { font-size: 13.5px; color: #8E8E97; line-height: 1.5; margin: 0 0 22px; }
+.confirm p b { color: #E6E6EA; font-weight: 500; }
+.cdanger { width: 100%; height: 54px; border-radius: 999px; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 15.5px;
+  color: #fff; background: linear-gradient(160deg, #FF5A4E, #C81E14);
+  box-shadow: 0 12px 28px rgba(200,30,20,.4), inset 0 1px 0 rgba(255,255,255,.32);
+  transition: transform .3s cubic-bezier(.32,.72,0,1); }
+.cdanger:active { transform: scale(.97); }
 .dkicker { font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: #6E6E77; padding: 0 10px 16px; }
 
 .navlist { display: flex; flex-direction: column; gap: 7px; }
@@ -317,12 +359,14 @@ textarea.field { resize: none; min-height: 80px; line-height: 1.5; border-radius
 
   <div class="scrim" id="scrim"></div>
   <div class="drawer glass" id="drawer">
+    <div class="brand"><span class="bicon" id="brandIcon"></span><span class="bname">Tasks</span></div>
     <div class="dkicker">Browse</div>
     <div class="navlist" id="navlist"></div>
     <div class="dfoot">Swipe from the left edge to open</div>
   </div>
 
   <div id="sheetHost"></div>
+  <div id="confirmHost"></div>
   <div id="toastHost"></div>
 </div>
 
@@ -420,9 +464,14 @@ const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
 /* ================================================================== */
 /*  state                                                              */
 /* ================================================================== */
+const ALERT_DEFAULTS = {
+  vibrate: true, second: false, overdue: false, highOnly: false,
+  briefing: false, briefTime: "08:00", quiet: false, quietFrom: "22:00", quietTo: "07:00"
+};
 const state = {
   tasks: [], view: "today", query: "", searching: false, drawer: false,
-  perm: "default", defaultRemind: 15, selDate: startOfDay(new Date()).getTime(), loaded: false
+  perm: "default", defaultRemind: 15, selDate: startOfDay(new Date()).getTime(), loaded: false,
+  alerts: Object.assign({}, ALERT_DEFAULTS), lastBrief: 0
 };
 
 const $ = (id) => document.getElementById(id);
@@ -436,6 +485,8 @@ async function load() {
     state.tasks = d.tasks || [];
     if (typeof d.defaultRemind === "number") state.defaultRemind = d.defaultRemind;
     if (d.view) state.view = d.view;
+    if (d.alerts) state.alerts = Object.assign({}, ALERT_DEFAULTS, d.alerts);
+    if (d.lastBrief) state.lastBrief = d.lastBrief;
   } catch (e) { /* first run */ }
   state.loaded = true;
   try { if ("Notification" in window) state.perm = Notification.permission; } catch (e) {}
@@ -448,7 +499,8 @@ function save() {
   saveTimer = setTimeout(async () => {
     try {
       await window.storage.set("glasstasks:v1", JSON.stringify({
-        tasks: state.tasks, defaultRemind: state.defaultRemind, view: state.view
+        tasks: state.tasks, defaultRemind: state.defaultRemind, view: state.view,
+        alerts: state.alerts, lastBrief: state.lastBrief
       }));
     } catch (e) { console.error("Could not save", e); }
   }, 300);
@@ -682,24 +734,43 @@ function focusScreen() {
 }
 
 function settingsScreen() {
-  const c = counts();
+  const c = counts(), a = state.alerts;
   const on = state.perm === "granted";
-  let chips = "";
-  REMINDERS.forEach((r) => {
-    chips += '<button class="qchip' + (state.defaultRemind === r.v ? " on" : "") +
-      '" data-act="lead" data-v="' + r.v + '">' + r.short + '</button>';
-  });
-  const lead = REMINDERS.filter((r) => r.v === state.defaultRemind)[0];
-  return '<button class="toggle" data-act="perm">' + (on ? ico("bell", 19) : ico("bellOff", 19)) +
-    '<div>Push notifications<small>' + (on ? "Alerts fire before a task starts" : "Tap to allow alerts on this device") +
-    '</small></div><span class="pillbadge ' + (on ? "on" : "off") + '">' + (on ? "On" : "Off") + '</span></button>' +
-    '<div class="label">Default lead time</div><div class="chiprow">' + chips + '</div>' +
-    '<div style="font-size:12.5px;color:#8E8E97;margin:10px 6px 0">New tasks start with ' +
-    lead.label.toLowerCase() + '.</div>' +
-    '<div class="label">Storage</div><div class="panel glass" style="padding:16px"><div class="nextcard"><div style="flex:1">' +
+  const sw = (key, title, sub) =>
+    '<button class="srow' + (a[key] ? " on" : "") + '" data-act="alert" data-key="' + key + '">' +
+    '<div class="stxt"><b>' + title + '</b><small>' + sub + '</small></div>' +
+    '<span class="switch"><i></i></span></button>';
+
+  let out = '<button class="toggle" data-act="perm" style="margin-bottom:8px">' +
+    (on ? ico("bell", 19) : ico("bellOff", 19)) +
+    '<div>Push notifications<small>' +
+    (on ? "Alerts arrive on this device" : "Tap to allow alerts on this device") +
+    '</small></div><span class="pillbadge ' + (on ? "on" : "off") + '">' + (on ? "On" : "Off") + '</span></button>';
+
+  out += '<div class="label">How alerts behave</div>';
+  out += sw("vibrate", "Vibrate", "Buzz the phone when an alert fires");
+  out += sw("second", "Second alert at start time", "For tasks reminded early, ping again when they begin");
+  out += sw("overdue", "Nudge when overdue", "One follow-up 15 minutes after a task is missed");
+  out += sw("highOnly", "High priority only", "Silence alerts for medium and low tasks");
+
+  out += '<div class="label">Daily briefing</div>';
+  out += sw("briefing", "Morning summary", "One alert listing everything due that day");
+  out += '<div class="collapse' + (a.briefing ? " open" : "") + '"><div>' +
+    '<div class="tcap">Send at</div><div class="timegrid" style="grid-template-columns:1fr">' +
+    '<input class="field tf" type="time" data-act="atime" data-key="briefTime" value="' + a.briefTime + '"></div></div></div>';
+
+  out += '<div class="label">Quiet hours</div>';
+  out += sw("quiet", "Hold alerts overnight", "Anything due in this window waits until it ends");
+  out += '<div class="collapse' + (a.quiet ? " open" : "") + '"><div><div class="timegrid">' +
+    '<div><div class="tcap">From</div><input class="field tf" type="time" data-act="atime" data-key="quietFrom" value="' + a.quietFrom + '"></div>' +
+    '<div><div class="tcap">Until</div><input class="field tf" type="time" data-act="atime" data-key="quietTo" value="' + a.quietTo + '"></div>' +
+    '</div></div></div>';
+
+  out += '<div class="label">Storage</div><div class="panel glass" style="padding:16px"><div class="nextcard"><div style="flex:1">' +
     '<div class="tname" style="font-size:15px">' + state.tasks.length + ' tasks saved</div>' +
     '<div class="tnote" style="margin-top:2px">' + c.done + ' completed &middot; kept on this device</div></div></div></div>' +
     (c.done ? '<button class="ghost" data-act="clearDone">Clear ' + c.done + ' completed</button>' : '');
+  return out;
 }
 
 /* ================================================================== */
@@ -801,6 +872,7 @@ function endDrawerDrag() {
 app.addEventListener("touchend", endDrawerDrag, { passive: true });
 app.addEventListener("touchcancel", endDrawerDrag, { passive: true });
 
+document.getElementById("brandIcon").innerHTML = ico("check", 19, 3);
 $("menuBtn").innerHTML = ico("menu", 19);
 $("menuBtn").addEventListener("click", () => settle(true));
 scrim.addEventListener("click", () => settle(false));
@@ -872,7 +944,17 @@ scroller.addEventListener("click", (e) => {
   if (kind === "go") { state.view = act.dataset.view; save(); renderAll(); return; }
   if (kind === "clearDone") return clearDone();
   if (kind === "perm") return askPermission();
-  if (kind === "lead") { state.defaultRemind = Number(act.dataset.v); save(); renderScreen(true); return; }
+  if (kind === "alert") {
+    state.alerts[act.dataset.key] = !state.alerts[act.dataset.key];
+    save(); renderScreen(true); return;
+  }
+});
+
+scroller.addEventListener("input", (e) => {
+  const f = e.target.closest('[data-act="atime"]');
+  if (!f) return;
+  state.alerts[f.dataset.key] = f.value;
+  save();
 });
 
 let rg = null;
@@ -909,7 +991,7 @@ function endRowDrag() {
   card.style.transform = "translate3d(0,0,0)";
   rg = null;
   if (dx > 78) toggleTask(id);
-  else if (dx < -78) removeTask(id);
+  else if (dx < -78) confirmDelete(id);
 }
 scroller.addEventListener("touchend", endRowDrag, { passive: true });
 scroller.addEventListener("touchcancel", endRowDrag, { passive: true });
@@ -925,36 +1007,89 @@ function showToast(title, body) {
   toastTimer = setTimeout(() => ($("toastHost").innerHTML = ""), 5200);
 }
 async function askPermission() {
+  if (!("Notification" in window)) {
+    showToast("Not available here", "This browser has no notification support \u2014 alerts appear in the app.");
+    return;
+  }
+  if (Notification.permission === "granted") {
+    showToast("Reminders are already on", "Turn them off in your browser's settings for this site.");
+    return;
+  }
+  if (Notification.permission === "denied") {
+    showToast("Notifications are blocked", "Allow them in your browser's settings \u2014 alerts stay in the app meanwhile.");
+    return;
+  }
   try {
-    if (!("Notification" in window)) {
-      showToast("Not available here", "This browser has no notification support \u2014 reminders appear in the app.");
-      return;
-    }
     const p = await Notification.requestPermission();
     state.perm = p;
     renderScreen(true);
-    if (p === "granted") new Notification("Reminders are on", { body: "You'll get a heads-up before each task starts." });
-    else showToast("Reminders stay in the app", "Allow notifications in your browser settings for lock-screen alerts.");
-  } catch (e) { showToast("Blocked by the browser", "Reminders will still appear inside the app."); }
+    if (p === "granted") showToast("Reminders are on", "You'll get a heads-up before each task starts.");
+    else showToast("Reminders stay in the app", "Allow notifications later for lock-screen alerts.");
+  } catch (e) { showToast("Blocked by the browser", "Alerts will still appear inside the app."); }
 }
+
+function inQuiet(d) {
+  const a = state.alerts;
+  if (!a.quiet) return false;
+  const mins = (v) => { const x = String(v).split(":"); return Number(x[0]) * 60 + Number(x[1]); };
+  const cur = d.getHours() * 60 + d.getMinutes(), f = mins(a.quietFrom), t = mins(a.quietTo);
+  return f <= t ? (cur >= f && cur < t) : (cur >= f || cur < t);
+}
+
+function deliver(title, body) {
+  try {
+    if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body: body });
+    else showToast(title, body);
+  } catch (e) { showToast(title, body); }
+  if (state.alerts.vibrate) { try { navigator.vibrate && navigator.vibrate([28, 60, 28]); } catch (e) {} }
+}
+
 function fireDue() {
-  const now = Date.now();
+  const nowD = new Date(), now = nowD.getTime(), a = state.alerts, quiet = inQuiet(nowD);
   let changed = false;
+
   state.tasks.forEach((t) => {
-    if (t.done || !t.due || t.notified) return;
+    if (t.done || !t.due) return;
     const dueMs = new Date(t.due).getTime();
-    if (now >= dueMs - (t.remind || 0) * 60000 && now < dueMs + 300000) {
-      const when = t.remind === 0 ? "starting now" : "starts at " + fmtTime(new Date(dueMs));
-      const body = PRIORITIES[t.priority].label + " priority \u00b7 " + when;
-      try {
-        if ("Notification" in window && Notification.permission === "granted") new Notification(t.title, { body: body, tag: t.id });
-        else showToast(t.title, body);
-      } catch (e) { showToast(t.title, body); }
-      t.notified = true;
-      changed = true;
+    const at = dueMs - (t.remind || 0) * 60000;
+    const muted = a.highOnly && t.priority !== "high";
+
+    if (!t.notified && now >= at) {
+      if (muted) { t.notified = true; changed = true; }
+      else if (quiet) { if (!t.held) { t.held = true; changed = true; } }
+      else if (now < dueMs + (t.held ? 86400000 : 300000)) {
+        deliver(t.title, PRIORITIES[t.priority].label + " priority \u00b7 " +
+          (t.remind === 0 ? "starting now" : "starts at " + fmtTime(new Date(dueMs))));
+        t.notified = true; t.held = false; changed = true;
+      } else { t.notified = true; changed = true; }
+    }
+
+    if (a.second && !muted && !quiet && t.remind > 0 && !t.notified2 && now >= dueMs && now < dueMs + 300000) {
+      deliver(t.title, "Starting now");
+      t.notified2 = true; changed = true;
+    }
+
+    if (a.overdue && !muted && !quiet && !t.nudged && now >= dueMs + 900000 && now < dueMs + 86400000) {
+      deliver("Still open \u00b7 " + t.title, "Overdue by " + Math.round((now - dueMs) / 60000) + " minutes");
+      t.nudged = true; changed = true;
     }
   });
-  if (changed) { save(); renderScreen(true); }
+
+  if (a.briefing && !quiet) {
+    const key = startOfDay(nowD).getTime();
+    const hm = String(a.briefTime).split(":");
+    const at = new Date(nowD); at.setHours(Number(hm[0]), Number(hm[1]), 0, 0);
+    if (now >= at.getTime() && state.lastBrief !== key) {
+      const list = state.tasks.filter((t) => !t.done && t.due && dayDiff(new Date(t.due), nowD) === 0).sort(byTime);
+      if (list.length) {
+        deliver("Today \u00b7 " + list.length + " task" + (list.length > 1 ? "s" : ""),
+          list.slice(0, 3).map((t) => fmtTime(new Date(t.due)) + " " + t.title).join(" \u00b7 "));
+      }
+      state.lastBrief = key; changed = true;
+    }
+  }
+
+  if (changed) { save(); if (state.view !== "settings") renderScreen(true); }
 }
 setInterval(fireDue, 15000);
 setInterval(() => { if (!document.querySelector(".sheet") && !state.drawer) renderScreen(true); }, 60000);
@@ -962,6 +1097,31 @@ setInterval(() => { if (!document.querySelector(".sheet") && !state.drawer) rend
 /* ================================================================== */
 /*  editor sheet                                                       */
 /* ================================================================== */
+let pendingDelete = null;
+function confirmDelete(id, after) {
+  const t = state.tasks.filter((x) => x.id === id)[0];
+  if (!t) return;
+  pendingDelete = { id: id, after: after || null };
+  $("confirmHost").innerHTML =
+    '<div class="confirmscrim" id="cScrim"></div>' +
+    '<div class="confirm glass">' +
+      '<div class="cicon">' + ico("trash", 24) + '</div>' +
+      '<h3>Delete this task?</h3>' +
+      '<p><b>' + esc(t.title) + '</b> will be removed for good. This can\'t be undone.</p>' +
+      '<button class="cdanger" id="cYes">Delete task</button>' +
+      '<button class="ghost" id="cNo">Keep it</button>' +
+    '</div>';
+  $("cScrim").addEventListener("click", closeConfirm);
+  $("cNo").addEventListener("click", closeConfirm);
+  $("cYes").addEventListener("click", () => {
+    const d = pendingDelete;
+    closeConfirm();
+    removeTask(d.id);
+    if (d.after) d.after();
+  });
+}
+function closeConfirm() { $("confirmHost").innerHTML = ""; pendingDelete = null; }
+
 let draft = null;
 const quicks = [
   { label: "In 1 hour", make: () => new Date(Date.now() + 3600000) },
@@ -1042,7 +1202,7 @@ function openSheet(task) {
     draft.remind = Number(b.dataset.r); syncSheet();
   });
   $("fSave").addEventListener("click", commitSheet);
-  if (task) $("fDelete").addEventListener("click", () => { removeTask(task.id); closeSheet(); });
+  if (task) $("fDelete").addEventListener("click", () => confirmDelete(task.id, closeSheet));
   if (!task) setTimeout(() => $("fTitle").focus(), 320);
 }
 
