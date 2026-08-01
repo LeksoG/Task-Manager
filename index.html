@@ -255,14 +255,19 @@ svg { display: block; }
 .srow.on .switch i { transform: translateX(18px); background: #08080A; }
 .timegrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 2px 2px 10px; }
 .tf { padding: 13px 16px; font-size: 15px; text-align: center; }
-.tcap { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #6E6E77; margin: 0 0 6px 4px; }
+.tcap { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #6E6E77; margin: 0 0 7px; text-align: center; }
 
 .gt.noglow .lightfield { display: none; }
 .gt.noglow .veil { background: linear-gradient(180deg, rgba(20,20,24,.5), #08080A 60%); }
 .gt.still *, .gt.still *::before, .gt.still *::after { animation-duration: .001ms !important; transition-duration: .09s !important; }
 
-.dtgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
-.tf { padding: 11px 6px; font-size: 13.5px; text-align: center; min-height: 44px; }
+/* minmax(0,1fr) + min-width:0 stops the native date control forcing the track
+   wider than half the sheet, which is what made the two ovals overlap */
+.dtgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.dtgrid > div { min-width: 0; }
+.tcap { text-align: center; }
+.tf { width: 100%; min-width: 0; max-width: 100%; padding: 12px 4px; font-size: 13.5px;
+  text-align: center; min-height: 46px; }
 .tf::-webkit-calendar-picker-indicator { display: none; }
 .tf::-webkit-date-and-time-value { text-align: center; margin: 0; }
 .tf::-webkit-datetime-edit { text-align: center; }
@@ -506,7 +511,7 @@ const ALERT_DEFAULTS = {
   overdue: false, highOnly: false, quiet: false, quietFrom: "22:00", quietTo: "07:00"
 };
 const PREF_DEFAULTS = {
-  glow: true, motion: true, confirmDelete: true, hideDone: false, startView: "today"
+  glow: true, motion: true, hideDone: false, startView: "today"
 };
 const state = {
   tasks: [], view: "today", query: "", searching: false, drawer: false,
@@ -839,7 +844,6 @@ function settingsScreen() {
   out += sw(p, "motion", "Motion", "Animated transitions and gestures");
 
   out += '<div class="label">Behaviour</div>';
-  out += sw(p, "confirmDelete", "Confirm before deleting", "Ask first when a task is swiped away");
   out += sw(p, "hideDone", "Hide completed in All tasks", "Finished work stays in its own screen");
 
   out += '<div class="label">Opens on</div><div class="chiprow">' +
@@ -1317,7 +1321,6 @@ function closeConfirm() { $("confirmHost").innerHTML = ""; pendingConfirm = null
 function confirmDelete(id, after) {
   const t = state.tasks.filter((x) => x.id === id)[0];
   if (!t) return;
-  if (!state.prefs.confirmDelete) { removeTask(id); if (after) after(); return; }
   openConfirm({
     title: "Delete this task?",
     text: "<b>" + esc(t.title) + "</b> will be removed for good. This can't be undone.",
