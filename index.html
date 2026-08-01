@@ -263,11 +263,23 @@ svg { display: block; }
 
 /* minmax(0,1fr) + min-width:0 stops the native date control forcing the track
    wider than half the sheet, which is what made the two ovals overlap */
-.dtgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.dtbar { display: flex; align-items: center; width: 100%; padding: 5px; border-radius: 999px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.11);
+  transition: border-color .34s ease, background .34s ease, box-shadow .34s ease; }
+.dtbar:focus-within { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.12);
+  box-shadow: 0 0 0 4px rgba(255,255,255,.05); }
+.dtin { flex: 1 1 0; min-width: 0; background: none; border: 0; outline: none; color: inherit;
+  font-size: 14px; text-align: center; padding: 11px 4px; border-radius: 999px;
+  -webkit-appearance: none; appearance: none; user-select: text; -webkit-user-select: text; }
+.dtin::-webkit-date-and-time-value { text-align: center; margin: 0; }
+.dtin::-webkit-datetime-edit { text-align: center; }
+.dtin::-webkit-calendar-picker-indicator { display: none; }
+.dtsep { flex: 0 0 auto; width: 1px; height: 22px; background: rgba(255,255,255,.15); }
+.dtgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: end; padding: 0 6px; }
 .dtgrid > div { min-width: 0; }
 .tcap { text-align: center; }
-.tf { width: 100%; min-width: 0; max-width: 100%; padding: 12px 4px; font-size: 13.5px;
-  text-align: center; min-height: 46px; }
+.tf { display: block; width: 100%; min-width: 0; max-width: 148px; margin: 0 auto; padding: 10px 6px;
+  font-size: 13px; text-align: center; min-height: 42px; }
 .tf::-webkit-calendar-picker-indicator { display: none; }
 .tf::-webkit-date-and-time-value { text-align: center; margin: 0; }
 .tf::-webkit-datetime-edit { text-align: center; }
@@ -1377,9 +1389,10 @@ function openSheet(task) {
       '<div class="segbar" id="segbar"' + d(3) + '>' + segs + '</div>' +
       '<div class="label"' + d(4) + '>Due</div>' +
       '<div class="chiprow" id="quickRow"' + d(4) + '>' + qc + '</div>' +
-      '<div class="dtgrid"' + d(5) + ' style="margin-top:8px">' +
-        '<div><div class="tcap">Date</div><input class="field tf" id="fDate" type="date" value="' + draft.due.slice(0, 10) + '"></div>' +
-        '<div><div class="tcap">Time</div><input class="field tf" id="fTime" type="time" value="' + draft.due.slice(11, 16) + '"></div>' +
+      '<div class="dtbar"' + d(5) + ' style="margin-top:8px">' +
+        '<input class="dtin" id="fDate" type="date" aria-label="Due date" value="' + draft.due.slice(0, 10) + '">' +
+        '<span class="dtsep"></span>' +
+        '<input class="dtin" id="fTime" type="time" aria-label="Due time" value="' + draft.due.slice(11, 16) + '">' +
       '</div>' +
       '<div class="collapse" id="remindWrap"><div>' +
         '<div class="label">Remind me</div><div class="chiprow" id="remindRow">' + rc + '</div>' +
