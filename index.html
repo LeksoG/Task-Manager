@@ -49,7 +49,7 @@ svg { display: block; }
 .shell { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; }
 
 /* ---------- top bar ---------- */
-.topbar { position: relative; flex: 0 0 auto; height: 66px; margin: 12px 12px 6px; border-radius: 999px; padding: 0 12px; display: flex; align-items: center; }
+.topbar { position: relative; z-index: 6; flex: 0 0 auto; height: 66px; margin: 12px 12px 6px; border-radius: 999px; padding: 0 12px; display: flex; align-items: center; }
 .iconbtn { width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center; flex: 0 0 auto;
   background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
   transition: transform .3s cubic-bezier(.32,.72,0,1), background .3s ease, opacity .3s ease; }
@@ -75,6 +75,33 @@ svg { display: block; }
   background: rgba(255,255,255,.10); opacity: 0; transform: scale(.6);
   transition: opacity .26s ease, transform .4s cubic-bezier(.32,.72,0,1); }
 .searchpill.open .clearbtn.show { display: grid; opacity: 1; transform: none; }
+
+/* ---------- pull-down quick panel ---------- */
+.quickclip { position: absolute; left: 0; right: 0; top: 78px; bottom: 0; z-index: 5; overflow: hidden; pointer-events: none; }
+.quick { position: absolute; left: 12px; right: 12px; top: 6px; border-radius: 28px; padding: 15px 15px 8px;
+  pointer-events: auto; will-change: transform; transition: transform .46s cubic-bezier(.32,.72,0,1); }
+.qadd { display: flex; align-items: center; gap: 9px; }
+.qadd input { flex: 1; min-width: 0; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13);
+  border-radius: 999px; padding: 12px 16px; font-size: 15px; outline: none; user-select: text; -webkit-user-select: text;
+  transition: border-color .3s ease, background .3s ease; }
+.qadd input:focus { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.12); }
+.qadd input::placeholder { color: #75757E; }
+.qgo { width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto; display: grid; place-items: center; color: #08080A;
+  background: linear-gradient(160deg, #FFFFFF, #C9C9D0); box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s ease; }
+.qgo:active { transform: scale(.9); }
+.qnext { margin-top: 11px; padding: 12px 14px 13px; border-radius: 21px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); }
+.qmeta { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #75757E; }
+.qname { font-family: 'Outfit', sans-serif; font-size: 14.5px; font-weight: 400; letter-spacing: -.01em; margin-top: 5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qacts { display: flex; gap: 8px; margin-top: 12px; }
+.qacts button { flex: 1; padding: 9px 4px; border-radius: 999px; font-size: 12.5px; font-weight: 500; color: #C4C4CC;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  transition: transform .3s cubic-bezier(.32,.72,0,1), background .3s ease; }
+.qacts button:active { transform: scale(.93); background: rgba(255,255,255,.16); }
+.qhint { font-size: 12.5px; color: #8E8E97; margin: 12px 4px 2px; line-height: 1.45; }
+.qgrab { width: 34px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.22); margin: 13px auto 3px; }
 
 /* ---------- screens ---------- */
 .scroller { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
@@ -233,14 +260,10 @@ svg { display: block; }
 .gt.noglow .lightfield { display: none; }
 .gt.noglow .veil { background: linear-gradient(180deg, rgba(20,20,24,.5), #08080A 60%); }
 .gt.still *, .gt.still *::before, .gt.still *::after { animation-duration: .001ms !important; transition-duration: .09s !important; }
-.gt.compact .card { padding: 11px 13px 11px 17px; }
-.gt.compact .tnote { display: none; }
-.gt.compact .meta { margin-top: 7px; }
-.gt.compact .rowwrap { margin-bottom: 8px; }
-.gt.compact .tname { font-size: 15px; }
 
-.dtgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.tf { padding: 14px 10px; font-size: 15px; text-align: center; min-height: 50px; }
+.dtgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.tf { padding: 11px 6px; font-size: 13.5px; text-align: center; min-height: 44px; }
+.tf::-webkit-calendar-picker-indicator { display: none; }
 .tf::-webkit-date-and-time-value { text-align: center; margin: 0; }
 .tf::-webkit-datetime-edit { text-align: center; }
 .tf::-webkit-calendar-picker-indicator { opacity: .4; filter: invert(1); }
@@ -367,6 +390,7 @@ textarea.field { resize: none; min-height: 80px; line-height: 1.5; border-radius
       </div>
     </div>
     <div class="scroller" id="scroller"></div>
+    <div class="quickclip"><div class="quick glass" id="quick"></div></div>
   </div>
 
   <button class="fab" id="fab"></button>
@@ -479,12 +503,10 @@ const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
 /*  state                                                              */
 /* ================================================================== */
 const ALERT_DEFAULTS = {
-  overdue: false, highOnly: false,
-  briefing: false, briefTime: "08:00", quiet: false, quietFrom: "22:00", quietTo: "07:00"
+  overdue: false, highOnly: false, quiet: false, quietFrom: "22:00", quietTo: "07:00"
 };
 const PREF_DEFAULTS = {
-  glow: true, motion: true, compact: false,
-  confirmDelete: true, hideDone: false, startView: "today"
+  glow: true, motion: true, confirmDelete: true, hideDone: false, startView: "today"
 };
 const state = {
   tasks: [], view: "today", query: "", searching: false, drawer: false,
@@ -496,7 +518,6 @@ function applyPrefs() {
   const p = state.prefs;
   app.classList.toggle("noglow", !p.glow);
   app.classList.toggle("still", !p.motion);
-  app.classList.toggle("compact", !!p.compact);
 }
 
 const $ = (id) => document.getElementById(id);
@@ -807,11 +828,6 @@ function settingsScreen() {
   out += '<div class="label">Alerts</div>';
   out += sw(a, "overdue", "Nudge when overdue", "One follow-up 15 minutes after a task is missed");
   out += sw(a, "highOnly", "High priority only", "Silence alerts for medium and low tasks");
-  out += sw(a, "briefing", "Morning summary", "One alert listing everything due that day");
-  out += '<div class="collapse' + (a.briefing ? " open" : "") + '"><div>' +
-    '<div class="tcap">Send at</div>' +
-    '<input class="field tf" type="time" data-act="atime" data-key="briefTime" value="' + a.briefTime + '" style="margin-bottom:8px">' +
-    '</div></div>';
   out += sw(a, "quiet", "Quiet hours", "Alerts landing in this window wait until it ends");
   out += '<div class="collapse' + (a.quiet ? " open" : "") + '"><div><div class="dtgrid" style="margin-bottom:8px">' +
     '<div><div class="tcap">From</div><input class="field tf" type="time" data-act="atime" data-key="quietFrom" value="' + a.quietFrom + '"></div>' +
@@ -820,7 +836,6 @@ function settingsScreen() {
 
   out += '<div class="label">Appearance</div>';
   out += sw(p, "glow", "Ambient glow", "The drifting light behind the glass");
-  out += sw(p, "compact", "Compact rows", "Tighter cards, notes hidden in lists");
   out += sw(p, "motion", "Motion", "Animated transitions and gestures");
 
   out += '<div class="label">Behaviour</div>';
@@ -836,8 +851,7 @@ function settingsScreen() {
     '<div class="tname" style="font-size:15px">' + state.tasks.length + ' tasks saved</div>' +
     '<div class="tnote" style="margin-top:2px">' + c.done + ' completed &middot; kept on this device</div></div></div></div>' +
     '<button class="ghost" data-act="backup">Copy a backup to the clipboard</button>' +
-    (c.done ? '<button class="ghost" data-act="clearDone">Clear ' + c.done + ' completed</button>' : '') +
-    '<button class="ghost" data-act="erase" style="color:#FF7A6E">Erase everything</button>';
+    (c.done ? '<button class="ghost" data-act="clearDone">Clear ' + c.done + ' completed</button>' : '');
   return out;
 }
 
@@ -886,7 +900,7 @@ function renderNav() {
   ).join("");
 }
 
-function renderAll(silent) { renderHead(); renderNav(); renderScreen(silent); }
+function renderAll(silent) { renderHead(); renderNav(); renderScreen(silent); if (window.renderQuick) renderQuick(); }
 
 /* ================================================================== */
 /*  drawer                                                             */
@@ -942,7 +956,7 @@ app.addEventListener("touchcancel", endDrawerDrag, { passive: true });
 
 document.getElementById("brandIcon").innerHTML = ico("check", 19, 3);
 $("menuBtn").innerHTML = ico("menu", 19);
-$("menuBtn").addEventListener("click", () => settle(true));
+$("menuBtn").addEventListener("click", () => { if (!topbarDragged) settle(true); });
 scrim.addEventListener("click", () => settle(false));
 $("navlist").addEventListener("click", (e) => {
   const b = e.target.closest(".navitem");
@@ -951,6 +965,128 @@ $("navlist").addEventListener("click", (e) => {
   save();
   setTimeout(() => { settle(false); renderAll(); }, 90);
 });
+
+/* ================================================================== */
+/*  pull-down quick panel                                              */
+/* ================================================================== */
+const quick = $("quick");
+let quickOpen = false;
+
+function quickHTML() {
+  const open = state.tasks.filter((t) => !t.done);
+  const next = open.filter((t) => t.due).sort(byTime)[0] || open[0];
+  let h = '<div class="qadd"><input id="qInput" placeholder="Quick add a task" enterkeyhint="done">' +
+    '<button class="qgo" id="qGo" aria-label="Add task">' + ico("plus", 20, 2.6) + '</button></div>';
+  if (next) {
+    const due = next.due ? new Date(next.due) : null;
+    h += '<div class="qnext" data-qid="' + next.id + '">' +
+      '<div class="qmeta">' + (due ? fmtDay(due) + " \u00b7 " + fmtTime(due) : "No time set") + '</div>' +
+      '<div class="qname">' + esc(next.title) + '</div>' +
+      '<div class="qacts">' +
+        '<button data-qa="done">Complete</button>' +
+        (due ? '<button data-qa="snooze">+15 min</button>' : '') +
+        '<button data-qa="open">Edit</button>' +
+      '</div></div>';
+  } else {
+    h += '<div class="qhint">Nothing open right now. Type above to add something in one move.</div>';
+  }
+  return h + '<div class="qgrab"></div>';
+}
+
+function renderQuick() {
+  const inp = $("qInput");
+  if (inp && document.activeElement === inp) return;
+  quick.innerHTML = quickHTML();
+  if (!quickOpen) setQuick(false, true);
+}
+
+function quickH() { return quick.offsetHeight + 14; }
+function paintQuick(y) {
+  quick.style.transition = "none";
+  quick.style.transform = "translate3d(0," + (y - quickH()) + "px,0)";
+}
+function setQuick(open, instant) {
+  quick.style.transition = instant ? "none" : "";
+  quick.style.transform = open ? "translate3d(0,0,0)" : "translate3d(0," + -quickH() + "px,0)";
+  quickOpen = open;
+  if (!open) { const i = $("qInput"); if (i) i.blur(); }
+}
+
+function addQuickTask() {
+  const inp = $("qInput");
+  if (!inp || !inp.value.trim()) return;
+  state.tasks = state.tasks.concat([{
+    id: uid(), title: inp.value.trim(), note: "", due: "", priority: "medium",
+    remind: state.defaultRemind, done: false, notified: false, created: Date.now()
+  }]);
+  inp.value = "";
+  inp.blur();
+  save(); flush();
+  renderHead(); renderNav(); renderScreen(true);
+  quick.innerHTML = quickHTML();
+  showToast("Task added", "Open it to set a time and priority.");
+}
+
+quick.addEventListener("click", (e) => {
+  if (e.target.closest("#qGo")) return addQuickTask();
+  const b = e.target.closest("[data-qa]");
+  if (!b) return;
+  const id = b.closest(".qnext").dataset.qid;
+  const t = state.tasks.filter((x) => x.id === id)[0];
+  if (!t) return;
+  if (b.dataset.qa === "done") { toggleTask(id); quick.innerHTML = quickHTML(); return; }
+  if (b.dataset.qa === "snooze") {
+    t.due = new Date(new Date(t.due).getTime() + 900000).toISOString();
+    t.notified = false; t.nudged = false;
+    save(); renderHead(); renderScreen(true); quick.innerHTML = quickHTML();
+    showToast("Pushed back 15 minutes", t.title + " is now due at " + fmtTime(new Date(t.due)) + ".");
+    return;
+  }
+  if (b.dataset.qa === "open") { setQuick(false); openSheet(t); }
+});
+
+quick.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.id === "qInput") addQuickTask(); });
+
+/* drag the top bar down to reveal it, up to put it away */
+let qg = null, topbarDragged = false;
+function qStart(e) {
+  const t = e.touches[0];
+  qg = { y: t.clientY, dy: 0, lock: null, base: quickOpen ? quickH() : 0, last: t.clientY, v: 0 };
+}
+function qMove(e) {
+  if (!qg) return;
+  const t = e.touches[0];
+  const dy = t.clientY - qg.y;
+  if (!qg.lock) {
+    if (Math.abs(dy) > 8) { qg.lock = "y"; topbarDragged = true; }
+    else return;
+  }
+  qg.v = t.clientY - qg.last; qg.last = t.clientY;
+  let y = qg.base + dy;
+  const H = quickH();
+  if (y < 0) y *= .3;
+  if (y > H) y = H + (y - H) * .3;
+  paintQuick(Math.max(-20, Math.min(H + 30, y)));
+}
+function qEnd() {
+  if (!qg) return;
+  const g = qg; qg = null;
+  if (g.lock !== "y") return;
+  const H = quickH();
+  const y = Math.max(0, Math.min(H, g.base + (g.last - g.y)));
+  quick.style.transition = "";
+  setQuick(Math.abs(g.v) > 4 ? g.v > 0 : y > H * 0.4);
+  setTimeout(() => { topbarDragged = false; }, 260);
+}
+const topbarEl = document.querySelector(".topbar");
+topbarEl.addEventListener("touchstart", qStart, { passive: true });
+topbarEl.addEventListener("touchmove", qMove, { passive: true });
+topbarEl.addEventListener("touchend", qEnd, { passive: true });
+topbarEl.addEventListener("touchcancel", qEnd, { passive: true });
+quick.addEventListener("touchstart", (e) => { if (!e.target.closest("input")) qStart(e); }, { passive: true });
+quick.addEventListener("touchmove", qMove, { passive: true });
+quick.addEventListener("touchend", qEnd, { passive: true });
+scroller.addEventListener("touchstart", () => { if (quickOpen) setQuick(false); }, { passive: true });
 
 /* ================================================================== */
 /*  search                                                             */
@@ -977,7 +1113,7 @@ function closeSearch() {
   clearBtn.classList.remove("show");
   renderScreen();
 }
-$("searchToggle").addEventListener("click", () => (state.searching ? closeSearch() : openSearch()));
+$("searchToggle").addEventListener("click", () => { if (topbarDragged) return; state.searching ? closeSearch() : openSearch(); });
 sInput.addEventListener("input", () => {
   state.query = sInput.value;
   clearBtn.classList.toggle("show", !!state.query);
@@ -1029,21 +1165,6 @@ scroller.addEventListener("click", (e) => {
         () => showToast("Couldn't copy", "This browser blocked clipboard access.")
       );
     } catch (e) { showToast("Couldn't copy", "This browser blocked clipboard access."); }
-    return;
-  }
-  if (kind === "erase") {
-    openConfirm({
-      title: "Erase everything?",
-      text: "All <b>" + state.tasks.length + " tasks</b> and every setting will be wiped from this device.",
-      yes: "Erase everything",
-      no: "Cancel",
-      onYes: () => {
-        state.tasks = []; state.alerts = Object.assign({}, ALERT_DEFAULTS);
-        state.prefs = Object.assign({}, PREF_DEFAULTS); state.lastBrief = 0;
-        applyPrefs(); save(); flush(); renderAll();
-        showToast("Everything erased", "The app is back to a clean slate.");
-      }
-    });
     return;
   }
 });
@@ -1167,19 +1288,6 @@ function fireDue() {
     }
   });
 
-  if (a.briefing && !quiet) {
-    const key = startOfDay(nowD).getTime();
-    const hm = String(a.briefTime).split(":");
-    const at = new Date(nowD); at.setHours(Number(hm[0]), Number(hm[1]), 0, 0);
-    if (now >= at.getTime() && state.lastBrief !== key) {
-      const list = state.tasks.filter((t) => !t.done && t.due && dayDiff(new Date(t.due), nowD) === 0).sort(byTime);
-      if (list.length) {
-        deliver("Today \u00b7 " + list.length + " task" + (list.length > 1 ? "s" : ""),
-          list.slice(0, 3).map((t) => fmtTime(new Date(t.due)) + " " + t.title).join(" \u00b7 "));
-      }
-      state.lastBrief = key; changed = true;
-    }
-  }
 
   if (changed) { save(); if (state.view !== "settings") renderScreen(true); }
 }
@@ -1280,6 +1388,7 @@ function openSheet(task) {
     '</div>';
 
   syncSheet();
+  armSheetGesture();
 
   $("sheetScrim").addEventListener("click", closeSheet);
   $("sheetClose").addEventListener("click", closeSheet);
@@ -1343,6 +1452,57 @@ function syncSheet() {
 
 function closeSheet() { $("sheetHost").innerHTML = ""; draft = null; }
 
+/* drag the sheet down to dismiss it */
+function armSheetGesture() {
+  const sheet = $("sheet"), scrimEl = $("sheetScrim");
+  let g = null;
+  /* the entrance animation outranks inline styles, so retire it once it's done */
+  const release = () => { sheet.style.animation = "none"; };
+  sheet.addEventListener("animationend", release, { once: true });
+  setTimeout(release, 560);
+
+  sheet.addEventListener("touchstart", (e) => {
+    if (sheet.scrollTop > 0) return;
+    if (e.target.closest("input, textarea")) return;
+    release();
+    g = { y: e.touches[0].clientY, dy: 0, lock: null, last: e.touches[0].clientY, v: 0 };
+  }, { passive: true });
+
+  sheet.addEventListener("touchmove", (e) => {
+    if (!g) return;
+    const y = e.touches[0].clientY, dy = y - g.y;
+    if (!g.lock) {
+      if (dy > 9) g.lock = "y";
+      else if (Math.abs(dy) > 9) { g = null; return; }
+      else return;
+    }
+    g.v = y - g.last; g.last = y;
+    g.dy = Math.max(0, dy);
+    sheet.style.transition = "none";
+    sheet.style.transform = "translateY(" + g.dy + "px)";
+    scrimEl.style.transition = "none";
+    scrimEl.style.opacity = String(Math.max(0, 1 - g.dy / 420));
+  }, { passive: true });
+
+  const finish = () => {
+    if (!g) return;
+    const d = g; g = null;
+    if (d.lock !== "y") return;
+    sheet.style.transition = "transform .42s cubic-bezier(.32,.72,0,1)";
+    scrimEl.style.transition = "opacity .34s ease";
+    if (d.dy > 120 || d.v > 6) {
+      sheet.style.transform = "translateY(102%)";
+      scrimEl.style.opacity = "0";
+      setTimeout(closeSheet, 300);
+    } else {
+      sheet.style.transform = "translateY(0)";
+      scrimEl.style.opacity = "1";
+    }
+  };
+  sheet.addEventListener("touchend", finish, { passive: true });
+  sheet.addEventListener("touchcancel", finish, { passive: true });
+}
+
 function commitSheet() {
   if (!draft.title.trim()) return;
   const data = {
@@ -1371,6 +1531,9 @@ scroller.addEventListener("scroll", syncFab, { passive: true });
 settle(false, true);
 applyPrefs();
 renderAll();
+renderQuick();
+requestAnimationFrame(() => setQuick(false, true));
+window.addEventListener("resize", () => { if (!quickOpen) setQuick(false, true); });
 load();
 </script>
 </body>
