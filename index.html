@@ -94,11 +94,14 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .club .cw{cursor:pointer;transition:transform .15s}
 .club .cw.pick{outline:3px solid var(--neon);outline-offset:2px;border-radius:12px}
 /* squad */
-.sqbar{display:flex;align-items:center;gap:9px;padding:16px 16px 4px}
+.sqbar{display:flex;align-items:center;gap:8px;padding:16px 16px 4px}
 .mini-btn{background:var(--panel);border:1px solid var(--line);color:var(--txt);font-family:inherit;font-weight:900;
- font-size:12px;padding:10px 13px;border-radius:13px;cursor:pointer;display:flex;align-items:center;gap:7px}
+ font-size:12px;padding:11px 12px;border-radius:13px;cursor:pointer;display:flex;align-items:center;gap:7px;
+ flex:0 0 auto;white-space:nowrap}
 .mini-btn:active{transform:scale(.96)}
-.mini-btn.brand{margin-left:auto;max-width:56%;overflow:hidden}
+.mini-btn.accent{background:rgba(0,229,160,.14);border-color:rgba(0,229,160,.5);color:var(--neon)}
+.mini-btn.accent svg{stroke:none;fill:var(--neon)}
+.mini-btn.brand{margin-left:auto;flex:0 1 auto;min-width:0;overflow:hidden}
 .mini-btn.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mini-btn svg{width:14px;height:14px;stroke:var(--dim);fill:none;stroke-width:2;flex:0 0 auto}
 .metaline{font-size:11.5px;color:var(--dim);font-weight:800;padding:8px 16px 10px}
