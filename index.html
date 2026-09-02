@@ -1356,6 +1356,7 @@ $("#nameX").onclick=()=>$("#nameOv").classList.remove("on");
 $("#subX").onclick=closeSubs;
 $("#matchX").onclick=()=>{clearInterval(ticker);if(M)M.over=true;$("#matchOv").classList.remove("on");};
 $("#autoFill").onclick=autoFill;
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("#autoFill");if(t)autoFill();});
 $("#formBtn").onclick=()=>{renderFormations();$("#formOv").classList.add("on");};
 $("#nameBtn").onclick=()=>{$("#nameInp").value=S.club;$("#nameOv").classList.add("on");setTimeout(()=>$("#nameInp").focus(),250);};
 $("#nameSave").onclick=()=>{const v=$("#nameInp").value.trim();if(!v){toast("Give your club a name");return;}
