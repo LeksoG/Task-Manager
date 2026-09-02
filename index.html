@@ -191,6 +191,15 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .ov{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;background:rgba(4,6,12,.95);backdrop-filter:blur(8px);
  opacity:0;visibility:hidden;transform:translateY(3%);transition:opacity .26s ease,transform .3s cubic-bezier(.22,.9,.3,1),visibility .26s}
 .ov.on{opacity:1;visibility:visible;transform:none}
+/* substitutions as a half-screen sheet so the match stays visible */
+#subOv{top:auto;height:58%;min-height:320px;border-radius:26px 26px 0 0;border:1px solid var(--line);border-bottom:0;
+ background:linear-gradient(180deg,#141b31,#080b16);backdrop-filter:none;box-shadow:0 -20px 44px rgba(0,0,0,.7);
+ transform:translateY(100%);z-index:75}
+#subOv.on{transform:translateY(0)}
+#subOv .grab{width:44px;height:4px;border-radius:99px;background:var(--line);margin:9px auto 0;flex:0 0 auto}
+#subOv .ov-head{padding:10px 16px 8px}
+#subOv .ov-head em{font-style:normal;font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--gold);display:block;margin-top:2px}
+#subOv .x{width:38px;height:38px;font-size:17px;background:var(--panel2);border-color:var(--line)}
 .ov-head{display:flex;align-items:center;padding:14px 16px;gap:10px;flex:0 0 auto}
 .ov-head b{font-size:15px;font-weight:900}
 .x{margin-left:auto;background:var(--panel);border:1px solid var(--line);color:var(--txt);width:34px;height:34px;border-radius:50%;
@@ -443,7 +452,8 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
   <div class="ov" id="matchOv"><div class="ov-head" id="matchHead" style="display:none"><b>Full time</b><button class="x" id="matchX">✕</button></div>
     <div class="ov-body" id="matchBody" style="padding:0"></div>
     <div class="htp" id="htp"></div><div class="gfx" id="gfx"></div></div>
-  <div class="ov" id="subOv"><div class="ov-head"><b>Substitutions</b><button class="x" id="subX">✕</button></div>
+  <div class="ov" id="subOv"><div class="grab"></div>
+    <div class="ov-head"><div><b>Substitutions</b><em>MATCH PAUSED</em></div><button class="x" id="subX">✕</button></div>
     <div class="ov-body" id="subBody"></div></div>
   <div class="ov" id="penOv"><div class="penwrap">
     <div class="penttl">PENALTY</div><div class="pensub">PICK A CIRCLE THE KEEPER ISN'T COVERING</div>
@@ -1177,8 +1187,11 @@ function openSubs(){
    b.appendChild(row);});
  };
  render();$("#subOv").classList.add("on");
+ const ck=$("#clk");if(ck){ck.textContent="PAUSED "+clock();ck.className="ck added";}
 }
-function closeSubs(){$("#subOv").classList.remove("on");if(M&&!M.over&&!$("#htp").classList.contains("on"))M.paused=false;}
+function closeSubs(){$("#subOv").classList.remove("on");
+ const ck=$("#clk");if(ck&&M&&!M.over){ck.textContent=clock();ck.className="ck"+(M.stopp?" added":"");}
+ if(M&&!M.over&&!$("#htp").classList.contains("on"))M.paused=false;}
 function tick(){
  if(!M||M.over||M.paused)return;
  if(M.stopp){
