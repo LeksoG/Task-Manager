@@ -11,8 +11,14 @@
 html,body{margin:0;height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 #app{position:relative;max-width:540px;margin:0 auto;height:100%;display:flex;flex-direction:column;overflow:hidden;
- background:radial-gradient(760px 420px at 8% -6%,rgba(0,229,160,.13),transparent 60%),
- radial-gradient(660px 420px at 112% 6%,rgba(255,45,112,.13),transparent 60%),var(--bg)}
+ background:
+  radial-gradient(760px 420px at 8% -6%,rgba(0,229,160,.17),transparent 60%),
+  radial-gradient(660px 420px at 112% 4%,rgba(255,45,112,.16),transparent 60%),
+  radial-gradient(700px 500px at 50% 112%,rgba(56,189,248,.13),transparent 65%),
+  repeating-linear-gradient(115deg,rgba(255,255,255,.016) 0 2px,transparent 2px 9px),
+  var(--bg)}
+#app:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;box-shadow:inset 0 0 130px rgba(0,0,0,.75)}
+.views,.topbar,.nav{position:relative;z-index:2}
 .topbar{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
 .logo{font-size:19px;font-weight:900;letter-spacing:-.4px;line-height:1}
 .logo span{color:var(--neon)}
@@ -28,7 +34,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .view::-webkit-scrollbar{display:none}
 .view.on{opacity:1;visibility:visible;transform:none}
 .h2{font-size:15px;font-weight:900;margin:20px 16px 12px;display:flex;align-items:center;gap:9px}
-.h2 i{width:4px;height:15px;border-radius:2px;background:var(--neon)}
+.h2 i{width:5px;height:17px;border-radius:3px;background:linear-gradient(180deg,var(--neon),var(--neon2));box-shadow:0 0 12px rgba(0,229,160,.6)}
 .h2 em{margin-left:auto;font-style:normal;font-size:11px;color:var(--dim);font-weight:700}
 .rail{display:flex;gap:16px;overflow-x:auto;padding:4px 16px 18px;scroll-snap-type:x mandatory;scrollbar-width:none}
 .rail::-webkit-scrollbar{display:none}
@@ -122,9 +128,48 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .cf-card h3{margin:0 0 8px;font-size:19px;font-weight:900}
 .cf-card p{margin:0;font-size:12.5px;line-height:1.65;color:var(--dim);font-weight:700}
 /* ---- header profile button ---- */
-.logo{cursor:pointer}
-.logo .chev{font-style:normal;color:var(--neon);font-size:16px;vertical-align:2px}
-.logo #userTxt{color:var(--txt)}
+.profbtn{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,229,160,.16),rgba(56,189,248,.08));
+ border:1.5px solid rgba(0,229,160,.45);border-radius:16px;padding:7px 10px 7px 8px;cursor:pointer;font-family:inherit;
+ color:var(--txt);box-shadow:0 6px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);transition:transform .14s;
+ animation:profPulse 3.4s ease-in-out infinite}
+.profbtn:active{transform:scale(.96)}
+@keyframes profPulse{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}
+ 50%{box-shadow:0 6px 22px rgba(0,229,160,.38),inset 0 1px 0 rgba(255,255,255,.16)}}
+.profbtn .pav{width:26px;flex:0 0 26px;display:block}
+.profbtn .pav svg{width:100%;display:block}
+.profbtn .pnm{text-align:left;line-height:1.15}
+.profbtn .pnm b{display:block;font-size:14px;font-weight:900;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profbtn .pnm em{display:block;font-style:normal;font-size:7.5px;letter-spacing:1.2px;font-weight:900;color:var(--neon);margin-top:2px}
+.profbtn .pchev{font-size:17px;font-weight:900;color:var(--neon);margin-left:2px}
+.r-legend{background:linear-gradient(165deg,#fff8e2,#dcc38a 32%,#8a6a2c 62%,#2b2313);color:#241a06}
+.r-legend:before{content:"";position:absolute;inset:-40%;z-index:3;pointer-events:none;
+ background:linear-gradient(72deg,transparent 42%,rgba(255,255,255,.6) 50%,transparent 58%);animation:sweep 2.8s linear infinite}
+.p-star{background:linear-gradient(168deg,#ffe6fb,#c73fe0 48%,#3d0b4a);color:#2b0432}
+.starfx{position:absolute;bottom:-10px;color:var(--gold);text-shadow:0 0 12px rgba(255,207,92,.9);pointer-events:none;
+ animation:starUp 2.4s ease-out infinite}
+@keyframes starUp{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(-70vh) rotate(220deg);opacity:0}}
+.walkout.star{color:var(--gold);text-shadow:0 0 18px rgba(255,207,92,.8);animation:blinky 1.1s ease-in-out infinite}
+.rays.leg{background:conic-gradient(from 0deg,rgba(255,247,214,.6),transparent 12%,rgba(255,207,92,.6) 24%,transparent 36%,rgba(255,247,214,.6) 48%,transparent 60%,rgba(255,207,92,.6) 72%,transparent 84%,rgba(255,247,214,.6) 96%)}
+.m-legend{background:radial-gradient(circle at 40% 32%,#fff8e2,#8a6a2c 72%);box-shadow:0 0 0 4px rgba(255,247,214,.8),0 0 80px rgba(255,207,92,.85)}
+.m-legend .mrate{color:#241a06;text-shadow:0 2px 0 rgba(255,255,255,.55)}
+#boot{position:fixed;inset:0;z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+ background:radial-gradient(70% 50% at 50% 40%,#123049,#05070f 70%),#05070f;transition:opacity .6s ease,transform .6s ease}
+#boot.gone{opacity:0;transform:scale(1.06);pointer-events:none}
+.boot-glow{position:absolute;width:130vw;aspect-ratio:1;border-radius:50%;opacity:.32;filter:blur(2px);animation:spin 12s linear infinite;
+ background:conic-gradient(from 0deg,rgba(0,229,160,.5),transparent 14%,rgba(56,189,248,.45) 28%,transparent 42%,rgba(255,45,112,.4) 56%,transparent 70%,rgba(0,229,160,.5) 84%,transparent 98%)}
+.boot-ball{position:relative;width:86px;animation:ballIn 1s cubic-bezier(.2,1.5,.4,1),ballSpin 3s linear .9s infinite}
+.boot-ball svg{width:100%;display:block;filter:drop-shadow(0 12px 26px rgba(0,0,0,.7))}
+@keyframes ballIn{0%{transform:scale(.2) translateY(-60px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes ballSpin{to{transform:rotate(360deg)}}
+.boot-logo{position:relative;font-size:34px;font-weight:900;letter-spacing:-1.5px;color:#fff;display:flex;align-items:baseline;gap:8px;
+ animation:pop .7s .25s cubic-bezier(.2,1.5,.4,1) backwards}
+.boot-logo span{color:var(--neon);text-shadow:0 0 24px rgba(0,229,160,.7)}
+.boot-logo i{font-style:normal;font-size:15px;color:var(--gold);border:2px solid var(--gold);border-radius:8px;padding:1px 6px}
+.boot-bar{position:relative;width:min(62vw,240px);height:7px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.boot-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--neon),var(--neon2));
+ box-shadow:0 0 14px rgba(0,229,160,.8);animation:bootFill 3.9s ease-in-out forwards}
+@keyframes bootFill{0%{width:4%}35%{width:48%}70%{width:76%}100%{width:100%}}
+.boot-tx{position:relative;font-size:10px;letter-spacing:4px;font-weight:900;color:var(--dim);animation:blinky 1.4s ease-in-out infinite}
 /* ---- career screen ---- */
 .prof{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,var(--panel),var(--panel2));
  border:1px solid var(--line);border-radius:20px;padding:16px}
@@ -220,7 +265,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
  background:linear-gradient(72deg,transparent 44%,rgba(255,255,255,.42) 50%,transparent 56%);animation:sweep 3.6s linear infinite}
 @keyframes sweep{0%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:0 16px}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px}
+.tile{background:linear-gradient(150deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
 .tile b{display:block;font-size:19px;font-weight:900}
 .tile span{font-size:10.5px;color:var(--dim);font-weight:700}
 .club{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 16px}
@@ -317,10 +362,16 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .prizerow .enter{background:var(--neon);color:#04241b;border:0;border-radius:12px;padding:9px 13px;font-family:inherit;font-weight:900;font-size:11.5px}
 .nav{position:absolute;left:14px;right:14px;bottom:14px;height:var(--nav-h);background:rgba(17,21,36,.88);backdrop-filter:blur(16px);
  border:1px solid var(--line);border-radius:24px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 16px 36px rgba(0,0,0,.6);z-index:40}
-.nav button{background:none;border:0;color:var(--dim);font-family:inherit;font-weight:800;font-size:10.5px;display:flex;flex-direction:column;
- align-items:center;gap:5px;padding:9px 18px;border-radius:17px;cursor:pointer;letter-spacing:.7px;transition:color .22s,background .22s,transform .22s}
-.nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.nav button.on{color:var(--neon);background:rgba(0,229,160,.11);transform:translateY(-2px)}
+.nav{background:rgba(13,17,30,.93);border:1px solid #2b3556;box-shadow:0 16px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.nav button{position:relative;background:none;border:0;color:#6f7899;font-family:inherit;font-weight:900;font-size:10px;
+ display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 13px;border-radius:16px;cursor:pointer;
+ letter-spacing:.8px;transition:color .25s,background .25s,transform .25s}
+.nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.nav button.on{color:#05271d;background:linear-gradient(150deg,#4dffc4,#00c98d);transform:translateY(-3px);
+ box-shadow:0 10px 22px rgba(0,229,160,.4),inset 0 1px 0 rgba(255,255,255,.5)}
+.nav button.on svg{transform:scale(1.08)}
+.nav button.on:before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:26px;height:4px;
+ border-radius:99px;background:var(--neon);box-shadow:0 0 14px var(--neon)}
 .ov{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;background:rgba(4,6,12,.95);backdrop-filter:blur(8px);
  opacity:0;visibility:hidden;transform:translateY(3%);transition:opacity .26s ease,transform .3s cubic-bezier(.22,.9,.3,1),visibility .26s}
 .ov.on{opacity:1;visibility:visible;transform:none}
@@ -364,7 +415,10 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .stam{height:5px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:5px;width:96px}
 .stam i{display:block;height:100%;background:var(--neon)}
 .stam.low i{background:var(--gold)}.stam.red i{background:var(--hot)}
-.btn{display:block;width:100%;background:var(--neon);color:#04241b;border:0;border-radius:16px;padding:15px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;margin-top:12px}
+.btn{display:block;width:100%;background:linear-gradient(150deg,#4dffc4,#00b881);color:#03241b;border:0;border-radius:16px;
+ padding:15px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;margin-top:12px;letter-spacing:.3px;
+ box-shadow:0 8px 20px rgba(0,229,160,.28),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .12s}
+.btn:active{transform:scale(.98)}
 .btn.ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
 .btn:disabled{background:var(--panel2);color:var(--dim)}
 .empty{text-align:center;color:var(--dim);font-size:12.5px;font-weight:700;padding:32px 28px;line-height:1.8}
@@ -762,9 +816,22 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 </style>
 </head>
 <body>
+<div id="boot">
+  <div class="boot-glow"></div>
+  <div class="boot-ball"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#fff"/>
+   <path d="M50 18l16 12-6 19H40l-6-19z" fill="#0b0e18"/>
+   <path d="M18 46l16-12 8 22-12 16-14-8zM82 46L66 34l-8 22 12 16 14-8z" fill="#0b0e18" opacity=".9"/>
+   <path d="M36 84l6-16h16l6 16-14 6z" fill="#0b0e18" opacity=".9"/></svg></div>
+  <div class="boot-logo">ULTRA <span>DRAFT</span><i>26</i></div>
+  <div class="boot-bar"><i id="bootBar"></i></div>
+  <div class="boot-tx" id="bootTx">WARMING UP</div>
+</div>
 <div id="app">
   <div class="topbar">
-    <div class="logo" id="userBtn"><span id="userTxt">Manager</span> <i class="chev">›</i><small id="userSub">VIEW CAREER</small></div>
+    <button class="profbtn" id="userBtn">
+      <span class="pav" id="userAv"></span>
+      <span class="pnm"><b id="userTxt">Manager</b><em id="userSub">TAP FOR CAREER</em></span>
+      <span class="pchev">›</span></button>
     <div class="wallet"><div class="chip"><i class="coin"></i><span id="coins">0</span></div>
     <div class="chip"><i class="gem"></i><span id="gems">0</span></div></div>
   </div>
@@ -933,7 +1000,7 @@ const RAW=[
 ["Gavi","Barcelona","UCL","Spain","CM",84],["Arda Guler","Real Madrid","UCL","Turkiye","CAM",84],
 ["Pau Cubarsi","Barcelona","UCL","Spain","CB",83],["Fermin Lopez","Barcelona","UCL","Spain","CAM",82],
 ["Endrick","Real Madrid","UCL","Brazil","ST",79]];
-const LEAGUE_NAME={PL:"Premier League",SAU:"Saudi Pro League",BUN:"Bundesliga",SA:"Serie A",L1:"Ligue 1",UCL:"Champions League",INT:"International"};
+const LEAGUE_NAME={PL:"Premier League",SAU:"Saudi Pro League",BUN:"Bundesliga",SA:"Serie A",L1:"Ligue 1",UCL:"Champions League",INT:"International",ICN:"Icon"};
 const BADGE={
  "Man City":{c1:"#6cabdd",c2:"#0e2b52",sh:"circle",pat:"hoop",t:"MCFC"},"Liverpool":{c1:"#c8102e",c2:"#f6eb61",sh:"shield",pat:"hoop",t:"LFC"},
  "Arsenal":{c1:"#ef0107",c2:"#ffffff",sh:"shield",pat:"halves",t:"AFC"},"Chelsea":{c1:"#034694",c2:"#f4c430",sh:"circle",pat:"ring",t:"CFC"},
@@ -997,7 +1064,7 @@ const NATION_FLAG={Norway:["#ba0c2f","#fff","#00205b"],Egypt:["#ce1126","#fff","
  Switzerland:["#d52b1e","#fff","#d52b1e"],Guinea:["#ce1126","#fcd116","#009460"],Colombia:["#fcd116","#003893","#ce1126"],
  Czechia:["#11457e","#fff","#d7141a"],Austria:["#ed2939","#fff","#ed2939"],Japan:["#fff","#bc002d","#fff"],
  Nigeria:["#008751","#fff","#008751"],USA:["#3c3b6e","#fff","#b22234"],Scotland:["#0065bf","#fff","#0065bf"],
- Turkiye:["#e30a17","#fff","#e30a17"],Ecuador:["#ffdd00","#0033a0","#ef3340"],Denmark:["#c60c30","#fff","#c60c30"]};
+ Turkiye:["#e30a17","#fff","#e30a17"],Cameroon:["#007a5e","#ce1126","#fcd116"],Ecuador:["#ffdd00","#0033a0","#ef3340"],Denmark:["#c60c30","#fff","#c60c30"]};
 const HAIR=["#1b1310","#2f2118","#5a3a20","#8a5a2b","#c9a26a","#0f0d0c","#3a2a22"];
 const SKIN=["#f5d0b0","#eab88f","#d69c6f","#b87a4c","#8d5524","#5c3317","#3f2312"];
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
@@ -1059,9 +1126,32 @@ const INTL=INTL_RAW.map(([name,club,league,nation,pos,rating],k)=>({id:POOL.leng
  stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
  rarity:rating>=90?"icon":rating>=87?"totw":rating>=80?"gold":rating>=72?"silver":"bronze",
  sur:name.split(" ").slice(-1)[0].toUpperCase()}));
-const ALL=POOL.concat(INTL);
-const SELL={bronze:150,silver:400,gold:1200,totw:5000,icon:15000};
-const RARITY_TXT={bronze:"BRONZE",silver:"SILVER",gold:"GOLD",totw:"TEAM OF THE WEEK",icon:"ICON"};
+/* ---- icons: retired greats, only ever found in icon packs ---- */
+const ICON_RAW=[
+["Ronaldinho","Barcelona","ICN","Brazil","CAM",94],["Zinedine Zidane","Real Madrid","ICN","France","CAM",94],
+["Ronaldo Nazario","Inter","ICN","Brazil","ST",94],["Thierry Henry","Arsenal","ICN","France","ST",93],
+["Paolo Maldini","AC Milan","ICN","Italy","CB",93],["Marco van Basten","AC Milan","ICN","Netherlands","ST",93],
+["Didier Drogba","Chelsea","ICN","Ivory Coast","ST",92],["Xavi","Barcelona","ICN","Spain","CM",92],
+["Andres Iniesta","Barcelona","ICN","Spain","CAM",92],["Roberto Carlos","Real Madrid","ICN","Brazil","LB",92],
+["Iker Casillas","Real Madrid","ICN","Spain","GK",92],["Gianluigi Buffon","Juventus","ICN","Italy","GK",92],
+["Zlatan Ibrahimovic","AC Milan","ICN","Sweden","ST",92],["Ruud Gullit","AC Milan","ICN","Netherlands","CAM",92],
+["Steven Gerrard","Liverpool","ICN","England","CM",91],["Andrea Pirlo","Juventus","ICN","Italy","CDM",91],
+["Kaka","AC Milan","ICN","Brazil","CAM",91],["Samuel Etoo","Inter","ICN","Cameroon","ST",91],
+["Alessandro Del Piero","Juventus","ICN","Italy","ST",91],["Luis Figo","Real Madrid","ICN","Portugal","RW",91],
+["Peter Schmeichel","Man Utd","ICN","Denmark","GK",91],["Sergio Ramos","Real Madrid","ICN","Spain","CB",91],
+["Frank Lampard","Chelsea","ICN","England","CM",90],["David Beckham","Man Utd","ICN","England","RW",90],
+["Wayne Rooney","Man Utd","ICN","England","ST",90],["Rio Ferdinand","Man Utd","ICN","England","CB",90],
+["Carles Puyol","Barcelona","ICN","Spain","CB",90],["Patrick Vieira","Arsenal","ICN","France","CDM",90],
+["Cafu","AC Milan","ICN","Brazil","RB",90],["Paul Scholes","Man Utd","ICN","England","CM",90],
+["Ruud van Nistelrooy","Man Utd","ICN","Netherlands","ST",90],["Petr Cech","Chelsea","ICN","Czechia","GK",90],
+["Fernando Torres","Liverpool","ICN","Spain","ST",89],["Michael Owen","Liverpool","ICN","England","ST",89]];
+const ICONS=ICON_RAW.map(([name,club,league,nation,pos,rating],k)=>({id:POOL.length+INTL.length+k,name,club,league,nation,pos,rating,
+ legend:true,stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
+ rarity:"legend",sur:name.split(" ").slice(-1)[0].toUpperCase()}));
+const ALL=POOL.concat(INTL,ICONS);
+const isStar=p=>!p.legend&&p.rating>=88;
+const SELL={bronze:150,silver:400,gold:1200,totw:5000,icon:15000,legend:45000};
+const RARITY_TXT={bronze:"BRONZE",silver:"SILVER",gold:"GOLD",totw:"TEAM OF THE WEEK",icon:"ICON",legend:"LEGEND"};
 function faceSVG(p){
  const h=hash(p.name),skin=SKIN[h%SKIN.length],hair=HAIR[(h>>3)%HAIR.length],style=(h>>6)%6,beard=(h>>9)%4,
   b=BADGE[p.club]||{c1:"#2b3350",c2:"#8892b0"},eye=["#4a3520","#2f5d3f","#3b5c8a","#5a4632"][(h>>12)%4],shade="rgba(0,0,0,.13)";
@@ -1135,7 +1225,7 @@ const PACKS=[
  {n:"Premium Gold",t:"RARE",c:14000,cls:"p-prem",num:4,min:78,max:99,rate:"78+",rl:"GUARANTEED",sub:"4 PLAYERS"},
  {n:"Rare Players",t:"EPIC",c:32000,cls:"p-rare",num:4,min:80,max:99,g:85,rate:"85+",rl:"GUARANTEED",sub:"4 PLAYERS"},
  {n:"TOTW Pack",t:"LEGENDARY",c:75000,cls:"p-totw",num:3,min:83,max:99,g:87,rate:"87+",rl:"TOTW PULL",sub:"3 PLAYERS"},
- {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:85,max:99,g:90,rate:"90+",rl:"ICON PULL",sub:"2 PLAYERS"}];
+ {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:88,max:99,g:90,pool:"icons",rate:"90+",rl:"LEGENDS ONLY",sub:"2 PLAYERS"}];
 /* ---- specials: gem-priced, the stuff you save up for ---- */
 const SPECIAL_PACKS=[
  {n:"Starter Boost",t:"STARTER",c:4000,cls:"p-starter",num:5,min:70,max:80,rate:"80",rl:"MAX RATED",sub:"5 PLAYERS · CHEAP DEPTH"},
@@ -1143,8 +1233,9 @@ const SPECIAL_PACKS=[
  {n:"Golden Ticket",t:"SPECIAL",gc:5,cls:"p-ticket",num:3,min:80,max:99,g:82,rate:"82+",rl:"GUARANTEED",sub:"3 PLAYERS"},
  {n:"Marquee Signing",t:"ELITE",gc:14,cls:"p-marquee",num:1,min:88,max:99,g:88,rate:"88+",rl:"ONE BIG NAME",sub:"1 PLAYER"},
  {n:"League Legends",t:"ELITE",c:45000,gc:20,cls:"p-legends",num:3,min:85,max:99,g:88,rate:"85+",rl:"EVERY CARD 85+",sub:"3 PLAYERS"},
- {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:88,max:99,g:91,rate:"91+",rl:"PRIME ICON",sub:"2 PLAYERS"}];
-const LEAGUE_PACKS=Object.keys(LEAGUE_NAME).filter(k=>k!=="INT").map(k=>({n:LEAGUE_NAME[k],t:"LEAGUE",c:16000,cls:"p-league",num:3,
+ {n:"Superstar Pack",t:"SUPERSTAR",c:90000,gc:15,cls:"p-star",num:2,min:86,max:99,g:89,pool:"stars",rate:"89+",rl:"A SUPERSTAR",sub:"2 PLAYERS"},
+ {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:90,max:99,g:92,pool:"icons",rate:"92+",rl:"PRIME LEGEND",sub:"2 PLAYERS"}];
+const LEAGUE_PACKS=Object.keys(LEAGUE_NAME).filter(k=>k!=="INT"&&k!=="ICN").map(k=>({n:LEAGUE_NAME[k],t:"LEAGUE",c:16000,cls:"p-league",num:3,
  min:76,max:99,league:k,rate:"76+",rl:LEAGUE_NAME[k].toUpperCase(),sub:"3 PLAYERS · THIS LEAGUE ONLY"}));
 const PACK_BY_NAME={};[...PACKS,...LEAGUE_PACKS,...SPECIAL_PACKS].forEach(p=>PACK_BY_NAME[p.n]=p);
 const OPPONENTS=[
@@ -1178,11 +1269,11 @@ function natBadge(n){const f=NATION_FLAG[n]||["#2b3350","#8892b0","#2b3350"];
 const flagBG=n=>{const c=NATION_FLAG[n]||["#444","#777","#444"];
  return `linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)`;};
 function natInfo(n){
- const ps=ALL.filter(p=>p.nation===n).sort((a,b)=>b.rating-a.rating),top=ps.slice(0,11);
+ const ps=ALL.filter(p=>p.nation===n&&!p.legend).sort((a,b)=>b.rating-a.rating),top=ps.slice(0,11);
  const ovr=top.length?Math.round(top.reduce((a,p)=>a+p.rating,0)/top.length-(11-top.length)*1.2):50;
  return {n,count:ps.length,ovr,players:ps};
 }
-const NATIONS=[...new Set(ALL.map(p=>p.nation))].map(natInfo).filter(x=>x.count>=13).sort((a,b)=>b.ovr-a.ovr);
+const NATIONS=[...new Set(ALL.filter(p=>!p.legend).map(p=>p.nation))].map(natInfo).filter(x=>x.count>=13).sort((a,b)=>b.ovr-a.ovr);
 const HOSTS=[
  {n:"Morocco",city:"Casablanca",x:455,y:206,r:80,pay:5000,gems:0},
  {n:"Japan",city:"Tokyo",x:843,y:168,r:82,pay:8000,gems:0},
@@ -1236,7 +1327,9 @@ function renderHome(){
  list.forEach(i=>{const w=document.createElement("div");w.innerHTML=cardHTML(POOL[i]);w.firstChild.onclick=()=>showDetail(POOL[i]);lat.appendChild(w.firstChild);});
 }
 function drawPack(p){
- const base=p.league?POOL.filter(x=>x.league===p.league):POOL;
+ const base=p.pool==="icons"?ICONS.concat(POOL.filter(x=>x.rating>=90))
+  :p.pool==="stars"?POOL.filter(x=>x.rating>=86)
+  :p.league?POOL.filter(x=>x.league===p.league):POOL;
  let pool=base.filter(x=>x.rating>=p.min&&x.rating<=p.max);
  if(pool.length<2)pool=base.slice();
  const out=[];for(let i=0;i<p.num;i++)out.push(pool[Math.floor(Math.random()*pool.length)]);
@@ -1261,9 +1354,15 @@ function stepOpen(){
  if(openState==="closed"){const bp=$("#bp");if(bp)bp.classList.add("rip");openState="revealing";setTimeout(revealNext,480);return;}
  if(openState==="revealing")revealNext();
 }
+const walkLabel=p=>p.legend?"★ LEGEND WALKOUT ★":isStar(p)?"★ SUPERSTAR WALKOUT ★":"WALKOUT";
+function starBurst(host,n){
+ for(let i=0;i<n;i++){const st=document.createElement("div");st.className="starfx";
+  st.textContent="★";st.style.left=Math.random()*100+"%";st.style.fontSize=(9+Math.random()*16)+"px";
+  st.style.animationDelay=(Math.random()*1.1).toFixed(2)+"s";host.appendChild(st);}
+}
 function cardStage(p,walk){
  return `<div class="revwrap">
- ${walk?'<div class="rays"></div><div class="walkout">'+(p.rating>=90?"ICON WALKOUT":"WALKOUT")+'</div>':""}
+ ${walk?'<div class="rays'+(p.legend?" leg":"")+'"></div><div class="walkout'+(p.legend||isStar(p)?" star":"")+'">'+walkLabel(p)+'</div>':""}
  <div class="reveal${walk?" burst":""}">${cardHTML(p)}</div>
  <div style="margin-top:13px;font-size:14px;font-weight:900">${p.name}</div>
  <div style="font-size:11px;color:var(--dim);font-weight:800;margin-top:3px">${p.club} · ${LEAGUE_NAME[p.league]} · ${RARITY_TXT[p.rarity]}</div></div>`;
@@ -1281,14 +1380,15 @@ function revealNext(){
 /* anticipation sequence for a big pull: a glowing circle shows the rating, then opens out into the card */
 function bigReveal(p){
  openState="anim";
- const icon=p.rating>=90;
+ const icon=p.legend||p.rating>=90,star=isStar(p);
  $("#openHint").textContent="";
- $("#stage").innerHTML=`<div class="antic">
+ $("#stage").innerHTML=`<div class="antic" id="anticWrap">
   <div class="halo${icon?" hot":""}"></div><div class="halo d2${icon?" hot":""}"></div>
-  <div class="morph ${icon?"m-icon":"m-totw"}" id="morph">
+  <div class="morph ${p.legend?"m-legend":icon?"m-icon":"m-totw"}" id="morph">
    <div class="mrate" id="mrate">?</div>
    <div class="mcard">${cardHTML(p)}</div></div>
-  <div class="antx gold" id="mtx">${icon?"THAT'S AN ICON":"TEAM OF THE WEEK"}</div></div>`;
+  <div class="antx gold" id="mtx">${p.legend?"A LEGEND IS COMING":star?"THAT'S A SUPERSTAR":"TEAM OF THE WEEK"}</div></div>`;
+ if(p.legend||star)starBurst($("#anticWrap"),18);
  const rate=$("#mrate");let v=Math.max(60,p.rating-14);
  const iv=setInterval(()=>{
   v++;rate.textContent=v;
@@ -1300,6 +1400,7 @@ function bigReveal(p){
     for(let i=0;i<34;i++){const c=document.createElement("div");c.className="conf";
      c.style.left=Math.random()*100+"%";c.style.background=["#00e5a0","#38bdf8","#ffcf5c","#fff"][i%4];
      c.style.animationDelay=(Math.random()*.6).toFixed(2)+"s";$("#stage").appendChild(c);}
+    if(p.legend||isStar(p))starBurst($("#stage"),22);
     setTimeout(()=>{
      const st=$("#stage");if(!st)return;
      st.innerHTML=cardStage(p,true);
@@ -2418,7 +2519,10 @@ function renderCareer(){
   if(u)S.user=u;if(c)S.club=c;
   save();renderProfile();renderSquad();renderCareer();toast("Saved");};
 }
-function renderProfile(){$("#userTxt").textContent=S.user;$("#userSub").textContent=(S.trophies||0)+" TROPHIES · VIEW CAREER";}
+function renderProfile(){
+ $("#userTxt").textContent=S.user;
+ $("#userSub").textContent=(S.trophies||0)+" TROPHIES · TAP FOR CAREER";
+ $("#userAv").innerHTML=crestSVG(myBadge());}
 /* ================= BOOT ================= */
 document.querySelectorAll(".nav button").forEach(b=>{
  b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
@@ -2447,6 +2551,13 @@ $("#formBtn").onclick=()=>{renderFormations();$("#formOv").classList.add("on");}
 $("#nameBtn").onclick=()=>{$("#nameInp").value=S.club;$("#nameOv").classList.add("on");setTimeout(()=>$("#nameInp").focus(),250);};
 $("#nameSave").onclick=()=>{const v=$("#nameInp").value.trim();if(!v){toast("Give your club a name");return;}
  S.club=v;$("#nameOv").classList.remove("on");renderSquad();renderProfile();save();toast("Club renamed to "+v);};
+(function bootSeq(){
+ const lines=["WARMING UP","LOADING SQUADS","POLISHING THE TROPHIES","INFLATING THE BALL","LINING UP THE PITCH","KICK OFF"];
+ let k=0;const tx=document.getElementById("bootTx");
+ const iv=setInterval(()=>{k++;if(tx)tx.textContent=lines[Math.min(k,lines.length-1)];},650);
+ setTimeout(()=>{clearInterval(iv);const b=document.getElementById("boot");
+  if(b){b.classList.add("gone");setTimeout(()=>b.remove(),700);}},4000);
+})();
 (async()=>{await load();if(!S.xi||S.xi.length!==11)S.xi=Array(11).fill(null);
  normWorld();renderProfile();renderTop();renderHome();renderSquad();renderRivals();renderWorld();})();
 </script>
