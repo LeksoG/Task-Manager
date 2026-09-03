@@ -2258,8 +2258,17 @@ function renderWorld(){
    d.innerHTML=`<div class="fl" style="background:${flagBG(nt.n)}"></div>
     <div><b>${nt.n}</b><span>${nt.ovr} OVR · ${nt.count} players</span>
     <span style="display:block">${nt.players[0].sur.charAt(0)+nt.players[0].sur.slice(1).toLowerCase()}</span></div>`;
-   d.onclick=()=>{w.nation=nt.n;save();renderWorld();toast("You now manage "+nt.n);};
+   d.onclick=()=>{
+    const changed=w.prev&&w.prev!==nt.n;
+    if(changed){w.host=null;w.stage=0;w.opps=[];}
+    w.nation=nt.n;w.prev=null;save();renderWorld();
+    toast(changed?"Tournament reset — you now manage "+nt.n:"You now manage "+nt.n);};
    g.appendChild(d);});
+  if(w.prev){
+   const c=document.createElement("button");c.className="btn ghost";c.id="wCancel";c.style.margin="16px 16px 0";
+   c.style.width="calc(100% - 32px)";c.textContent="Cancel — stay with "+w.prev;
+   c.onclick=()=>{w.nation=w.prev;w.prev=null;save();renderWorld();toast("Still managing "+w.nation);};
+   b.appendChild(c);}
   return;
  }
  const inf=natInfo(w.nation);
@@ -2294,7 +2303,7 @@ function renderWorld(){
  const ch=$("#wChange");if(ch)ch.onclick=()=>confirmBox("Change nation?",
   w.host!==null?"You're in the middle of the "+HOSTS[w.host].city+" tournament. Switching nations ends this run and your progress restarts from game 1 with the new country."
    :"Your international squad will be rebuilt from the new country's players. Any tournament progress restarts from game 1.",
-  "Yes, switch nation",()=>{w.nation=null;w.host=null;w.stage=0;w.opps=[];save();renderWorld();});
+  "Yes, switch nation",()=>{w.prev=w.nation;w.nation=null;save();renderWorld();});
  const pl=$("#wPlay");if(pl)pl.onclick=()=>previewWorld();
  const mw=$("#mapWrap");
  if(mw)HOSTS.forEach((h,i)=>{
@@ -2319,10 +2328,10 @@ function rewardBox(h,i,flat){
 }
 function confirmBox(title,msg,okText,onOk){
  $("#cfBody").innerHTML=`<div class="cf-card"><h3>${title}</h3><p>${msg}</p>
-  <button class="btn" id="cfOk">${okText}</button><button class="btn ghost" id="cfNo">Cancel</button></div>`;
+  <button class="btn" id="cfOk">${okText}</button></div>`;
  $("#cfOv").classList.add("on");
- $("#cfOk").onclick=()=>{$("#cfOv").classList.remove("on");onOk();};
- $("#cfNo").onclick=()=>$("#cfOv").classList.remove("on");
+ $("#cfOk").onclick=e=>{e.stopPropagation();$("#cfOv").classList.remove("on");onOk();};
+ $("#cfBody").onclick=e=>{if(!e.target.closest(".cf-card"))$("#cfOv").classList.remove("on");};
 }
 function previewHost(i){
  const h=HOSTS[i],w=normWorld(),inf=natInfo(w.nation);
