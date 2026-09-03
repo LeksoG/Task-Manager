@@ -128,6 +128,40 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .cf-card h3{margin:0 0 8px;font-size:19px;font-weight:900}
 .cf-card p{margin:0;font-size:12.5px;line-height:1.65;color:var(--dim);font-weight:700}
 .btn.cancel{background:var(--panel2);color:var(--txt);border:1.5px solid var(--line);box-shadow:none}
+.btn.sellbtn2{background:linear-gradient(150deg,#ff6b95,#c9134a);color:#fff;box-shadow:0 8px 20px rgba(255,45,112,.28)}
+.btn.sellbtn2 b{font-weight:900}
+/* squad player sheet */
+#slotOv{top:auto;height:auto;max-height:78%;border-radius:26px 26px 0 0;border:1px solid var(--line);border-bottom:0;
+ background:linear-gradient(180deg,#141b31,#080b16);backdrop-filter:none;box-shadow:0 -20px 44px rgba(0,0,0,.7);
+ transform:translateY(100%);z-index:78}
+#slotOv.on{transform:translateY(0)}
+#slotOv .grab{width:44px;height:4px;border-radius:99px;background:var(--line);margin:9px auto 0;flex:0 0 auto}
+#slotOv .ov-head{padding:10px 16px 6px}
+#slotOv .ov-head em{font-style:normal;display:block;font-size:10px;font-weight:800;color:var(--dim);margin-top:3px}
+.slotrow{display:flex;gap:14px;align-items:center;padding:6px 0 14px}
+.slotcard{width:96px;flex:0 0 96px}
+.slotinfo b{font-size:14px;font-weight:900;display:block}
+.slotinfo span{font-size:10.5px;color:var(--dim);font-weight:800;display:block}
+.slotstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin-top:9px}
+.slotstats i{font-style:normal;font-size:13px;font-weight:900;display:flex;gap:4px;align-items:baseline}
+.slotstats i em{font-style:normal;font-size:8.5px;color:var(--dim)}
+.pslot.swapped .card{animation:swapPop .62s cubic-bezier(.2,1.4,.35,1)}
+@keyframes swapPop{0%{transform:rotateY(80deg) scale(.75);opacity:.25}60%{transform:rotateY(-8deg) scale(1.08)}100%{transform:rotateY(0) scale(1)}}
+.pslot.sel .card{animation:incGlow 1.2s ease-in-out infinite}
+/* special edition cards */
+.card.special{clip-path:polygon(0 5%,5% 0,95% 0,100% 5%,100% 95%,95% 100%,5% 100%,0 95%);border:0}
+.card .spholo{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.55;
+ background:linear-gradient(125deg,rgba(255,0,180,.35),rgba(0,255,240,.3) 35%,rgba(255,220,0,.3) 65%,rgba(120,0,255,.35));
+ background-size:280% 280%;animation:holoMove 5s ease-in-out infinite}
+@keyframes holoMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.card .spedge{position:absolute;inset:0;z-index:4;pointer-events:none;
+ clip-path:polygon(0 5%,5% 0,95% 0,100% 5%,100% 95%,95% 100%,5% 100%,0 95%);
+ box-shadow:inset 0 0 0 2.5px rgba(255,255,255,.85),inset 0 0 26px rgba(255,255,255,.35)}
+.card .spbadge{position:absolute;top:5cqw;right:6cqw;z-index:5;font-size:9cqw;color:#fff;
+ text-shadow:0 0 10px rgba(255,255,255,.9);animation:blinky 1.8s ease-in-out infinite}
+.r-superstar{background:linear-gradient(160deg,#ff9df3,#a01ec4 42%,#3d0a55 78%,#16031f);color:#fff}
+.r-superstar .nm,.r-superstar .sts,.r-superstar .meta{color:#fff}
+.r-prime{background:linear-gradient(160deg,#fffdf0,#ffe9a8 30%,#c79a2c 62%,#4a3407);color:#2a1e04}
 .btn.cancel:active{transform:scale(.98)}
 /* ---- header profile button ---- */
 .profbtn{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,229,160,.16),rgba(56,189,248,.08));
@@ -917,6 +951,9 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
     <div class="frame"><div class="ttt" id="ttt"></div></div><div class="penres" id="penres"></div></div></div>
   <div class="ov" id="careerOv"><div class="ov-head"><b>Career</b><button class="x" id="careerX">✕</button></div>
     <div class="ov-body" id="careerBody"></div></div>
+  <div class="ov" id="slotOv"><div class="grab"></div>
+    <div class="ov-head"><div><b id="slotName">Player</b><em id="slotPos"></em></div><button class="x" id="slotX">✕</button></div>
+    <div class="ov-body" id="slotBody"></div></div>
   <div class="ov" id="promoOv"><div class="promo-wrap" id="promoBody"></div></div>
   <div class="ov" id="cfOv"><div class="cf-wrap" id="cfBody"></div></div>
   <div class="ov" id="flyOv"><div class="flywrap" id="flyBody"></div></div>
@@ -1150,10 +1187,21 @@ const ICON_RAW=[
 const ICONS=ICON_RAW.map(([name,club,league,nation,pos,rating],k)=>({id:POOL.length+INTL.length+k,name,club,league,nation,pos,rating,
  legend:true,stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
  rarity:"legend",sur:name.split(" ").slice(-1)[0].toUpperCase()}));
-const ALL=POOL.concat(INTL,ICONS);
-const isStar=p=>!p.legend&&p.rating>=88;
-const SELL={bronze:150,silver:400,gold:1200,totw:5000,icon:15000,legend:45000};
-const RARITY_TXT={bronze:"BRONZE",silver:"SILVER",gold:"GOLD",totw:"TEAM OF THE WEEK",icon:"ICON",legend:"LEGEND"};
+/* ---- special versions: a second, rarer card of the same player ---- */
+let VID=POOL.length+INTL.length+ICONS.length;
+const mkVariant=(p,kind,bump)=>({...p,id:VID++,base:p.id,special:true,kind,
+ rating:clamp(p.rating+bump,0,99),
+ stats:p.stats.map(v=>clamp(v+bump+1,38,99)),
+ rarity:kind});
+const VARIANTS=[]
+ .concat(POOL.filter(p=>p.rating>=85).map(p=>mkVariant(p,"superstar",3)))
+ .concat(ICONS.filter(p=>p.rating>=90).map(p=>mkVariant(p,"prime",2)));
+const VAR_OF={};VARIANTS.forEach(v=>VAR_OF[v.base]=v);
+const ALL=POOL.concat(INTL,ICONS,VARIANTS);
+const isStar=p=>!p.legend&&(p.rarity==="superstar"||p.rating>=88);
+const SELL={bronze:150,silver:400,gold:1200,totw:5000,icon:15000,legend:45000,superstar:26000,prime:90000};
+const RARITY_TXT={bronze:"BRONZE",silver:"SILVER",gold:"GOLD",totw:"TEAM OF THE WEEK",icon:"ELITE",legend:"LEGEND",
+ superstar:"SUPERSTAR EDITION",prime:"PRIME LEGEND"};
 function faceSVG(p){
  const h=hash(p.name),skin=SKIN[h%SKIN.length],hair=HAIR[(h>>3)%HAIR.length],style=(h>>6)%6,beard=(h>>9)%4,
   b=BADGE[p.club]||{c1:"#2b3350",c2:"#8892b0"},eye=["#4a3520","#2f5d3f","#3b5c8a","#5a4632"][(h>>12)%4],shade="rgba(0,0,0,.13)";
@@ -1189,8 +1237,9 @@ const MGR_SVG=`<svg viewBox="0 0 40 40"><rect width="40" height="40" fill="#1b21
 const flagHTML=n=>{const c=NATION_FLAG[n]||["#444","#777","#444"];
  return `<div class="flag" style="background:linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)"></div>`;};
 function cardHTML(p){
- const L=p.pos==="GK"?LABELS.gk:LABELS.out;
- return `<div class="cw"><div class="card r-${p.rarity}"><div class="shine"></div>
+ const L=p.pos==="GK"?LABELS.gk:LABELS.out,sp=!!p.special;
+ return `<div class="cw"><div class="card r-${p.rarity}${sp?" special":""}"><div class="shine"></div>
+ ${sp?`<div class="spholo"></div><div class="spbadge">★</div><div class="spedge"></div>`:""}
  <div class="top"><div class="meta"><div class="ovr">${p.rating}</div><div class="pos">${p.pos}</div>
  ${flagHTML(p.nation)}<div class="crest">${crestSVG(p.club)}</div></div><div class="face">${faceSVG(p)}</div></div>
  <div class="nm">${p.sur}</div><div class="sts">${p.stats.map((s,i)=>`<div>${s}<i>${L[i]}</i></div>`).join("")}</div></div></div>`;
@@ -1226,17 +1275,17 @@ const PACKS=[
  {n:"Gold Pack",t:"RARE",c:6000,cls:"p-gold",num:3,min:75,max:86,rate:"86",rl:"MAX RATED",sub:"3 PLAYERS"},
  {n:"Premium Gold",t:"RARE",c:14000,cls:"p-prem",num:4,min:78,max:99,rate:"78+",rl:"GUARANTEED",sub:"4 PLAYERS"},
  {n:"Rare Players",t:"EPIC",c:32000,cls:"p-rare",num:4,min:80,max:99,g:85,rate:"85+",rl:"GUARANTEED",sub:"4 PLAYERS"},
- {n:"TOTW Pack",t:"LEGENDARY",c:75000,cls:"p-totw",num:3,min:83,max:99,g:87,rate:"87+",rl:"TOTW PULL",sub:"3 PLAYERS"},
- {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:88,max:99,g:90,pool:"icons",rate:"90+",rl:"LEGENDS ONLY",sub:"2 PLAYERS"}];
+ {n:"TOTW Pack",t:"LEGENDARY",c:75000,cls:"p-totw",num:3,min:83,max:99,g:87,vchance:.08,vkind:"superstar",rate:"87+",rl:"TOTW PULL",sub:"3 PLAYERS"},
+ {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:88,max:99,g:90,pool:"icons",steep:.82,vchance:.07,vkind:"prime",rate:"90+",rl:"LEGENDS ONLY",sub:"2 PLAYERS"}];
 /* ---- specials: gem-priced, the stuff you save up for ---- */
 const SPECIAL_PACKS=[
  {n:"Starter Boost",t:"STARTER",c:4000,cls:"p-starter",num:5,min:70,max:80,rate:"80",rl:"MAX RATED",sub:"5 PLAYERS · CHEAP DEPTH"},
  {n:"Hidden Gem",t:"SPECIAL",c:9000,gc:2,cls:"p-special",num:5,min:76,max:84,rate:"84",rl:"MAX RATED",sub:"5 PLAYERS"},
  {n:"Golden Ticket",t:"SPECIAL",gc:5,cls:"p-ticket",num:3,min:80,max:99,g:82,rate:"82+",rl:"GUARANTEED",sub:"3 PLAYERS"},
- {n:"Marquee Signing",t:"ELITE",gc:14,cls:"p-marquee",num:1,min:88,max:99,g:88,rate:"88+",rl:"ONE BIG NAME",sub:"1 PLAYER"},
+ {n:"Marquee Signing",t:"ELITE",gc:14,cls:"p-marquee",num:1,min:88,max:99,g:88,steep:.82,rate:"88+",rl:"ONE BIG NAME",sub:"1 PLAYER"},
  {n:"League Legends",t:"ELITE",c:45000,gc:20,cls:"p-legends",num:3,min:85,max:99,g:88,rate:"85+",rl:"EVERY CARD 85+",sub:"3 PLAYERS"},
- {n:"Superstar Pack",t:"SUPERSTAR",c:90000,gc:15,cls:"p-star",num:2,min:86,max:99,g:89,pool:"stars",rate:"89+",rl:"A SUPERSTAR",sub:"2 PLAYERS"},
- {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:90,max:99,g:92,pool:"icons",rate:"92+",rl:"PRIME LEGEND",sub:"2 PLAYERS"}];
+ {n:"Superstar Pack",t:"SUPERSTAR",c:90000,gc:15,cls:"p-star",num:2,min:86,max:99,g:89,pool:"stars",steep:.8,vchance:.3,vkind:"superstar",rate:"89+",rl:"SPECIAL EDITION CHANCE",sub:"2 PLAYERS"},
+ {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:90,max:99,g:92,pool:"icons",steep:.86,vchance:.4,vkind:"prime",rate:"92+",rl:"PRIME LEGEND",sub:"2 PLAYERS"}];
 const LEAGUE_PACKS=Object.keys(LEAGUE_NAME).filter(k=>k!=="INT"&&k!=="ICN").map(k=>({n:LEAGUE_NAME[k],t:"LEAGUE",c:16000,cls:"p-league",num:3,
  min:76,max:99,league:k,rate:"76+",rl:LEAGUE_NAME[k].toUpperCase(),sub:"3 PLAYERS · THIS LEAGUE ONLY"}));
 const PACK_BY_NAME={};[...PACKS,...LEAGUE_PACKS,...SPECIAL_PACKS].forEach(p=>PACK_BY_NAME[p.n]=p);
@@ -1271,11 +1320,11 @@ function natBadge(n){const f=NATION_FLAG[n]||["#2b3350","#8892b0","#2b3350"];
 const flagBG=n=>{const c=NATION_FLAG[n]||["#444","#777","#444"];
  return `linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)`;};
 function natInfo(n){
- const ps=ALL.filter(p=>p.nation===n&&!p.legend).sort((a,b)=>b.rating-a.rating),top=ps.slice(0,11);
+ const ps=ALL.filter(p=>p.nation===n&&!p.legend&&!p.special).sort((a,b)=>b.rating-a.rating),top=ps.slice(0,11);
  const ovr=top.length?Math.round(top.reduce((a,p)=>a+p.rating,0)/top.length-(11-top.length)*1.2):50;
  return {n,count:ps.length,ovr,players:ps};
 }
-const NATIONS=[...new Set(ALL.filter(p=>!p.legend).map(p=>p.nation))].map(natInfo).filter(x=>x.count>=13).sort((a,b)=>b.ovr-a.ovr);
+const NATIONS=[...new Set(ALL.filter(p=>!p.legend&&!p.special).map(p=>p.nation))].map(natInfo).filter(x=>x.count>=13).sort((a,b)=>b.ovr-a.ovr);
 const HOSTS=[
  {n:"Morocco",city:"Casablanca",x:455,y:206,r:80,pay:5000,gems:0},
  {n:"Japan",city:"Tokyo",x:843,y:168,r:82,pay:8000,gems:0},
@@ -1305,7 +1354,7 @@ const myBadge=()=>({c1:"#00e5a0",c2:"#04241b",sh:"shield",pat:"sash",t:initials(
 const $=s=>document.querySelector(s);
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),1900);}
 const fmt=n=>n.toLocaleString("en-US");
-const ownedPlayers=()=>S.owned.map(i=>POOL[i]);
+const ownedPlayers=()=>S.owned.map(i=>ALL[i]).filter(Boolean);
 const renderTop=()=>{$("#coins").textContent=fmt(S.coins);$("#gems").textContent=S.gems;};
 /* ================= HOME ================= */
 const packHTML=(p,big)=>`<div class="pk ${p.cls}"><div class="weave"></div><div class="glow"></div><div class="foil"></div>
@@ -1326,7 +1375,16 @@ function renderHome(){
  const lat=$("#latest"),list=S.latest.slice(0,6);
  $("#pullHint").textContent=list.length?"tap a card":"";
  lat.innerHTML=list.length?"":`<div class="empty" style="grid-column:1/-1">Your club is empty. Open a pack above to sign your first players.</div>`;
- list.forEach(i=>{const w=document.createElement("div");w.innerHTML=cardHTML(POOL[i]);w.firstChild.onclick=()=>showDetail(POOL[i]);lat.appendChild(w.firstChild);});
+ list.forEach(i=>{const w=document.createElement("div");w.innerHTML=cardHTML(ALL[i]);w.firstChild.onclick=()=>showDetail(ALL[i]);lat.appendChild(w.firstChild);});
+}
+/* the better the card, the steeper the odds against it */
+function weightedPick(pool,steep){
+ if(!pool.length)return null;
+ const lo=Math.min.apply(null,pool.map(x=>x.rating)),k=steep||0.74;
+ let tot=0;const ws=pool.map(x=>{const wgt=Math.pow(k,x.rating-lo);tot+=wgt;return wgt;});
+ let r=Math.random()*tot;
+ for(let i=0;i<pool.length;i++){r-=ws[i];if(r<=0)return pool[i];}
+ return pool[pool.length-1];
 }
 function drawPack(p){
  const base=p.pool==="icons"?ICONS.concat(POOL.filter(x=>x.rating>=90))
@@ -1334,8 +1392,12 @@ function drawPack(p){
   :p.league?POOL.filter(x=>x.league===p.league):POOL;
  let pool=base.filter(x=>x.rating>=p.min&&x.rating<=p.max);
  if(pool.length<2)pool=base.slice();
- const out=[];for(let i=0;i<p.num;i++)out.push(pool[Math.floor(Math.random()*pool.length)]);
- if(p.g){const e=pool.filter(x=>x.rating>=p.g);if(e.length)out[out.length-1]=e[Math.floor(Math.random()*e.length)];}
+ const out=[];for(let i=0;i<p.num;i++)out.push(weightedPick(pool,p.steep));
+ if(p.g){const e=pool.filter(x=>x.rating>=p.g);if(e.length)out[out.length-1]=weightedPick(e,p.steep);}
+ /* rare chance the card comes as its special edition */
+ if(p.vchance)for(let i=0;i<out.length;i++){
+  const v=VAR_OF[out[i].id];
+  if(v&&v.kind===(p.vkind||v.kind)&&Math.random()<p.vchance)out[i]=v;}
  return out;
 }
 let openQ=[],openI=0,openState="closed";
@@ -1415,14 +1477,14 @@ function bigReveal(p){
 /* ================= SQUAD ================= */
 function chemOf(i){
  const id=S.xi[i];if(id===null||id===undefined)return 0;
- const p=POOL[id],slot=slotsOf(S.formation)[i];
+ const p=ALL[id],slot=slotsOf(S.formation)[i];
  let c=p.pos===slot?2:(posGroup(p.pos)===posGroup(slot)?1:0);
- const mates=S.xi.filter((x,j)=>x!==null&&j!==i).map(x=>POOL[x]);
+ const mates=S.xi.filter((x,j)=>x!==null&&j!==i).map(x=>ALL[x]);
  if(mates.some(m=>m.club===p.club))c++;else if(mates.filter(m=>m.league===p.league).length>=2)c++;
  return clamp(c,0,3);
 }
 const squadStats=()=>{const f=S.xi.filter(x=>x!==null&&x!==undefined);
- return {ovr:f.length?Math.round(f.reduce((a,x)=>a+POOL[x].rating,0)/f.length):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
+ return {ovr:f.length?Math.round(f.reduce((a,x)=>a+ALL[x].rating,0)/f.length):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
 /* --- fixed best XI: global best-pair assignment --- */
 function bestXI(ids,formation){
  const sl=slotsOf(formation),players=[...new Set(ids.filter(x=>x!==null&&x!==undefined))].map(i=>ALL[i]).filter(Boolean);
@@ -1440,7 +1502,7 @@ function bestXI(ids,formation){
 }
 function sections(){
  const sl=slotsOf(S.formation),g={GK:[],DEF:[],MID:[],ATT:[]};
- sl.forEach((s,i)=>{const id=S.xi[i];if(id!==null&&id!==undefined)g[posGroup(s)].push(POOL[id].rating);});
+ sl.forEach((s,i)=>{const id=S.xi[i];if(id!==null&&id!==undefined)g[posGroup(s)].push(ALL[id].rating);});
  const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):55;
  return {def:avg(g.GK.concat(g.DEF)),mid:avg(g.MID),att:avg(g.ATT)};
 }
@@ -1448,8 +1510,8 @@ let sel=null; /* {type:'slot',i} or {type:'club',id} */
 function setHint(){
  const h=$("#swapHint");
  if(sel&&sel.type==="slot"){h.className="swaphint on";
-  h.textContent="Selected "+(S.xi[sel.i]!==null&&S.xi[sel.i]!==undefined?POOL[S.xi[sel.i]].name:slotsOf(S.formation)[sel.i])+" — tap another slot to swap, or tap a card in your club to bring them in.";}
- else if(sel&&sel.type==="club"){h.className="swaphint on";h.textContent="Selected "+POOL[sel.id].name+" — tap a slot on the pitch to put them there.";}
+  h.textContent="Selected "+(S.xi[sel.i]!==null&&S.xi[sel.i]!==undefined?ALL[S.xi[sel.i]].name:slotsOf(S.formation)[sel.i])+" — tap another slot to swap, or tap a card in your club to bring them in.";}
+ else if(sel&&sel.type==="club"){h.className="swaphint on";h.textContent="Selected "+ALL[sel.id].name+" — tap a slot on the pitch to put them there.";}
  else h.className="swaphint";
 }
 function clearSel(){sel=null;setHint();
@@ -1459,13 +1521,42 @@ function assign(i,id){
  if(at>=0&&at!==i){S.xi[at]=S.xi[i];}
  S.xi[i]=id;
 }
+function flashSwap(a,b){
+ const slots=document.querySelectorAll("#pitch .pslot");
+ [a,b].forEach(i=>{const el=slots[i];if(el){el.classList.add("swapped");setTimeout(()=>el.classList.remove("swapped"),640);}});
+}
 function slotTap(i){
- if(sel&&sel.type==="club"){assign(i,sel.id);clearSel();renderSquad();save();return;}
+ if(sel&&sel.type==="club"){assign(i,sel.id);clearSel();renderSquad();flashSwap(i,i);save();return;}
  if(sel&&sel.type==="slot"){
-  if(sel.i===i){clearSel();pickFor(i);return;}
-  const a=S.xi[sel.i];S.xi[sel.i]=S.xi[i];S.xi[i]=a;clearSel();renderSquad();save();toast("Players swapped");return;}
+  if(sel.i===i){clearSel();renderSquad();return;}
+  const from=sel.i,a=S.xi[from];S.xi[from]=S.xi[i];S.xi[i]=a;
+  clearSel();renderSquad();flashSwap(from,i);save();toast("Players switched");return;}
  if(S.xi[i]===null||S.xi[i]===undefined){pickFor(i);return;}
- sel={type:"slot",i};renderSquad();
+ openSlot(i);
+}
+function openSlot(i){
+ const p=ALL[S.xi[i]];if(!p)return;
+ $("#slotName").textContent=p.name;
+ $("#slotPos").textContent=`${slotsOf(S.formation)[i]} · ${p.rating} ${RARITY_TXT[p.rarity]} · chem ${chemOf(i)}/3`;
+ $("#slotBody").innerHTML=`
+  <div class="slotrow"><div class="slotcard">${cardHTML(p)}</div>
+   <div class="slotinfo"><b>${p.club}</b><span>${LEAGUE_NAME[p.league]}</span><span>${p.nation}</span>
+    <div class="slotstats">${p.stats.map((v,k)=>`<i>${v}<em>${(p.pos==="GK"?LABELS.gk:LABELS.out)[k]}</em></i>`).join("")}</div></div></div>
+  <button class="btn" id="slotSwap">Switch player</button>
+  <button class="btn sellbtn2" id="slotSell">Quick sell · <b>${fmt(SELL[p.rarity])}</b> coins</button>
+  <button class="btn cancel" id="slotCancel">Cancel</button>`;
+ $("#slotOv").classList.add("on");
+ const close=()=>$("#slotOv").classList.remove("on");
+ $("#slotCancel").onclick=close;
+ $("#slotSwap").onclick=()=>{close();sel={type:"slot",i};renderSquad();
+  const v=$("#v-squad");if(v&&v.scrollTo)v.scrollTo({top:Math.max(0,$("#pitch").offsetTop-90),behavior:"smooth"});};
+ $("#slotSell").onclick=()=>{
+  const before={c:S.coins,g:S.gems},val=SELL[p.rarity];
+  const k=S.owned.indexOf(p.id);if(k>=0)S.owned.splice(k,1);
+  S.xi[i]=null;
+  const l=S.latest.indexOf(p.id);if(l>=0)S.latest.splice(l,1);
+  S.coins+=val;close();clearSel();renderSquad();renderHome();save();
+  awardFX(val,0,before);toast("Sold "+p.name+" for "+fmt(val));};
 }
 function clubTap(p){
  if(sel&&sel.type==="slot"){assign(sel.i,p.id);clearSel();renderSquad();save();toast(p.name+" is in your XI");return;}
@@ -1511,7 +1602,7 @@ function renderSquad(){
   row.forEach(pos=>{
    const i=n++,id=S.xi[i],s=document.createElement("div");
    s.className="pslot"+(sel&&sel.type==="slot"&&sel.i===i?" sel":"");s.dataset.i=i;
-   s.innerHTML=(id===null||id===undefined?`<div class="mini-empty">+</div>`:cardHTML(POOL[id]))+
+   s.innerHTML=(id===null||id===undefined?`<div class="mini-empty">+</div>`:cardHTML(ALL[id]))+
     `<div class="lab">${pos}${id!==null&&id!==undefined?" · "+chemOf(i)+"/3":""}</div>`;
    s.onclick=()=>slotTap(i);
    if(id!==null&&id!==undefined)s.addEventListener("pointerdown",e=>startDrag(e,{type:"slot",i},s.firstChild));
@@ -1538,7 +1629,7 @@ function pickFor(idx){
  $("#pickTitle").textContent="Choose your "+sl[idx];
  const b=$("#pickBody");b.innerHTML="";
  if(cur!==null&&cur!==undefined){const rm=document.createElement("button");rm.className="btn ghost";rm.style.marginBottom="14px";
-  rm.textContent="Remove "+POOL[cur].name;rm.onclick=()=>{S.xi[idx]=null;$("#pickOv").classList.remove("on");renderSquad();save();};b.appendChild(rm);}
+  rm.textContent="Remove "+ALL[cur].name;rm.onclick=()=>{S.xi[idx]=null;$("#pickOv").classList.remove("on");renderSquad();save();};b.appendChild(rm);}
  if(!list.length)b.insertAdjacentHTML("beforeend",`<div class="empty">No spare cards. Open more packs to fill this slot.</div>`);
  list.forEach(p=>{const row=document.createElement("div");row.className="prowitem";
   row.innerHTML=`<div class="mini">${cardHTML(p)}</div><div><b>${p.name}</b><span>${p.club} · ${p.pos} · ${LEAGUE_NAME[p.league]}</span></div>
