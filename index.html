@@ -127,6 +127,8 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
  border-radius:22px;padding:22px;animation:pop .3s cubic-bezier(.2,1.4,.4,1)}
 .cf-card h3{margin:0 0 8px;font-size:19px;font-weight:900}
 .cf-card p{margin:0;font-size:12.5px;line-height:1.65;color:var(--dim);font-weight:700}
+.btn.cancel{background:var(--panel2);color:var(--txt);border:1.5px solid var(--line);box-shadow:none}
+.btn.cancel:active{transform:scale(.98)}
 /* ---- header profile button ---- */
 .profbtn{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,229,160,.16),rgba(56,189,248,.08));
  border:1.5px solid rgba(0,229,160,.45);border-radius:16px;padding:7px 10px 7px 8px;cursor:pointer;font-family:inherit;
@@ -2328,10 +2330,13 @@ function rewardBox(h,i,flat){
 }
 function confirmBox(title,msg,okText,onOk){
  $("#cfBody").innerHTML=`<div class="cf-card"><h3>${title}</h3><p>${msg}</p>
-  <button class="btn" id="cfOk">${okText}</button></div>`;
+  <button class="btn" id="cfOk">${okText}</button>
+  <button class="btn cancel" id="cfNo">Cancel</button></div>`;
+ const close=()=>$("#cfOv").classList.remove("on");
  $("#cfOv").classList.add("on");
- $("#cfOk").onclick=e=>{e.stopPropagation();$("#cfOv").classList.remove("on");onOk();};
- $("#cfBody").onclick=e=>{if(!e.target.closest(".cf-card"))$("#cfOv").classList.remove("on");};
+ $("#cfOk").onclick=e=>{e.stopPropagation();close();onOk();};
+ $("#cfNo").onclick=e=>{e.stopPropagation();close();};
+ $("#cfBody").onclick=e=>{if(!e.target.closest(".cf-card"))close();};
 }
 function previewHost(i){
  const h=HOSTS[i],w=normWorld(),inf=natInfo(w.nation);
