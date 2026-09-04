@@ -28,11 +28,28 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .coin{width:15px;height:15px;border-radius:50%;background:linear-gradient(160deg,#ffe9a3,#e0a52a);box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
 .gem{width:13px;height:13px;background:linear-gradient(160deg,#8ff,#2b8cff);clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
 .views{flex:1 1 auto;position:relative;overflow:hidden}
+/* nothing offscreen should keep animating */
+.view:not(.on),.view:not(.on) *{animation-play-state:paused!important}
+.view{overscroll-behavior:contain;contain:paint}
+.opcard,.compcard,.dailycard,.mkt,.prowitem,.upcard{contain:content}
+/* small pack thumbnails and grid cards drop their heavy effects */
+.pkmini .foil,.pkmini .burst,.pkmini .sparks,.deal-art .sparks{display:none}
+/* rails hold a lot of packs — keep their art, halve the moving parts */
+.rail .pk .burst{animation:none;opacity:.14}
+.rail .pk .sparks i:nth-child(n+4){display:none}
+.rail .pk .foil{animation-duration:6s}
+.pkmini .glow{opacity:.35}
+.club .card:before,.club .card:after,.pslot .card:before,.pslot .card:after,
+.prowitem .card:before,.prowitem .card:after,.mkt-c .card:before,.mkt-c .card:after,
+.slotcard .card:before,.slotcard .card:after,.benchcard .card:before,.benchcard .card:after{animation:none!important}
+.club .spholo,.pslot .spholo,.prowitem .spholo,.mkt-c .spholo,.benchcard .spholo{animation:none!important;opacity:.4}
+.club .spbadge,.pslot .spbadge{animation:none!important}
 .view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h) + 30px);
- opacity:0;visibility:hidden;transform:translateY(14px) scale(.99);
- transition:opacity .3s ease,transform .34s cubic-bezier(.22,.9,.3,1),visibility .3s;scrollbar-width:none}
+ opacity:0;visibility:hidden;transform:translate3d(0,10px,0);
+ transition:opacity .22s ease,transform .26s cubic-bezier(.22,.9,.3,1),visibility .22s;scrollbar-width:none;
+ -webkit-overflow-scrolling:touch;will-change:opacity,transform}
 .view::-webkit-scrollbar{display:none}
-.view.on{opacity:1;visibility:visible;transform:none}
+.view.on{opacity:1;visibility:visible;transform:translate3d(0,0,0)}
 .h2{font-size:15px;font-weight:900;margin:20px 16px 12px;display:flex;align-items:center;gap:9px}
 .h2 i{width:5px;height:17px;border-radius:3px;background:linear-gradient(180deg,var(--neon),var(--neon2));box-shadow:0 0 12px rgba(0,229,160,.6)}
 .h2 em{margin-left:auto;font-style:normal;font-size:11px;color:var(--dim);font-weight:700}
@@ -64,6 +81,27 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .pk-corner.br{right:12px;bottom:12px;border-width:0 2px 2px 0}
 .pk .weave{background:repeating-linear-gradient(115deg,#fff 0 2px,transparent 2px 11px),
  repeating-linear-gradient(65deg,#fff 0 1px,transparent 1px 9px)}
+.pk .burst{position:absolute;left:50%;top:42%;width:190%;aspect-ratio:1;transform:translate(-50%,-50%);opacity:.22;
+ background:conic-gradient(from 0deg,rgba(255,255,255,.9) 0 4deg,transparent 4deg 18deg);animation:spin 24s linear infinite}
+.pk .sparks i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.9);
+ box-shadow:0 0 6px rgba(255,255,255,.9);animation:twinkle 2.4s ease-in-out infinite}
+.pk .sparks i:nth-child(1){left:14%;top:22%;animation-delay:0s}
+.pk .sparks i:nth-child(2){left:82%;top:18%;animation-delay:.4s}
+.pk .sparks i:nth-child(3){left:24%;top:66%;animation-delay:.8s}
+.pk .sparks i:nth-child(4){left:76%;top:58%;animation-delay:1.2s}
+.pk .sparks i:nth-child(5){left:52%;top:12%;animation-delay:1.6s}
+.pk .sparks i:nth-child(6){left:38%;top:80%;animation-delay:2s}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.3)}}
+.pk .ribbon{position:relative;z-index:3;background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,.38));
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 3px 10px rgba(0,0,0,.4);padding:5px 14px}
+.pk .rateb{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.65),rgba(255,255,255,.18));
+ clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);box-shadow:none;padding:2px}
+.pk .rb-in{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+ clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);
+ background:linear-gradient(160deg,rgba(255,255,255,.5),rgba(255,255,255,.08));backdrop-filter:blur(2px)}
+.pk .ttl{text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.pk .price{box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 4px 12px rgba(0,0,0,.4);
+ background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,.42))}
 /* ---- big pull anticipation ---- */
 .antic{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
 .halo{position:absolute;width:230px;height:230px;border-radius:50%;border:3px solid var(--gold);opacity:0;
@@ -268,6 +306,18 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
  font-family:inherit;font-weight:900;font-size:10px;cursor:pointer}
 .dr-b:disabled{background:var(--panel2);color:var(--dim)}
 .dr.got .dr-b{background:rgba(0,229,160,.18);color:var(--neon)}
+.compcard.locked{opacity:.72}
+.compcard.locked .compin{filter:grayscale(.85)}
+.compcard.locked .comptop b,.compcard.locked .brnd i{color:var(--dim)}
+.compcard.locked .enter{background:var(--panel2);color:var(--dim);cursor:default}
+.compcard.locked .lockp{background:rgba(255,255,255,.1);color:var(--dim)}
+.lockbar{position:relative;margin-top:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+ border-radius:14px;padding:10px 12px;filter:none}
+.compcard.locked .compin .lockbar{filter:none}
+.lockbar span{display:block;font-size:9.5px;letter-spacing:1.6px;font-weight:900;color:var(--hot)}
+.lockbar b{display:block;font-size:11px;font-weight:900;color:var(--txt);margin-top:3px}
+.lockprog{height:5px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:8px}
+.lockprog i{display:block;height:100%;background:linear-gradient(90deg,var(--hot),var(--gold))}
 .primebar{display:flex;align-items:center;gap:10px;margin:14px 16px 0;padding:11px 13px;border-radius:15px;
  background:linear-gradient(120deg,rgba(255,207,92,.22),rgba(255,45,112,.12));border:1.5px solid rgba(255,207,92,.55)}
 .primebar span{font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--gold)}
@@ -340,9 +390,18 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .profbtn .pnm b{display:block;font-size:14px;font-weight:900;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .profbtn .pnm em{display:block;font-style:normal;font-size:7.5px;letter-spacing:1.2px;font-weight:900;color:var(--neon);margin-top:2px}
 .profbtn .pchev{font-size:17px;font-weight:900;color:var(--neon);margin-left:2px}
-.r-legend{background:linear-gradient(165deg,#fff8e2,#dcc38a 32%,#8a6a2c 62%,#2b2313);color:#241a06}
-.r-legend:before{content:"";position:absolute;inset:-40%;z-index:3;pointer-events:none;
- background:linear-gradient(72deg,transparent 42%,rgba(255,255,255,.6) 50%,transparent 58%);animation:sweep 2.8s linear infinite}
+.r-legend{color:#f6e9c6;
+ background:
+  radial-gradient(120% 80% at 50% 0,rgba(255,238,190,.35),transparent 60%),
+  repeating-conic-gradient(from 0deg at 50% 34%,rgba(255,222,150,.10) 0 6deg,transparent 6deg 14deg),
+  linear-gradient(168deg,#3b2d10,#171208 55%,#090705)}
+.r-legend .nm,.r-legend .sts,.r-legend .meta{color:#ffdf9a}
+.r-legend .ovr{color:#fff3cf;text-shadow:0 0 14px rgba(255,207,92,.8)}
+.r-legend .nm{border-bottom-color:rgba(255,207,92,.6)}
+.r-legend:before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
+ box-shadow:inset 0 0 0 2px rgba(255,214,140,.75),inset 0 0 22px rgba(255,190,90,.35)}
+.r-legend:after{content:"";position:absolute;inset:-40%;z-index:3;pointer-events:none;
+ background:linear-gradient(72deg,transparent 44%,rgba(255,238,190,.45) 50%,transparent 56%);animation:sweep 3.4s linear infinite}
 .p-star{background:linear-gradient(168deg,#ffe6fb,#c73fe0 48%,#3d0b4a);color:#2b0432}
 .starfx{position:absolute;bottom:-10px;color:var(--gold);text-shadow:0 0 12px rgba(255,207,92,.9);pointer-events:none;
  animation:starUp 2.4s ease-out infinite}
@@ -572,7 +631,11 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .comptop .tro svg{width:100%;display:block}
 .comptop b{font-size:16.5px;font-weight:900;display:block}
 .comptop span{font-size:10.5px;color:var(--dim);font-weight:800}
-.comptop .lockp{margin-left:auto;font-size:9px;font-weight:900;padding:5px 9px;border-radius:99px;background:rgba(255,45,112,.16);color:var(--hot)}
+.comptop .lockp{margin-left:auto;font-size:9px;font-weight:900;padding:5px 9px;border-radius:99px;
+ background:rgba(255,255,255,.1);color:#aab2cc;letter-spacing:.6px}
+.compcard.locked{filter:grayscale(.9) brightness(.72);background:linear-gradient(125deg,#4a5068,#20242f)}
+.compcard.locked .compin{background:linear-gradient(160deg,rgba(14,16,24,.92),rgba(10,12,18,.97))}
+.prizerow .enter.off{background:rgba(255,255,255,.12);color:#aab2cc;font-size:10px;letter-spacing:.4px}
 .pips{display:flex;gap:6px;margin-top:12px;position:relative}
 .pips div{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:7px 4px;text-align:center}
 .pips div b{font-size:13px;font-weight:900;display:block}
@@ -584,10 +647,10 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .prizerow .t b{font-size:12px;font-weight:900;display:block;color:var(--gold)}
 .prizerow .t span{font-size:10px;color:var(--dim);font-weight:800}
 .prizerow .enter{background:var(--neon);color:#04241b;border:0;border-radius:12px;padding:9px 13px;font-family:inherit;font-weight:900;font-size:11.5px}
-.nav{position:absolute;left:14px;right:14px;bottom:14px;height:var(--nav-h);background:rgba(17,21,36,.88);backdrop-filter:blur(16px);
+.nav{position:absolute;left:14px;right:14px;bottom:14px;height:var(--nav-h);background:rgba(17,21,36,.96);
  border:1px solid var(--line);border-radius:24px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 16px 36px rgba(0,0,0,.6);z-index:40}
-.nav{background:rgba(13,17,30,.93);border:1px solid #2b3556;box-shadow:0 16px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
-.nav button{position:relative;background:none;border:0;color:#6f7899;font-family:inherit;font-weight:900;font-size:10px;
+.nav{background:linear-gradient(180deg,rgba(19,24,41,.98),rgba(11,14,25,.99));border:1px solid #2b3556;box-shadow:0 16px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.nav button{position:relative;background:none;border:0;color:#6f7899;font-family:inherit;font-weight:900;font-size:10px;touch-action:manipulation;
  display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 13px;border-radius:16px;cursor:pointer;
  letter-spacing:.8px;transition:color .25s,background .25s,transform .25s}
 .nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
@@ -697,18 +760,179 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .plab{display:flex;justify-content:space-between;padding:5px 16px 8px;font-size:9px;font-weight:900;color:var(--dim);letter-spacing:1.2px}
 .pbox{position:relative;margin:0 14px;aspect-ratio:1.62;border-radius:16px;overflow:hidden;border:1px solid #1c7a55;
  background:radial-gradient(120% 80% at 50% -20%,rgba(255,255,255,.1),transparent 60%),repeating-linear-gradient(90deg,#0f4634 0 8.33%,#0c3b2c 8.33% 16.66%)}
-.pbox .ln{position:absolute;border:2px solid rgba(255,255,255,.28)}
-.pbox .half{left:50%;top:0;bottom:0;border-width:0 0 0 2px}
-.pbox .circ{left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%}
-.pbox .boxl{left:0;top:22%;bottom:22%;width:15%;border-width:2px 2px 2px 0}
-.pbox .boxr{right:0;top:22%;bottom:22%;width:15%;border-width:2px 0 2px 2px}
-.pbox .sixl{left:0;top:35%;bottom:35%;width:7%;border-width:2px 2px 2px 0}
-.pbox .sixr{right:0;top:35%;bottom:35%;width:7%;border-width:2px 0 2px 2px}
-.pbox .gl,.pbox .gr{top:40%;bottom:40%;width:3.5%;border-width:2px;
+/* ---- broadcast score bug ---- */
+.scorebug{display:flex;align-items:stretch;gap:8px;margin:0 14px 8px;border-radius:16px;overflow:hidden;
+ background:linear-gradient(180deg,rgba(20,26,44,.95),rgba(9,12,22,.95));border:1px solid var(--line);
+ box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.sb-team{flex:1;display:flex;align-items:center;gap:8px;padding:9px 10px;min-width:0}
+.sb-team.away{justify-content:flex-end;text-align:right}
+.sb-cr{width:26px;flex:0 0 26px}
+.sb-cr svg{width:100%;display:block}
+.sb-tx{min-width:0}
+.sb-tx b{display:block;font-size:11px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:86px}
+.sb-tx span{font-size:8.5px;color:var(--dim);font-weight:900;letter-spacing:1px}
+.sb-bar{width:4px;align-self:stretch;border-radius:2px;box-shadow:0 0 10px currentColor}
+.sb-mid{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 10px;
+ background:rgba(0,0,0,.35);border-left:1px solid var(--line);border-right:1px solid var(--line);min-width:96px}
+.sb-mid .sc{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;transition:transform .3s}
+.sb-mid .sc.bump{transform:scale(1.3)}
+.sb-mid .ck{font-size:10.5px;font-weight:900;letter-spacing:1.6px;color:var(--neon);margin-top:3px}
+.sb-mid .ck.added{color:var(--gold)}
+/* ---- live stat strip ---- */
+.statstrip{display:flex;gap:6px;padding:0 14px 10px}
+.ss{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);
+ border-radius:12px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.ss b{font-size:13px;font-weight:900;color:var(--neon)}
+.ss b.op{color:var(--hot);font-size:11px}
+.ss span{font-size:7px;letter-spacing:.9px;font-weight:900;color:var(--dim)}
+/* ---- numbered player chips ---- */
+.dot{width:17px;height:17px;margin:-8.5px 0 0 -8.5px;display:flex;align-items:center;justify-content:center}
+.dot .dnum{font-size:8px;font-weight:900;color:rgba(0,0,0,.62);line-height:1}
+.dot.them .dnum{color:rgba(255,255,255,.85)}
+.dot.gk .dnum{color:rgba(0,0,0,.6)}
+.dot.onball{box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 14px rgba(255,255,255,.55),0 2px 6px rgba(0,0,0,.5);z-index:5}
+.dot.onball:after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(255,255,255,.55);
+ animation:ping 1.3s ease-out infinite}
+.dot .dt{top:17px}
+/* ---- commentary as a ticker ---- */
+.feed{height:74px;padding:8px 14px 0}
+.feed div{display:flex;gap:8px;align-items:baseline;padding:2px 0}
+.feed div b:first-child{flex:0 0 auto;background:rgba(255,255,255,.09);border-radius:6px;padding:2px 6px;
+ font-size:9.5px;color:var(--txt);letter-spacing:.4px}
+/* ---- token chip ---- */
+.tokic{width:13px;height:13px;fill:var(--gold);stroke:none}
+.chip{padding:6px 8px;font-size:11px;gap:4px}
+.profbtn .pnm b{max-width:64px}
+/* ---- training ---- */
+#trainOv{top:auto;height:auto;max-height:82%;border-radius:26px 26px 0 0;border:1px solid var(--line);border-bottom:0;
+ background:linear-gradient(180deg,#141b31,#080b16);backdrop-filter:none;box-shadow:0 -20px 44px rgba(0,0,0,.7);
+ transform:translateY(100%);z-index:82}
+#trainOv.on{transform:translateY(0)}
+#trainOv .grab{width:44px;height:4px;border-radius:99px;background:var(--line);margin:9px auto 0;flex:0 0 auto}
+.trainwrap{display:flex;gap:16px;align-items:center;padding:6px 0 16px}
+.tr-card{width:110px;flex:0 0 110px;transition:transform .3s}
+.tr-card.levelup{animation:lvlPop .9s cubic-bezier(.2,1.5,.4,1)}
+@keyframes lvlPop{0%{transform:scale(1)}35%{transform:scale(1.14);filter:brightness(1.5) drop-shadow(0 0 20px rgba(255,207,92,.9))}100%{transform:scale(1)}}
+.tr-info b{font-size:16px;font-weight:900;display:block}
+.tr-info span{font-size:11px;color:var(--dim);font-weight:800}
+.tr-pips{display:flex;gap:5px;margin:9px 0 6px}
+.tr-pips i{width:20px;height:6px;border-radius:99px;background:rgba(255,255,255,.14)}
+.tr-pips i.on{background:linear-gradient(90deg,var(--gold),#ffb02e);box-shadow:0 0 8px rgba(255,207,92,.6)}
+.tr-lvl{font-size:10.5px;color:var(--gold)!important;font-weight:900;letter-spacing:.6px}
+.tr-rows{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:4px 14px}
+.tr-rows div{display:flex;justify-content:space-between;padding:10px 0;font-size:12.5px;font-weight:800;border-bottom:1px solid var(--line)}
+.tr-rows div:last-child{border:0}
+.tr-rows span{color:var(--dim)}
+.tr-max{text-align:center;font-size:12px;font-weight:900;letter-spacing:2px;color:var(--gold);padding:16px 0 2px}
+.btn.trainbtn{background:linear-gradient(150deg,#ffe9a8,#e8a020);color:#2c1d00;box-shadow:0 8px 20px rgba(255,180,60,.28)}
+/* ---- transfer market ---- */
+.market{display:flex;flex-direction:column;gap:10px;padding:0 16px}
+.mkt{display:flex;align-items:center;gap:12px;padding:11px;border-radius:18px;
+ background:linear-gradient(120deg,var(--panel),var(--panel2));border:1px solid var(--line)}
+.mkt.owned{opacity:.5}
+.mkt-c{width:54px;flex:0 0 54px}
+.mkt-t{flex:1;min-width:0}
+.mkt-t b{font-size:13px;font-weight:900;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkt-t span{font-size:10px;color:var(--dim);font-weight:800}
+.mkt-p{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:900;color:var(--gold);margin-top:5px}
+.mkt-b{background:linear-gradient(150deg,#4dffc4,#00b881);color:#03241b;border:0;border-radius:12px;padding:10px 13px;
+ font-family:inherit;font-weight:900;font-size:11px;cursor:pointer}
+.mkt-b:disabled{background:var(--panel2);color:var(--dim)}
+/* ---- kick off intro ---- */
+#koOv{background:radial-gradient(70% 50% at 50% 40%,rgba(0,229,160,.16),rgba(3,5,10,.97)),#03050a;z-index:88}
+.ko-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:20px}
+.ko-row{display:flex;align-items:center;gap:14px;width:100%;justify-content:center}
+.ko-side{text-align:center;width:38%}
+.ko-side.left{animation:koLeft .8s cubic-bezier(.2,1.3,.35,1) both}
+.ko-side.right{animation:koRight .8s cubic-bezier(.2,1.3,.35,1) both}
+@keyframes koLeft{from{transform:translateX(-90vw) rotate(-18deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes koRight{from{transform:translateX(90vw) rotate(18deg);opacity:0}to{transform:none;opacity:1}}
+.ko-cr{width:74px;margin:0 auto 10px}
+.ko-cr svg{width:100%;display:block;filter:drop-shadow(0 10px 22px rgba(0,0,0,.7))}
+.ko-side b{display:block;font-size:13px;font-weight:900;line-height:1.2}
+.ko-side span{font-size:10px;color:var(--dim);font-weight:900;letter-spacing:1px}
+.ko-vs{font-size:26px;font-weight:900;color:var(--gold);text-shadow:0 0 24px rgba(255,207,92,.8);
+ animation:vsPop .5s .7s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes vsPop{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
+.ko-count{font-size:76px;font-weight:900;letter-spacing:-4px;color:#fff;text-shadow:0 0 40px rgba(0,229,160,.7);min-height:80px}
+.ko-count.tickpop{animation:tickPop .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes tickPop{0%{transform:scale(1.9);opacity:.2}60%{transform:scale(.94)}100%{transform:scale(1);opacity:1}}
+.ko-count.go{font-size:34px;letter-spacing:5px;color:var(--neon);animation:tickPop .5s cubic-bezier(.2,1.6,.4,1)}
+.ko-sub{font-size:10px;letter-spacing:4px;font-weight:900;color:var(--dim)}
+/* ---- polished lower half of the match screen ---- */
+.mgr{background:linear-gradient(120deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border-radius:16px;padding:10px 12px}
+.zones{gap:8px}
+.zone{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border-radius:15px;padding:9px 6px}
+.zone .zv{font-size:16px}
+.feed{height:78px;padding:10px 14px 0;font-size:11.5px}
+.feed div{display:flex;gap:8px;align-items:baseline;padding:3px 0;animation:feedIn .35s ease}
+@keyframes feedIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.feed div b:first-child{flex:0 0 auto;background:linear-gradient(150deg,rgba(255,255,255,.16),rgba(255,255,255,.06));
+ border-radius:7px;padding:3px 7px;font-size:9.5px;color:#fff;letter-spacing:.3px}
+.tactics{gap:8px;padding:6px 14px 0}
+.tac{border-radius:17px;padding:12px 6px}
+.tac:before{content:attr(data-ic);display:block;font-size:14px;margin-bottom:3px}
+.subrow button{background:linear-gradient(120deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border-radius:15px;padding:13px}
+.pbox{padding:14px 10px}
+.field{position:absolute;left:10px;right:10px;top:14px;bottom:14px;overflow:hidden;border-radius:4px;
+ box-shadow:0 0 0 2px rgba(255,255,255,.5),0 10px 26px rgba(0,0,0,.55)}
+.mow{position:absolute;inset:0;background:
+ repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 8.33%,transparent 8.33% 16.66%),
+ repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0 25%,transparent 25% 50%),
+ linear-gradient(180deg,#12643f,#0c4530)}
+.pitchvig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
+.tier{position:absolute;background:linear-gradient(180deg,#1a2136,#0b0f1c);overflow:hidden}
+.tier:after{content:"";position:absolute;inset:0;opacity:.55;
+ background:radial-gradient(1.1px 1.1px at 15% 30%,#fff,transparent),radial-gradient(1.1px 1.1px at 45% 60%,#ffd,transparent),
+ radial-gradient(1.1px 1.1px at 70% 25%,#dff,transparent),radial-gradient(1.1px 1.1px at 88% 70%,#fdd,transparent);
+ background-size:7px 6px;animation:crowdBob 3.4s ease-in-out infinite}
+@keyframes crowdBob{0%,100%{transform:translateY(0)}50%{transform:translateY(1px)}}
+.tier.t{left:0;right:0;top:0;height:14px}
+.tier.b{left:0;right:0;bottom:0;height:14px}
+.tier.l{top:0;bottom:0;left:0;width:10px}
+.tier.r{top:0;bottom:0;right:0;width:10px}
+.net{position:absolute;top:38%;bottom:38%;width:9px;border:1.5px solid rgba(255,255,255,.85);
+ background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1px,transparent 1px 3px),
+ repeating-linear-gradient(0deg,rgba(255,255,255,.5) 0 1px,transparent 1px 3px)}
+.net.nl{left:0;border-right:0}
+.net.nr{right:0;border-left:0}
+.arc{position:absolute;width:14px;height:14px;border:2px solid rgba(255,255,255,.4)}
+.arc.a1{left:-7px;top:-7px;border-radius:0 0 14px 0}
+.arc.a2{right:-7px;top:-7px;border-radius:0 0 0 14px}
+.arc.a3{left:-7px;bottom:-7px;border-radius:0 14px 0 0}
+.arc.a4{right:-7px;bottom:-7px;border-radius:14px 0 0 0}
+.ballghost{position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;z-index:4;
+ background:rgba(255,255,255,.32);filter:blur(3px);
+ transition:left .95s cubic-bezier(.3,.9,.4,1),top .95s cubic-bezier(.3,.9,.4,1)}
+.pball i{position:absolute;inset:2px;border-radius:50%;opacity:.55;animation:ballRoll 1.1s linear infinite;
+ background:conic-gradient(from 0deg,#0b0e18 0 12%,transparent 12% 38%,#0b0e18 38% 50%,transparent 50% 76%,#0b0e18 76% 88%,transparent 88%)}
+@keyframes ballRoll{to{transform:rotate(360deg)}}
+.dot.me{background:var(--myc,#00e5a0)}
+.dot.them{background:var(--opc,#ff2d70)}
+.dot.gk{background:#ffd875}
+.dirarrow{position:absolute;left:50%;top:1px;transform:translateX(-50%);font-size:11px;font-weight:900;
+ letter-spacing:-2px;z-index:6;text-shadow:0 1px 4px #000;transition:color .4s}
+.dirarrow.att{color:var(--neon)}
+.dirarrow.def{color:var(--hot)}
+.dirarrow.mid{color:rgba(255,255,255,.35)}
+.pbox.goalflash .field{animation:gflash .9s ease}
+.pbox.goalred .field{animation:gflashR .9s ease}
+@keyframes gflash{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.5)}40%{box-shadow:0 0 0 3px var(--neon),0 0 40px rgba(0,229,160,.8)}}
+@keyframes gflashR{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.5)}40%{box-shadow:0 0 0 3px var(--hot),0 0 40px rgba(255,45,112,.8)}}
+.pbox.goalflash .tier:after,.pbox.goalred .tier:after{animation:crowdPop .5s ease 3}
+@keyframes crowdPop{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+.field .ln{position:absolute;border:2px solid rgba(255,255,255,.28)}
+.field .half{left:50%;top:0;bottom:0;border-width:0 0 0 2px}
+.field .circ{left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%}
+.field .boxl{left:0;top:22%;bottom:22%;width:15%;border-width:2px 2px 2px 0}
+.field .boxr{right:0;top:22%;bottom:22%;width:15%;border-width:2px 0 2px 2px}
+.field .sixl{left:0;top:35%;bottom:35%;width:7%;border-width:2px 2px 2px 0}
+.field .sixr{right:0;top:35%;bottom:35%;width:7%;border-width:2px 0 2px 2px}
+.field .gl,.field .gr{top:40%;bottom:40%;width:3.5%;border-width:2px;
  background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1px,transparent 1px 4px),repeating-linear-gradient(0deg,rgba(255,255,255,.5) 0 1px,transparent 1px 4px)}
-.pbox .gl{left:-.5%}.pbox .gr{right:-.5%}
-.pbox .spot{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.5);margin:-2px 0 0 -2px;top:50%}
-.pbox .arc{position:absolute;width:16px;height:16px;border:2px solid rgba(255,255,255,.25)}
+.field .gl{left:-.5%}.field .gr{right:-.5%}
+.field .spot{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.5);margin:-2px 0 0 -2px;top:50%}
+.field .arcold{position:absolute;width:16px;height:16px;border:2px solid rgba(255,255,255,.25)}
 .dot{position:absolute;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;border-radius:50%;border:2px solid rgba(255,255,255,.85);
  transition:left .62s cubic-bezier(.3,.9,.3,1),top .62s cubic-bezier(.3,.9,.3,1),box-shadow .3s;box-shadow:0 2px 5px rgba(0,0,0,.45)}
 .dot.me{background:var(--neon)}.dot.them{background:var(--hot)}.dot.gk{background:#ffd875}
@@ -1107,6 +1331,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
      <div class="chip"><svg class="fanic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9" r="2.4"/>
       <path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M15 19c0-2.4 1.4-3.7 3.4-3.7 1.7 0 2.6.9 2.6 3.7"/></svg>
       <span id="fans">0</span></div>
+     <div class="chip"><svg class="tokic" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg><span id="toks">0</span></div>
      <div class="chip"><i class="coin"></i><span id="coins">0</span></div>
      <div class="chip"><i class="gem"></i><span id="gems">0</span></div></div>
   </div>
@@ -1130,6 +1355,8 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
       </div>
       <div class="h2"><i></i>Latest pulls<em id="pullHint"></em></div>
       <div class="club" id="latest"></div>
+      <div class="h2"><i></i>Transfer market<em>new list every day</em></div>
+      <div id="marketWrap"></div>
       <div class="h2"><i></i>Collection<em id="collPct">0%</em></div>
       <div id="collWrap"></div>
     </section>
@@ -1204,6 +1431,10 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
   <div class="ov" id="slotOv"><div class="grab"></div>
     <div class="ov-head"><div><b id="slotName">Player</b><em id="slotPos"></em></div><button class="x" id="slotX">✕</button></div>
     <div class="ov-body" id="slotBody"></div></div>
+  <div class="ov" id="koOv"></div>
+  <div class="ov" id="trainOv"><div class="grab"></div>
+    <div class="ov-head"><b>Training ground</b><button class="x" id="trainX">✕</button></div>
+    <div class="ov-body" id="trainBody"></div></div>
   <div class="ov" id="mysOv"><div class="mys-wrap" id="mysBody"></div></div>
   <div class="ov" id="promoOv"><div class="promo-wrap" id="promoBody"></div></div>
   <div class="ov" id="cfOv"><div class="cf-wrap" id="cfBody"></div></div>
@@ -1354,7 +1585,8 @@ const NATION_FLAG={Norway:["#ba0c2f","#fff","#00205b"],Egypt:["#ce1126","#fff","
  Switzerland:["#d52b1e","#fff","#d52b1e"],Guinea:["#ce1126","#fcd116","#009460"],Colombia:["#fcd116","#003893","#ce1126"],
  Czechia:["#11457e","#fff","#d7141a"],Austria:["#ed2939","#fff","#ed2939"],Japan:["#fff","#bc002d","#fff"],
  Nigeria:["#008751","#fff","#008751"],USA:["#3c3b6e","#fff","#b22234"],Scotland:["#0065bf","#fff","#0065bf"],
- Turkiye:["#e30a17","#fff","#e30a17"],Cameroon:["#007a5e","#ce1126","#fcd116"],Ecuador:["#ffdd00","#0033a0","#ef3340"],Denmark:["#c60c30","#fff","#c60c30"]};
+ Turkiye:["#e30a17","#fff","#e30a17"],Cameroon:["#007a5e","#ce1126","#fcd116"],
+ Georgia:["#fff","#da291c","#fff"],Ecuador:["#ffdd00","#0033a0","#ef3340"],Denmark:["#c60c30","#fff","#c60c30"]};
 const HAIR=["#1b1310","#2f2118","#5a3a20","#8a5a2b","#c9a26a","#0f0d0c","#3a2a22"];
 const SKIN=["#f5d0b0","#eab88f","#d69c6f","#b87a4c","#8d5524","#5c3317","#3f2312"];
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
@@ -1363,10 +1595,10 @@ function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 const OFFSETS={GK:[0,-2,-6,1,-30,-4],ST:[1,2,-8,0,-40,-3],LW:[5,-3,-3,4,-33,-11],RW:[5,-3,-3,4,-33,-11],LM:[4,-6,0,2,-20,-8],RM:[4,-6,0,2,-20,-8],
  CAM:[-2,-1,3,4,-24,-9],CM:[-5,-6,3,0,-8,-2],CDM:[-8,-12,-1,-3,3,2],CB:[-11,-30,-13,-16,3,3],LB:[4,-15,-3,-1,-1,-5],RB:[4,-15,-3,-1,-1,-5]};
 const LABELS={out:["PAC","SHO","PAS","DRI","DEF","PHY"],gk:["DIV","HAN","KIC","REF","SPD","POS"]};
-const LIFT=r=>clamp(Math.round(r+3+(r>=88?(r-87)*0.8:0)),40,96);
+const LIFT=r=>clamp(Math.round(r+3+(r>=88?(r-87)*1.25:0)),40,99);
 const POOL=RAW.map(([name,club,league,nation,pos,r0],id)=>{const rating=LIFT(r0);return {id,name,club,league,nation,pos,rating,
  stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
- rarity:rating>=94?"icon":rating>=90?"totw":rating>=83?"gold":rating>=75?"silver":"bronze",
+ rarity:rating>=97?"icon":rating>=93?"totw":rating>=85?"gold":rating>=76?"silver":"bronze",
  sur:name.split(" ").slice(-1)[0].toUpperCase()};});
 /* ---- international call-ups: real national-team players, used only by the World tab ---- */
 const INTL_RAW=[
@@ -1412,10 +1644,38 @@ const INTL_RAW=[
 ["Aymeric Laporte","Athletic Club","INT","Spain","CB",83],["Jules Kounde","Barcelona","INT","France","RB",85],
 ["Ibrahima Konate","Liverpool","INT","France","CB",85],["Aurelien Tchouameni","Real Madrid","INT","France","CDM",85],
 ["Jordan Pickford","Everton","INT","England","GK",84],["Reece James","Chelsea","INT","England","RB",83],
-["Marc Guiu","Sunderland","INT","Spain","ST",73],["Antonio Silva","Benfica","INT","Portugal","CB",80]];
+["Marc Guiu","Sunderland","INT","Spain","ST",73],["Antonio Silva","Benfica","INT","Portugal","CB",80],
+["Khvicha Kvaratskhelia","PSG","INT","Georgia","LW",88],["Giorgi Mamardashvili","Liverpool","INT","Georgia","GK",84],
+["Georges Mikautadze","Lyon","INT","Georgia","ST",82],["Zuriko Davitashvili","Saint-Etienne","INT","Georgia","RW",79],
+["Giorgi Chakvetadze","Watford","INT","Georgia","CAM",77],["Giorgi Kochorashvili","Levante","INT","Georgia","CM",77],
+["Anzor Mekvabishvili","Ferencvaros","INT","Georgia","CDM",75],["Luka Lochoshvili","Cremonese","INT","Georgia","CB",75],
+["Guram Kashia","Slovan Bratislava","INT","Georgia","CB",74],["Lasha Dvali","APOEL","INT","Georgia","CB",73],
+["Otar Kakabadze","Cracovia","INT","Georgia","RB",73],["Saba Lobjanidze","Atlanta United","INT","Georgia","RW",74],
+["Budu Zivzivadze","Karlsruher","INT","Georgia","ST",74],["Giorgi Gvelesiani","Persepolis","INT","Georgia","CB",72],
+["Luka Modric","AC Milan","INT","Croatia","CM",86],["Mateo Kovacic","Man City","INT","Croatia","CM",85],
+["Dominik Livakovic","Girona","INT","Croatia","GK",82],["Petar Sucic","Inter","INT","Croatia","CM",81],
+["Andrej Kramaric","Hoffenheim","INT","Croatia","ST",81],["Martin Baturina","Como","INT","Croatia","CAM",80],
+["Josip Stanisic","Bayern Munich","INT","Croatia","RB",81],["Josip Sutalo","Ajax","INT","Croatia","CB",79],
+["Borna Sosa","Crystal Palace","INT","Croatia","LB",79],["Mario Pasalic","Atalanta","INT","Croatia","CAM",81],
+["Luka Sucic","Real Sociedad","INT","Croatia","CM",79],["Ivan Perisic","PSV","INT","Croatia","LW",81],
+["Marin Pongracic","Fiorentina","INT","Croatia","CB",78],
+["Victor Osimhen","Galatasaray","INT","Nigeria","ST",87],["Alex Iwobi","Fulham","INT","Nigeria","CM",81],
+["Wilfred Ndidi","Besiktas","INT","Nigeria","CDM",80],["Calvin Bassey","Fulham","INT","Nigeria","CB",81],
+["Ola Aina","Nottingham Forest","INT","Nigeria","RB",80],["Stanley Nwabali","Chippa United","INT","Nigeria","GK",76],
+["Samuel Chukwueze","AC Milan","INT","Nigeria","RW",80],["Victor Boniface","Leverkusen","INT","Nigeria","ST",81],
+["Moses Simon","Paris FC","INT","Nigeria","LW",79],["William Troost-Ekong","Al Kholood","INT","Nigeria","CB",78],
+["Frank Onyeka","Augsburg","INT","Nigeria","CM",76],["Zaidu Sanusi","Porto","INT","Nigeria","LB",76],
+["Bright Osayi-Samuel","Birmingham","INT","Nigeria","RB",75],
+["Weston McKennie","Juventus","INT","USA","CM",81],["Tyler Adams","Bournemouth","INT","USA","CDM",80],
+["Antonee Robinson","Fulham","INT","USA","LB",83],["Chris Richards","Crystal Palace","INT","USA","CB",81],
+["Matt Turner","New England","INT","USA","GK",78],["Sergino Dest","PSV","INT","USA","RB",79],
+["Timothy Weah","Marseille","INT","USA","RW",79],["Folarin Balogun","Monaco","INT","USA","ST",80],
+["Gio Reyna","Borussia M","INT","USA","CAM",78],["Malik Tillman","Leverkusen","INT","USA","CAM",80],
+["Tim Ream","Charlotte","INT","USA","CB",76],["Yunus Musah","Atalanta","INT","USA","CM",78],
+["Johnny Cardoso","Atletico Madrid","INT","USA","CDM",79]];
 const INTL=INTL_RAW.map(([name,club,league,nation,pos,r0],k)=>{const rating=LIFT(r0);return {id:POOL.length+k,name,club,league,nation,pos,rating,intl:true,
  stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
- rarity:rating>=94?"icon":rating>=90?"totw":rating>=83?"gold":rating>=75?"silver":"bronze",
+ rarity:rating>=97?"icon":rating>=93?"totw":rating>=85?"gold":rating>=76?"silver":"bronze",
  sur:name.split(" ").slice(-1)[0].toUpperCase()};});
 /* ---- icons: retired greats, only ever found in icon packs ---- */
 const ICON_RAW=[
@@ -1436,21 +1696,21 @@ const ICON_RAW=[
 ["Cafu","AC Milan","ICN","Brazil","RB",90],["Paul Scholes","Man Utd","ICN","England","CM",90],
 ["Ruud van Nistelrooy","Man Utd","ICN","Netherlands","ST",90],["Petr Cech","Chelsea","ICN","Czechia","GK",90],
 ["Fernando Torres","Liverpool","ICN","Spain","ST",89],["Michael Owen","Liverpool","ICN","England","ST",89]];
-const ICONS=ICON_RAW.map(([name,club,league,nation,pos,r0],k)=>{const rating=clamp(r0+5,40,99);return {id:POOL.length+INTL.length+k,name,club,league,nation,pos,rating,
+const ICONS=ICON_RAW.map(([name,club,league,nation,pos,r0],k)=>{const rating=clamp(r0+7,40,103);return {id:POOL.length+INTL.length+k,name,club,league,nation,pos,rating,
  legend:true,stats:(OFFSETS[pos]||OFFSETS.CM).map((o,i)=>clamp(Math.round(rating+o+(rnd(name,i)*7-3)),38,99)),
  rarity:"legend",sur:name.split(" ").slice(-1)[0].toUpperCase()};});
 /* ---- special versions: a second, rarer card of the same player ---- */
 let VID=POOL.length+INTL.length+ICONS.length;
 const mkVariant=(p,kind,bump)=>({...p,id:VID++,base:p.id,special:true,kind,
- rating:clamp(p.rating+bump,0,105),
- stats:p.stats.map(v=>clamp(v+bump+1,38,105)),
+ rating:clamp(p.rating+bump,0,109),
+ stats:p.stats.map(v=>clamp(v+bump+1,38,109)),
  rarity:kind});
 const VARIANTS=[]
- .concat(POOL.filter(p=>p.rating>=88).map(p=>mkVariant(p,"superstar",8)))
- .concat(ICONS.filter(p=>p.rating>=94).map(p=>mkVariant(p,"prime",7)));
+ .concat(POOL.filter(p=>p.rating>=90).map(p=>mkVariant(p,"superstar",8)))
+ .concat(ICONS.filter(p=>p.rating>=96).map(p=>mkVariant(p,"prime",8)));
 const VAR_OF={};VARIANTS.forEach(v=>VAR_OF[v.base]=v);
 const ALL=POOL.concat(INTL,ICONS,VARIANTS);
-const isStar=p=>!p.legend&&(p.rarity==="superstar"||p.rating>=93);
+const isStar=p=>!p.legend&&(p.rarity==="superstar"||p.rating>=96);
 const SELL={bronze:150,silver:400,gold:1200,totw:5000,icon:15000,legend:45000,superstar:40000,prime:140000};
 const RARITY_TXT={bronze:"BRONZE",silver:"SILVER",gold:"GOLD",totw:"TEAM OF THE WEEK",icon:"ELITE",legend:"LEGEND",
  superstar:"SUPERSTAR EDITION",prime:"PRIME LEGEND"};
@@ -1486,11 +1746,32 @@ const MGR_SVG=`<svg viewBox="0 0 40 40"><rect width="40" height="40" fill="#1b21
  <ellipse cx="20" cy="17" rx="9" ry="10" fill="#d69c6f"/><path d="M11 15c0-7 4-10 9-10s9 3 9 10c-2-4-4-5-9-5s-7 1-9 5z" fill="#2f2118"/>
  <circle cx="16.5" cy="17" r="1.4" fill="#111"/><circle cx="23.5" cy="17" r="1.4" fill="#111"/>
  <path d="M17 22c2 1.5 4 1.5 6 0" stroke="#8a5540" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>`;
-const flagHTML=n=>{const c=NATION_FLAG[n]||["#444","#777","#444"];
- return `<div class="flag" style="background:linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)"></div>`;};
+const R="#d0021b";
+const FLAG_CSS={
+ /* five-cross flag: big St George cross plus a Bolnisi cross in each quarter */
+ Georgia:
+  `linear-gradient(${R},${R}) 50% 50%/100% 20% no-repeat,`+
+  `linear-gradient(${R},${R}) 50% 50%/20% 100% no-repeat,`+
+  `linear-gradient(${R},${R}) 20% 24%/16% 5% no-repeat,`+
+  `linear-gradient(${R},${R}) 24% 20%/5% 16% no-repeat,`+
+  `linear-gradient(${R},${R}) 80% 24%/16% 5% no-repeat,`+
+  `linear-gradient(${R},${R}) 76% 20%/5% 16% no-repeat,`+
+  `linear-gradient(${R},${R}) 20% 76%/16% 5% no-repeat,`+
+  `linear-gradient(${R},${R}) 24% 80%/5% 16% no-repeat,`+
+  `linear-gradient(${R},${R}) 80% 76%/16% 5% no-repeat,`+
+  `linear-gradient(${R},${R}) 76% 80%/5% 16% no-repeat,`+
+  `#ffffff`};
+const flagPaint=n=>{
+ if(FLAG_CSS[n])return FLAG_CSS[n];
+ const c=NATION_FLAG[n]||["#444","#777","#444"];
+ return `linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)`;};
+const flagHTML=n=>`<div class="flag" style="background:${flagPaint(n)}"></div>`;
+const _cardCache={};
 function cardHTML(p){
+ const key=p.id+"|"+p.rating+"|"+p.rarity;
+ const hit=_cardCache[key];if(hit)return hit;
  const L=p.pos==="GK"?LABELS.gk:LABELS.out,sp=!!p.special;
- return `<div class="cw"><div class="card r-${p.rarity}${sp?" special":""}${p.rating>=100?" century":""}"><div class="shine"></div>
+ return _cardCache[key]=`<div class="cw"><div class="card r-${p.rarity}${sp?" special":""}${p.rating>=100?" century":""}"><div class="shine"></div>
  ${sp?`<div class="spholo"></div><div class="spbadge">★</div><div class="spedge"></div>`:""}
  <div class="top"><div class="meta"><div class="ovr${p.rating>=100?" three":""}">${p.rating}</div><div class="pos">${p.pos}</div>
  ${flagHTML(p.nation)}<div class="crest">${crestSVG(p.club)}</div></div><div class="face">${faceSVG(p)}</div></div>
@@ -1512,7 +1793,7 @@ function coordsOf(f){const rows=rowsOf(f),out=[],n=rows.length;
 const posGroup=p=>p==="GK"?"GK":["CB","LB","RB"].includes(p)?"DEF":["CDM","CM","CAM","LM","RM"].includes(p)?"MID":"ATT";
 /* ================= STATE + DEVICE SAVE ================= */
 const KEY="ultradraft:v5";
-let S={user:"Manager",club:"My Club",formation:"4-3-3",coins:26000,gems:3,fans:2400,streak:0,h2h:{},divClaim:[],form:[],owned:[],xi:Array(11).fill(null),packs:0,
+let S={user:"Manager",club:"My Club",formation:"4-3-3",coins:26000,gems:3,fans:2400,tokens:6,up:{},streak:0,h2h:{},divClaim:[],form:[],owned:[],xi:Array(11).fill(null),packs:0,
  w:0,d:0,l:0,gf:0,ga:0,mp:0,trophies:0,latest:[],
  world:{nation:null,stage:0,tours:0}};
 function save(){const j=JSON.stringify(S);
@@ -1522,26 +1803,26 @@ async function load(){
  try{const l=localStorage.getItem(KEY);if(l){Object.assign(S,JSON.parse(l));return;}}catch(e){}
  try{const r=await window.storage.get(KEY);if(r&&r.value)Object.assign(S,JSON.parse(r.value));}catch(e){}}
 const PACKS=[
- {n:"Bronze Pack",t:"COMMON",c:800,cls:"p-bronze",num:3,min:60,max:77,rate:"77",rl:"MAX RATED",sub:"3 PLAYERS"},
- {n:"Silver Pack",t:"UNCOMMON",c:2200,cls:"p-silver",num:3,min:71,max:82,rate:"82",rl:"MAX RATED",sub:"3 PLAYERS"},
- {n:"Gold Pack",t:"RARE",c:6000,cls:"p-gold",num:3,min:78,max:89,rate:"89",rl:"MAX RATED",sub:"3 PLAYERS"},
- {n:"Premium Gold",t:"RARE",c:14000,cls:"p-prem",num:4,min:81,max:99,rate:"81+",rl:"GUARANTEED",sub:"4 PLAYERS"},
- {n:"Rare Players",t:"EPIC",c:32000,cls:"p-rare",num:4,min:83,max:99,g:89,rate:"89+",rl:"GUARANTEED",sub:"4 PLAYERS"},
- {n:"TOTW Pack",t:"LEGENDARY",c:75000,cls:"p-totw",num:3,min:86,max:99,g:91,vchance:.06,vkind:"superstar",rate:"91+",rl:"TOTW PULL",sub:"3 PLAYERS"},
- {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:92,max:99,g:94,pool:"icons",steep:.82,vchance:.07,vkind:"prime",rate:"94+",rl:"LEGENDS ONLY",sub:"2 PLAYERS"}];
+ {n:"Bronze Pack",t:"COMMON",c:800,cls:"p-bronze",num:3,min:60,max:79,rate:"79",rl:"MAX RATED",sub:"3 PLAYERS"},
+ {n:"Silver Pack",t:"UNCOMMON",c:2200,cls:"p-silver",num:3,min:73,max:85,rate:"85",rl:"MAX RATED",sub:"3 PLAYERS"},
+ {n:"Gold Pack",t:"RARE",c:6000,cls:"p-gold",num:3,min:80,max:92,rate:"92",rl:"MAX RATED",sub:"3 PLAYERS"},
+ {n:"Premium Gold",t:"RARE",c:14000,cls:"p-prem",num:4,min:84,max:99,rate:"84+",rl:"GUARANTEED",sub:"4 PLAYERS"},
+ {n:"Rare Players",t:"EPIC",c:32000,cls:"p-rare",num:4,min:86,max:99,g:92,rate:"92+",rl:"GUARANTEED",sub:"4 PLAYERS"},
+ {n:"TOTW Pack",t:"LEGENDARY",c:75000,cls:"p-totw",num:3,min:89,max:99,g:94,vchance:.06,vkind:"superstar",rate:"94+",rl:"TOTW PULL",sub:"3 PLAYERS"},
+ {n:"Icon Pack",t:"MYTHIC",c:180000,cls:"p-icon",num:2,min:95,max:103,g:97,pool:"icons",steep:.82,vchance:.07,vkind:"prime",rate:"97+",rl:"LEGENDS ONLY",sub:"2 PLAYERS"}];
 /* ---- specials: gem-priced, the stuff you save up for ---- */
 const SPECIAL_PACKS=[
- {n:"Starter Boost",t:"STARTER",c:4000,cls:"p-starter",num:5,min:73,max:83,rate:"83",rl:"MAX RATED",sub:"5 PLAYERS · CHEAP DEPTH"},
- {n:"Hidden Gem",t:"SPECIAL",c:9000,gc:2,cls:"p-special",num:5,min:79,max:87,rate:"87",rl:"MAX RATED",sub:"5 PLAYERS"},
- {n:"Golden Ticket",t:"SPECIAL",gc:5,cls:"p-ticket",num:3,min:83,max:99,g:86,rate:"86+",rl:"GUARANTEED",sub:"3 PLAYERS"},
- {n:"Marquee Signing",t:"ELITE",gc:14,cls:"p-marquee",num:1,min:92,max:99,g:92,steep:.82,rate:"92+",rl:"ONE BIG NAME",sub:"1 PLAYER"},
- {n:"League Legends",t:"ELITE",c:45000,gc:20,cls:"p-legends",num:3,min:89,max:99,g:92,rate:"89+",rl:"EVERY CARD 85+",sub:"3 PLAYERS"},
- {n:"Superstar Pack",t:"SUPERSTAR",c:90000,gc:15,cls:"p-star",num:2,min:90,max:99,g:93,pool:"stars",steep:.8,vchance:.3,vkind:"superstar",rate:"93+",rl:"SPECIAL EDITION CHANCE",sub:"2 PLAYERS"},
- {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:95,max:99,g:97,pool:"icons",steep:.86,vchance:.4,vkind:"prime",rate:"97+",rl:"PRIME LEGEND",sub:"2 PLAYERS"},
- {n:"Elite 96 Pack",t:"ULTRA",c:320000,gc:20,cls:"p-elite",num:2,min:96,max:105,g:96,pool:"elite",steep:.62,rate:"96+",rl:"GUARANTEED 96+",sub:"2 SPECIAL CARDS"},
- {n:"Centurion Pack",t:"CENTURION",c:500000,gc:55,cls:"p-cent",num:1,min:100,max:105,g:100,pool:"cent",steep:.5,rate:"100+",rl:"TRIPLE DIGITS",sub:"1 CARD · 100 RATED OR BETTER"}];
+ {n:"Starter Boost",t:"STARTER",c:4000,cls:"p-starter",num:5,min:75,max:86,rate:"86",rl:"MAX RATED",sub:"5 PLAYERS · CHEAP DEPTH"},
+ {n:"Hidden Gem",t:"SPECIAL",c:9000,gc:2,cls:"p-special",num:5,min:82,max:90,rate:"90",rl:"MAX RATED",sub:"5 PLAYERS"},
+ {n:"Golden Ticket",t:"SPECIAL",gc:5,cls:"p-ticket",num:3,min:86,max:99,g:89,rate:"89+",rl:"GUARANTEED",sub:"3 PLAYERS"},
+ {n:"Marquee Signing",t:"ELITE",gc:14,cls:"p-marquee",num:1,min:95,max:99,g:95,steep:.82,rate:"95+",rl:"ONE BIG NAME",sub:"1 PLAYER"},
+ {n:"League Legends",t:"ELITE",c:45000,gc:20,cls:"p-legends",num:3,min:92,max:99,g:95,rate:"92+",rl:"EVERY CARD 85+",sub:"3 PLAYERS"},
+ {n:"Superstar Pack",t:"SUPERSTAR",c:90000,gc:15,cls:"p-star",num:2,min:93,max:99,g:96,pool:"stars",steep:.8,vchance:.3,vkind:"superstar",rate:"96+",rl:"SPECIAL EDITION CHANCE",sub:"2 PLAYERS"},
+ {n:"Prime Icon",t:"MYTHIC",gc:32,cls:"p-prime",num:2,min:98,max:103,g:100,pool:"icons",steep:.86,vchance:.4,vkind:"prime",rate:"100+",rl:"PRIME LEGEND",sub:"2 PLAYERS"},
+ {n:"Elite 99 Pack",t:"ULTRA",c:320000,gc:20,cls:"p-elite",num:2,min:99,max:109,g:99,pool:"elite",steep:.62,rate:"99+",rl:"GUARANTEED 96+",sub:"2 SPECIAL CARDS"},
+ {n:"Centurion Pack",t:"CENTURION",c:500000,gc:55,cls:"p-cent",num:1,min:104,max:109,g:104,pool:"cent",steep:.5,rate:"104+",rl:"104 OR BETTER",sub:"1 CARD · TOP OF THE GAME"}];
 const LEAGUE_PACKS=Object.keys(LEAGUE_NAME).filter(k=>k!=="INT"&&k!=="ICN").map(k=>({n:LEAGUE_NAME[k],t:"LEAGUE",c:16000,cls:"p-league",num:3,
- min:79,max:99,league:k,rate:"79+",rl:LEAGUE_NAME[k].toUpperCase(),sub:"3 PLAYERS · THIS LEAGUE ONLY"}));
+ min:82,max:99,league:k,rate:"82+",rl:LEAGUE_NAME[k].toUpperCase(),sub:"3 PLAYERS · THIS LEAGUE ONLY"}));
 const PACK_BY_NAME={};[...PACKS,...LEAGUE_PACKS,...SPECIAL_PACKS].forEach(p=>PACK_BY_NAME[p.n]=p);
 const OPPONENTS=[
  {n:"Bronze Rovers",r:72,pay:1400,gems:1,c1:"#b1763f",c2:"#3c2210",b:{c1:"#b1763f",c2:"#3c2210",sh:"shield",pat:"halves",t:"BRV"}},
@@ -1571,8 +1852,7 @@ const NAT_CODE={"Saudi Arabia":"KSA",Netherlands:"NED",England:"ENG",Spain:"ESP"
 const natCode=n=>NAT_CODE[n]||n.slice(0,3).toUpperCase();
 function natBadge(n){const f=NATION_FLAG[n]||["#2b3350","#8892b0","#2b3350"];
  return {c1:f[0],c2:f[2]===f[0]?f[1]:f[2],sh:"shield",pat:"hoop",t:natCode(n)};}
-const flagBG=n=>{const c=NATION_FLAG[n]||["#444","#777","#444"];
- return `linear-gradient(180deg,${c[0]} 33%,${c[1]} 33% 66%,${c[2]} 66%)`;};
+const flagBG=n=>flagPaint(n);
 function natInfo(n){
  const ps=ALL.filter(p=>p.nation===n&&!p.legend&&!p.special).sort((a,b)=>b.rating-a.rating),top=ps.slice(0,11);
  const ovr=top.length?Math.round(top.reduce((a,p)=>a+p.rating,0)/top.length-(11-top.length)*1.2):50;
@@ -1611,24 +1891,37 @@ const attendance=()=>S.fans||0;
 const matchdayIncome=()=>Math.round((S.fans||0)*0.6);
 const fanMultiplier=()=>1+(S.trophies||0)*0.06+((S.world&&S.world.titles)||0)*0.1;
 const FAN_CAP=260000;
+/* ---- training: tokens turn into rating ---- */
+const upMax=p=>p.rating>=104?1:p.rating>=100?2:p.rating>=95?3:p.rating>=88?4:5;
+const upLvl=id=>((S.up||{})[id]||0);
+const upCost=lvl=>2+lvl*2;
+function applyUpgrades(){
+ Object.keys(S.up||{}).forEach(id=>{
+  const p=ALL[id],n=S.up[id];if(!p||!n||p._up)return;
+  p.rating=clamp(p.rating+n,0,109);p.stats=p.stats.map(v=>clamp(v+n,38,109));p._up=n;
+  p.rarity=p.special?p.rarity:p.legend?"legend":p.rating>=97?"icon":p.rating>=93?"totw":p.rating>=85?"gold":p.rating>=76?"silver":"bronze";
+ });
+}
 const $=s=>document.querySelector(s);
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),1900);}
 const fmt=n=>n.toLocaleString("en-US");
 const ownedPlayers=()=>S.owned.map(i=>ALL[i]).filter(Boolean);
 const renderTop=()=>{$("#coins").textContent=fmt(S.coins);$("#gems").textContent=S.gems;
+ $("#toks").textContent=S.tokens||0;
  $("#fans").textContent=fmtK(S.fans||0);};
 /* ================= HOME ================= */
-const packHTML=(p,big)=>`<div class="pk ${p.cls}"><div class="weave"></div><div class="glow"></div><div class="foil"></div>
+const packHTML=(p,big)=>`<div class="pk ${p.cls}"><div class="weave"></div><div class="burst"></div><div class="glow"></div><div class="foil"></div>
  <div class="pk-frame"></div><div class="pk-corner tl"></div><div class="pk-corner tr"></div>
  <div class="pk-corner bl"></div><div class="pk-corner br"></div>
- <div class="ribbon">${p.t}</div>
- <div class="emb"><div class="rateb"><span class="rv">${p.rate||p.num}</span><span class="rl">${p.rl||"CARDS"}</span></div></div>
+ <div class="sparks"><i></i><i></i><i></i></div>
+ <div class="ribbon"><span>${p.t}</span></div>
+ <div class="emb"><div class="rateb"><div class="rb-in"><span class="rv">${p.rate||p.num}</span><span class="rl">${p.rl||"CARDS"}</span></div></div></div>
  <div class="ttl">${p.n}</div><div class="sub">${p.sub}</div>
  ${big?"":`<div class="price">${p.gc?`<i class="gem"></i>${p.gc}`:""}${p.gc&&p.c?`<em>+</em>`:""}${p.c?`<i class="coin"></i>${fmt(p.c)}`:""}</div>`}</div>`;
 function renderHome(){
  const mk=(el,arr)=>{el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.className="pkwrap";
   d.innerHTML=packHTML(p);d.onclick=()=>openPack(p);el.appendChild(d);});};
- renderDaily();renderDeal();renderCollection();mk($("#packRail"),PACKS);mk($("#leagueRail"),LEAGUE_PACKS);mk($("#specialRail"),SPECIAL_PACKS);
+ renderDaily();renderDeal();renderMarket();renderCollection();mk($("#packRail"),PACKS);mk($("#leagueRail"),LEAGUE_PACKS);mk($("#specialRail"),SPECIAL_PACKS);
  $("#stPlayers").textContent=S.owned.length;
  const best=ownedPlayers().sort((a,b)=>b.rating-a.rating)[0];
  $("#stBest").textContent=best?best.rating:"–";
@@ -1659,6 +1952,29 @@ function renderDeal(){
    <button class="btn" id="dealBuy">Buy today's deal</button></div></div>`;
  $("#dealBuy").onclick=()=>openPack({...p,c:price});
 }
+const marketPrice=p=>Math.round(Math.pow(Math.max(1,p.rating-58),3.3)*(p.special?2.2:p.legend?1.7:1)/1000)*1000;
+function marketList(){
+ const pool=POOL.concat(ICONS,VARIANTS).filter(p=>p.rating>=90);
+ const seed=dayIndex();
+ return pool.map((p,i)=>({p,k:hash(p.name+"|"+seed+"|"+i)})).sort((a,b)=>a.k-b.k).slice(0,6).map(x=>x.p);
+}
+function renderMarket(){
+ const list=marketList(),w=$("#marketWrap");
+ w.innerHTML=`<div class="market">${list.map((p,i)=>{
+  const owned=S.owned.includes(p.id),price=marketPrice(p);
+  return `<div class="mkt${owned?" owned":""}" data-i="${i}">
+   <div class="mkt-c">${cardHTML(p)}</div>
+   <div class="mkt-t"><b>${p.name}</b><span>${p.club} · ${p.pos}</span>
+    <div class="mkt-p"><i class="coin"></i>${fmt(price)}</div></div>
+   <button class="mkt-b" ${owned?"disabled":""}>${owned?"OWNED":"BUY"}</button></div>`;}).join("")}</div>`;
+ w.querySelectorAll(".mkt").forEach(row=>{
+  const b=row.querySelector(".mkt-b");if(!b||b.disabled)return;
+  b.onclick=()=>{
+   const p=list[+row.dataset.i],price=marketPrice(p);
+   if(S.coins<price){toast("You need "+fmt(price-S.coins)+" more coins");return;}
+   S.coins-=price;S.owned.push(p.id);S.latest.unshift(p.id);S.latest=S.latest.slice(0,12);
+   save();renderTop();renderHome();renderSquad();toast(p.name+" signed for "+fmt(price));};});
+}
 function renderCollection(){
  const owned=new Set(S.owned.map(i=>ALL[i]&&ALL[i].base!==undefined?ALL[i].base:i));
  const groups=[{k:"PL",n:"Premier League"},{k:"SAU",n:"Saudi Pro League"},{k:"BUN",n:"Bundesliga"},
@@ -1676,10 +1992,10 @@ function renderCollection(){
 }
 function drawPack(p){
  const PACKABLE=POOL.concat(ICONS,VARIANTS);
- const base=p.pool==="icons"?ICONS.concat(POOL.filter(x=>x.rating>=94))
-  :p.pool==="stars"?POOL.filter(x=>x.rating>=90)
-  :p.pool==="elite"?PACKABLE.filter(x=>x.rating>=96)
-  :p.pool==="cent"?PACKABLE.filter(x=>x.rating>=100)
+ const base=p.pool==="icons"?ICONS.concat(POOL.filter(x=>x.rating>=97))
+  :p.pool==="stars"?POOL.filter(x=>x.rating>=93)
+  :p.pool==="elite"?PACKABLE.filter(x=>x.rating>=99)
+  :p.pool==="cent"?PACKABLE.filter(x=>x.rating>=104)
   :p.league?POOL.filter(x=>x.league===p.league):POOL;
  let pool=base.filter(x=>x.rating>=p.min&&x.rating<=p.max);
  if(pool.length<2)pool=base.slice();
@@ -1709,7 +2025,7 @@ function stepOpen(){
  if(openState==="closed"){const bp=$("#bp");if(bp)bp.classList.add("rip");openState="revealing";setTimeout(revealNext,480);return;}
  if(openState==="revealing")revealNext();
 }
-const walkLabel=p=>p.rating>=100?"★ CENTURION WALKOUT ★":p.legend?"★ LEGEND WALKOUT ★":isStar(p)?"★ SUPERSTAR WALKOUT ★":"WALKOUT";
+const walkLabel=p=>p.rating>=104?"★ CENTURION WALKOUT ★":p.legend?"★ LEGEND WALKOUT ★":isStar(p)?"★ SUPERSTAR WALKOUT ★":"WALKOUT";
 function starBurst(host,n){
  for(let i=0;i<n;i++){const st=document.createElement("div");st.className="starfx";
   st.textContent="★";st.style.left=Math.random()*100+"%";st.style.fontSize=(9+Math.random()*16)+"px";
@@ -1728,21 +2044,21 @@ function revealNext(){
  S.owned.push(p.id);S.latest.unshift(p.id);S.latest=S.latest.slice(0,12);
  $("#pcount").textContent=openI+" / "+openQ.length;
  save();
- if(p.rating>=93){bigReveal(p);return;}
+ if(p.rating>=96){bigReveal(p);return;}
  $("#stage").innerHTML=cardStage(p,false);
  $("#openHint").textContent=openI>=openQ.length?"TAP TO FINISH":"TAP FOR NEXT CARD";
 }
 /* anticipation sequence for a big pull: a glowing circle shows the rating, then opens out into the card */
 function bigReveal(p){
  openState="anim";
- const icon=p.legend||p.rating>=97,star=isStar(p);
+ const icon=p.legend||p.rating>=100,star=isStar(p);
  $("#openHint").textContent="";
  $("#stage").innerHTML=`<div class="antic" id="anticWrap">
   <div class="halo${icon?" hot":""}"></div><div class="halo d2${icon?" hot":""}"></div>
   <div class="morph ${p.legend?"m-legend":icon?"m-icon":"m-totw"}" id="morph">
    <div class="mrate" id="mrate">?</div>
    <div class="mcard">${cardHTML(p)}</div></div>
-  <div class="antx gold" id="mtx">${p.rating>=100?"TRIPLE DIGITS INCOMING":p.legend?"A LEGEND IS COMING":star?"THAT'S A SUPERSTAR":"TEAM OF THE WEEK"}</div></div>`;
+  <div class="antx gold" id="mtx">${p.rating>=104?"TRIPLE DIGITS INCOMING":p.legend?"A LEGEND IS COMING":star?"THAT'S A SUPERSTAR":"TEAM OF THE WEEK"}</div></div>`;
  if(p.legend||star)starBurst($("#anticWrap"),18);
  const rate=$("#mrate");let v=Math.max(60,p.rating-14);
  const iv=setInterval(()=>{
@@ -1774,8 +2090,11 @@ function chemOf(i){
  if(mates.some(m=>m.club===p.club))c++;else if(mates.filter(m=>m.league===p.league).length>=2)c++;
  return clamp(c,0,3);
 }
-const squadStats=()=>{const f=S.xi.filter(x=>x!==null&&x!==undefined);
- return {ovr:f.length?Math.round(f.reduce((a,x)=>a+ALL[x].rating,0)/f.length):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
+const baseRating=p=>p.rating-((S.up&&S.up[p.id])||0);
+const squadStats=()=>{const f=S.xi.filter(x=>x!==null&&x!==undefined).map(x=>ALL[x]);
+ const rawAvg=f.length?f.reduce((a,p)=>a+baseRating(p),0)/f.length:0;
+ const upAvg=f.length?f.reduce((a,p)=>a+((S.up&&S.up[p.id])||0),0)/f.length:0;
+ return {ovr:f.length?clamp(Math.round(rawAvg)+Math.min(2,Math.round(upAvg)),0,109):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
 /* --- fixed best XI: global best-pair assignment --- */
 function bestXI(ids,formation){
  const sl=slotsOf(formation),players=[...new Set(ids.filter(x=>x!==null&&x!==undefined))].map(i=>ALL[i]).filter(Boolean);
@@ -1825,34 +2144,52 @@ function slotTap(i){
  if(S.xi[i]===null||S.xi[i]===undefined){pickFor(i);return;}
  openSlot(i);
 }
-function openSlot(i){
- const p=ALL[S.xi[i]];if(!p)return;
+function openSlot(i){playerSheet(ALL[S.xi[i]],i);}
+function openClub(p){playerSheet(p,S.xi.indexOf(p.id));}
+function playerSheet(p,i){
+ if(!p)return;
+ const inXI=i>=0;
  $("#slotName").textContent=p.name;
- $("#slotPos").textContent=`${slotsOf(S.formation)[i]} · ${p.rating} ${RARITY_TXT[p.rarity]} · chem ${chemOf(i)}/3`;
+ $("#slotPos").textContent=inXI
+  ? `${slotsOf(S.formation)[i]} · ${p.rating} ${RARITY_TXT[p.rarity]} · chem ${chemOf(i)}/3`
+  : `SUBSTITUTE · ${p.pos} · ${p.rating} ${RARITY_TXT[p.rarity]}`;
  $("#slotBody").innerHTML=`
   <div class="slotrow"><div class="slotcard">${cardHTML(p)}</div>
    <div class="slotinfo"><b>${p.club}</b><span>${LEAGUE_NAME[p.league]}</span><span>${p.nation}</span>
     <div class="slotstats">${p.stats.map((v,k)=>`<i>${v}<em>${(p.pos==="GK"?LABELS.gk:LABELS.out)[k]}</em></i>`).join("")}</div></div></div>
-  <button class="btn" id="slotSwap">Switch player</button>
+  <button class="btn" id="slotSwap">${inXI?"Switch player":"Put in the starting XI"}</button>
+  ${inXI?"":`<button class="btn ghost" id="slotSwapInto">Swap with a player on the pitch</button>`}
+  <button class="btn trainbtn" id="slotTrain">Upgrade player · <b>${upLvl(p.id)>=upMax(p)?"maxed":upCost(upLvl(p.id))+" tokens"}</b></button>
   <button class="btn sellbtn2" id="slotSell">Quick sell · <b>${fmt(SELL[p.rarity])}</b> coins</button>
   <button class="btn cancel" id="slotCancel">Cancel</button>`;
  $("#slotOv").classList.add("on");
  const close=()=>$("#slotOv").classList.remove("on");
  $("#slotCancel").onclick=close;
- $("#slotSwap").onclick=()=>{close();sel={type:"slot",i};renderSquad();
-  const v=$("#v-squad");if(v&&v.scrollTo)v.scrollTo({top:Math.max(0,$("#pitch").offsetTop-90),behavior:"smooth"});};
+ $("#slotTrain").onclick=()=>{close();setTimeout(()=>trainSheet(p),260);};
+ const toPitch=()=>{const v=$("#v-squad");if(v&&v.scrollTo)v.scrollTo({top:Math.max(0,$("#pitch").offsetTop-90),behavior:"smooth"});};
+ $("#slotSwap").onclick=()=>{
+  close();
+  if(inXI){sel={type:"slot",i};renderSquad();toPitch();return;}
+  const sl=slotsOf(S.formation);
+  let spot=sl.findIndex((pos,k)=>(S.xi[k]===null||S.xi[k]===undefined)&&pos===p.pos);
+  if(spot<0)spot=sl.findIndex((pos,k)=>(S.xi[k]===null||S.xi[k]===undefined)&&posGroup(pos)===posGroup(p.pos));
+  if(spot<0)spot=S.xi.findIndex(x=>x===null||x===undefined);
+  if(spot>=0){assign(spot,p.id);clearSel();renderSquad();flashSwap(spot,spot);save();toPitch();toast(p.name+" starts at "+sl[spot]);}
+  else{sel={type:"club",id:p.id};renderSquad();toPitch();toast("Tap the player he replaces");}};
+ const si=$("#slotSwapInto");
+ if(si)si.onclick=()=>{close();sel={type:"club",id:p.id};renderSquad();toPitch();toast("Tap the player he replaces");};
  $("#slotSell").onclick=()=>{
   const before={c:S.coins,g:S.gems},val=SELL[p.rarity];
   const k=S.owned.indexOf(p.id);if(k>=0)S.owned.splice(k,1);
-  S.xi[i]=null;
+  if(inXI)S.xi[i]=null;
   const l=S.latest.indexOf(p.id);if(l>=0)S.latest.splice(l,1);
   S.coins+=val;close();clearSel();renderSquad();renderHome();save();
   awardFX(val,0,before);toast("Sold "+p.name+" for "+fmt(val));};
 }
 function clubTap(p){
  if(sel&&sel.type==="slot"){assign(sel.i,p.id);clearSel();renderSquad();save();toast(p.name+" is in your XI");return;}
- if(sel&&sel.type==="club"&&sel.id===p.id){clearSel();showDetail(p);return;}
- sel={type:"club",id:p.id};renderSquad();
+ if(sel&&sel.type==="club"){clearSel();renderSquad();return;}
+ openClub(p);
 }
 /* drag and drop (mouse + pen) */
 let drag=null,ghost=null;
@@ -2066,17 +2403,21 @@ function renderRivals(){
   el.onclick=()=>preview(o);list.appendChild(el);});
  COMPS.forEach(c=>{
   const locked=st.ovr<c.minOvr;
-  const el=document.createElement("div");el.className="compcard";el.style.setProperty("--c1",c.c1);el.style.setProperty("--c2",c.c2);
+  const el=document.createElement("div");el.className="compcard"+(locked?" locked":"");
+  el.style.setProperty("--c1",locked?"#39415e":c.c1);el.style.setProperty("--c2",locked?"#171b2c":c.c2);
   const run=S.cup&&S.cup.n===c.n?S.cup.round:0;
   el.innerHTML=`<div class="compin">
    <div class="comptop"><div class="tro">${trophySVG(c.c1,c.c2)}</div>
     <div><b>${c.n}</b><span>${run?`in progress · ${c.rounds[run].n.toLowerCase()}-final next`:"3 rounds · knockout"}</span></div>
-    ${locked?`<div class="lockp">NEEDS ${c.minOvr} OVR</div>`:""}</div>
+    ${locked?`<div class="lockp">🔒 LOCKED</div>`:""}</div>
+   ${locked?`<div class="lockbar"><span>🔒 REQUIRES ${c.minOvr} OVR</span>
+     <b>Your squad is ${st.ovr} — ${c.minOvr-st.ovr} more to unlock</b>
+     <div class="lockprog"><i style="width:${clamp(st.ovr/c.minOvr*100,4,100)}%"></i></div></div>`:""}
    <div class="pips">${c.rounds.map((r,k)=>`<div class="${k<run?"done":k===run&&run?"now":""}"><b>${r.r}</b><span>${r.n.toUpperCase()}</span></div>`).join("")}</div>
    <div class="prizerow">${pkMini(c.trophy.pack)}
     <div class="t"><b>${fmt(c.trophy.coins)} coins · ${c.trophy.gems} gems</b><span>plus a free ${c.trophy.pack} for the winner</span></div>
-    <button class="enter">${locked?"LOCKED":run?"CONTINUE":"ENTER"}</button></div></div>`;
-  el.onclick=()=>locked?toast("Your squad needs "+c.minOvr+" OVR to enter"):previewComp(c,run);
+    <button class="enter${locked?" off":""}">${locked?`LOCKED · ${c.minOvr} OVR`:run?"CONTINUE":"ENTER"}</button></div></div>`;
+  el.onclick=()=>locked?toast("Reach "+c.minOvr+" OVR to unlock "+c.n+" — you're on "+st.ovr):previewComp(c,run);
   cl.appendChild(el);});
 }
 function rewardRows(o){
@@ -2169,19 +2510,32 @@ function startMatch(o,ctx,sq){
  $("#matchHead").style.display="none";
  $("#matchBody").innerHTML=`
  <div class="mom" id="mom"><div class="ar" id="arL"></div><b id="momTx">KICK OFF</b><div class="ar" id="arR"></div></div>
- <div class="mtop">
-  <div class="side">${crestSVG(squad.badge)}<b>${squad.name.toUpperCase()}</b><span>${squad.ovr} OVR</span></div>
-  <div class="mid"><div class="sc" id="sc">0 - 0</div><div class="ck" id="clk">0'</div></div>
-  <div class="side">${crestSVG(o.b)}<b>${o.n.toUpperCase()}</b><span>${o.r} OVR</span></div></div>
- <div class="poss"><i class="pa" id="pa" style="width:50%"></i><i class="pb" id="pb" style="width:50%"></i></div>
- <div class="plab"><span id="paT">POSSESSION 50%</span><span id="pbT">50%</span></div>
- <div class="pbox" id="pbox">
-  <div class="ln half"></div><div class="ln circ"></div><div class="ln boxl"></div><div class="ln boxr"></div>
-  <div class="ln sixl"></div><div class="ln sixr"></div><div class="ln gl"></div><div class="ln gr"></div>
-  <div class="spot" style="left:11%"></div><div class="spot" style="left:50%"></div><div class="spot" style="left:89%"></div>
-  <div class="arc" style="left:-8px;top:-8px;border-radius:0 0 16px 0"></div><div class="arc" style="right:-8px;top:-8px;border-radius:0 0 0 16px"></div>
-  <div class="arc" style="left:-8px;bottom:-8px;border-radius:0 16px 0 0"></div><div class="arc" style="right:-8px;bottom:-8px;border-radius:16px 0 0 0"></div>
-  <div class="pball" id="pball" style="left:50%;top:50%"></div></div>
+ <div class="scorebug">
+  <div class="sb-team"><div class="sb-cr">${crestSVG(squad.badge)}</div>
+   <div class="sb-tx"><b>${squad.name.toUpperCase()}</b><span>${squad.ovr} OVR</span></div>
+   <i class="sb-bar" style="background:${squad.badge.c1};color:${squad.badge.c1}"></i></div>
+  <div class="sb-mid"><div class="sc" id="sc">0 - 0</div><div class="ck" id="clk">0'</div></div>
+  <div class="sb-team away"><i class="sb-bar" style="background:${o.b.c1};color:${o.b.c1}"></i>
+   <div class="sb-tx"><b>${o.n.toUpperCase()}</b><span>${o.r} OVR</span></div>
+   <div class="sb-cr">${crestSVG(o.b)}</div></div></div>
+
+ <div class="arena" id="arena">
+  <div class="cband cb-n"><i></i></div><div class="cband cb-s"><i></i></div>
+  <div class="cband cb-w"><i></i></div><div class="cband cb-e"><i></i></div>
+  <div class="pbox" id="pbox" style="--myc:${myBadge().c1};--opc:${o.b.c1}">
+   <div class="tier t"></div><div class="tier b"></div><div class="tier l"></div><div class="tier r"></div>
+   <div class="field" id="field">
+    <div class="mow"></div><div class="pitchvig"></div>
+    <div class="ln half"></div><div class="ln circ"></div><div class="ln boxl"></div><div class="ln boxr"></div>
+    <div class="ln sixl"></div><div class="ln sixr"></div><div class="ln gl"></div><div class="ln gr"></div>
+    <div class="net nl"></div><div class="net nr"></div>
+    <div class="spot" style="left:11%"></div><div class="spot" style="left:50%"></div><div class="spot" style="left:89%"></div>
+    <div class="arc a1"></div><div class="arc a2"></div><div class="arc a3"></div><div class="arc a4"></div>
+    <div class="pshadow" id="pshadow"></div>
+    <div class="ballghost" id="ballghost" style="left:50%;top:50%"></div>
+    <div class="pball" id="pball" style="left:50%;top:50%"><i></i></div>
+   </div>
+   <div class="dirarrow mid" id="dirArrow">▶</div></div></div>
  <div class="mgr"><div class="av">${MGR_SVG}</div><div class="tx"><em>MANAGER</em><span id="mgrTx">We start balanced and feel them out.</span></div></div>
  <div class="zones">
   <div class="zone" id="z-def"><div class="zl">DEFENCE</div><div class="zv">0</div><div class="zo">vs ${M.them.att}</div></div>
@@ -2189,9 +2543,9 @@ function startMatch(o,ctx,sq){
   <div class="zone" id="z-att"><div class="zl">ATTACK</div><div class="zv">0</div><div class="zo">vs ${M.them.def}</div></div></div>
  <div class="feed" id="feed"><div>Switch tactics any time — the clock keeps running.</div></div>
  <div class="tactics">
-  <button class="tac tac-d" data-t="D">DEFEND<small>SIT DEEP</small></button>
-  <button class="tac tac-m on" data-t="M">BALANCED<small>HOLD SHAPE</small></button>
-  <button class="tac tac-a" data-t="A">ATTACK<small>PUSH UP</small></button></div>
+  <button class="tac tac-d" data-t="D" data-ic="🛡">DEFEND<small>SIT DEEP</small></button>
+  <button class="tac tac-m on" data-t="M" data-ic="⚖">BALANCED<small>HOLD SHAPE</small></button>
+  <button class="tac tac-a" data-t="A" data-ic="⚔">ATTACK<small>PUSH UP</small></button></div>
  <div class="subrow"><button id="subBtn">SUBSTITUTIONS · <b>5</b> LEFT</button></div>`;
  document.querySelectorAll(".tac").forEach(b=>b.onclick=()=>{
   M.tac=b.dataset.t;document.querySelectorAll(".tac").forEach(x=>x.classList.remove("on","sugg"));
@@ -2199,23 +2553,51 @@ function startMatch(o,ctx,sq){
   say(`<b>${clock()}</b> Tactic switched to <span class="g">${b.dataset.t==="A"?"ATTACK":b.dataset.t==="D"?"DEFEND":"BALANCED"}</span>.`);});
  $("#subBtn").onclick=()=>openSubs();
  const os=oppStrength(o,squad.ovr);M.them=os.them;M.style=os.style;
- computeMe();buildDots();labelDots();movePlayers();updateMom();
+ const ar=$("#arena"),mb=myBadge();
+ if(ar){ar.style.setProperty("--me",mb.c1);ar.style.setProperty("--them",(o.b&&o.b.c1)||"#ff2d70");}
+ computeMe();buildDots();labelDots();movePlayers();updateMom();statStrip();
  $("#z-def").querySelector(".zo").textContent="vs "+M.them.att;
  $("#z-mid").querySelector(".zo").textContent="vs "+M.them.mid;
  $("#z-att").querySelector(".zo").textContent="vs "+M.them.def;
  $("#mgrTx").textContent=M.style.tip;
  $("#matchOv").classList.add("on");
- setTimeout(()=>{M.paused=false;},900);
+ kickoffIntro(squad,o);
  clearInterval(ticker);ticker=setInterval(tick,660);
 }
 const clock=()=>M.stopp?`${45*M.half}+${M.extra}'`:`${M.min}'`;
+function kickoffIntro(squad,o){
+ M.paused=true;
+ const ko=$("#koOv");
+ ko.innerHTML=`<div class="ko-wrap">
+  <div class="ko-row">
+   <div class="ko-side left"><div class="ko-cr">${crestSVG(squad.badge)}</div><b>${squad.name.toUpperCase()}</b><span>${squad.ovr} OVR</span></div>
+   <div class="ko-vs">VS</div>
+   <div class="ko-side right"><div class="ko-cr">${crestSVG(o.b)}</div><b>${o.n.toUpperCase()}</b><span>${o.r} OVR</span></div>
+  </div>
+  <div class="ko-count" id="koCount">3</div>
+  <div class="ko-sub" id="koSub">${M.ctx&&M.ctx.world?WROUNDS[M.ctx.stage]:M.ctx?"CUP TIE":"RIVALS MATCH"}</div></div>`;
+ ko.classList.add("on");
+ let n=3;
+ const el=()=>document.getElementById("koCount");
+ setTimeout(()=>{
+  const iv=setInterval(()=>{
+   n--;const e=el();
+   if(n<=0){clearInterval(iv);
+    if(e){e.textContent="KICK OFF";e.classList.add("go");}
+    setTimeout(()=>{ko.classList.remove("on");if(M&&!M.over)M.paused=false;},600);
+    return;}
+   if(e){e.textContent=n;e.classList.remove("tickpop");void e.offsetWidth;e.classList.add("tickpop");}
+  },700);
+ },1200);
+}
 function buildDots(){
- const box=$("#pbox");box.querySelectorAll(".dot").forEach(d=>d.remove());
+ const box=$("#field")||$("#pbox");box.querySelectorAll(".dot").forEach(d=>d.remove());
  M.dots=[];M.foe=[];
  for(let i=0;i<11;i++){
   const a=document.createElement("div");a.className="dot me"+(i===0?" gk":"");
-  a.innerHTML='<span class="dt"></span>';box.appendChild(a);M.dots.push(a);
-  const b=document.createElement("div");b.className="dot them"+(i===0?" gk":"");box.appendChild(b);M.foe.push(b);}
+  a.innerHTML='<b class="dnum">'+(i+1)+'</b><span class="dt"></span>';box.appendChild(a);M.dots.push(a);
+  const b=document.createElement("div");b.className="dot them"+(i===0?" gk":"");
+  b.innerHTML='<b class="dnum">'+(i+1)+'</b>';box.appendChild(b);M.foe.push(b);}
 }
 function labelDots(){
  if(!M||!M.dots)return;
@@ -2243,10 +2625,19 @@ function movePlayers(){
  M.dots.forEach((d,i)=>d.classList.toggle("onball",i===near&&M.ball>=0));
  M.foe.forEach(d=>d.classList.remove("onball"));
  if(M.ball<0)M.foe[Math.max(1,Math.floor(Math.random()*11))].classList.add("onball");
- $("#pball").style.left=bx+"%";$("#pball").style.top=(38+Math.random()*24)+"%";
+ const by=38+Math.random()*24;
+ $("#pball").style.left=bx+"%";$("#pball").style.top=by+"%";
+ const psh=$("#pshadow");if(psh){psh.style.left=bx+"%";psh.style.top=(by+2.5)+"%";}
  ["def","mid","att"].forEach(z=>$("#z-"+z).classList.remove("act"));
  $("#z-"+(M.ball>=1?"att":M.ball<=-1?"def":"mid")).classList.add("act");
  updateMom();
+}
+function statStrip(){
+ const el=$("#statStrip");if(!el||!M)return;
+ const pc=M.total?Math.round(M.won/M.total*100):50;
+ const row=(l,a,b)=>`<div class="ss"><b>${a}</b><span>${l}</span><b class="op">${b}</b></div>`;
+ el.innerHTML=row("SHOTS",M.shots,M.theirShots)+row("ON TARGET",M.onT||0,M.theirOnT||0)+
+  row("CORNERS",M.corners||0,M.theirCorners||0)+row("POSS",pc+"%",(100-pc)+"%");
 }
 function say(h){M.feed.unshift(`<div>${h}</div>`);$("#feed").innerHTML=M.feed.slice(0,3).join("");}
 function scorer(){
@@ -2479,9 +2870,12 @@ function contest(){
  M.total++;if(win)M.won++;
  M.ball=clamp(M.ball+(win?1:-1),-3,3);
  const pc=Math.round(M.won/M.total*100);
- $("#pa").style.width=pc+"%";$("#pb").style.width=(100-pc)+"%";
- $("#paT").textContent="POSSESSION "+pc+"%";$("#pbT").textContent=(100-pc)+"%";
+ const pa=$("#pa"),pb=$("#pb");
+ if(pa&&pb){pa.style.width=pc+"%";pb.style.width=(100-pc)+"%";}
  movePlayers();
+ if(win&&Math.random()<.12){M.corners=(M.corners||0)+1;say(`<b>${clock()}</b> Corner won on the right.`);}
+ else if(!win&&Math.random()<.1)M.theirCorners=(M.theirCorners||0)+1;
+ statStrip();
  if(M.ball>=3)shot();
  else if(M.ball<=-3)theirShot();
  else if(Math.random()<.3){
@@ -2493,22 +2887,70 @@ function shot(){
  M.ball=0;M.shots++;
  if(Math.random()<.22){penalty();return;}
  const ch=clamp(.34+(M.me.att-M.them.def)/90+(M.tac==="A"?.06:0),.2,.72);
+ M.onT=(M.onT||0)+1;
  if(Math.random()<ch){const s=scorer();M.hs++;(M.goalScorers=M.goalScorers||[]).push(s.name);goalFX("you",`${s.sur} ${clock()}`);
   say(`<b>${clock()}</b> <span class="g">GOAL</span> — ${s.name} smashes it in.`);managerTip(true);}
  else{say(`<b>${clock()}</b> ${M.o.n}'s keeper claws it away.`);}
  bump();movePlayers();
 }
+const adjacentCells=i=>{const r=Math.floor(i/3),c=i%3,out=[];
+ [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]].forEach(([dr,dc])=>{const nr=r+dr,nc=c+dc;
+  if(nr>=0&&nr<3&&nc>=0&&nc<3)out.push(nr*3+nc);});
+ return out;};
+function theirPenalty(){
+ M.paused=true;
+ const gk=M.onPitch[0],reach=clamp(Math.round(((gk?gk.rating:80)-80)/6),0,3);
+ const shotCell=Math.floor(Math.random()*9),grid=$("#ttt");
+ $("#penTtl").textContent="PENALTY AGAINST YOU";
+ $("#penSub").textContent="TAP THE CORNER YOU DIVE TO";
+ $("#shootBoard").innerHTML="";
+ $("#penTaker").innerHTML=`<span>PENALTY TO ${M.o.n.toUpperCase()}</span><b>${gk?gk.name:"Your keeper"}</b>
+  <em>his reach covers ${1+reach} zone${reach?"s":""}</em>`;
+ grid.innerHTML="";grid.dataset.done="";
+ $("#penres").className="penres";$("#penres").textContent="";
+ for(let i=0;i<9;i++){
+  const c=document.createElement("div");c.className="cell";c.dataset.i=i;
+  c.onclick=()=>{
+   if(grid.dataset.done)return;grid.dataset.done="1";
+   const covered=[i].concat(adjacentCells(i).slice(0,reach));
+   const saved=covered.includes(shotCell);
+   const res=$("#penres"),sc=grid.querySelector('[data-i="'+shotCell+'"]');
+   covered.forEach(z=>{const el=grid.querySelector('[data-i="'+z+'"]');
+    if(el&&z!==shotCell){el.classList.add("safe");el.textContent="🧤";}});
+   if(saved){sc.classList.add("hit");sc.textContent="🧤";
+    res.textContent="SAVED!";res.style.color="var(--neon)";res.classList.add("on");
+    setTimeout(()=>{$("#penOv").classList.remove("on");
+     say(`<b>${clock()}</b> <span class="g">PENALTY SAVED</span> — ${gk?gk.name:"your keeper"} guesses right!`);
+     bump();movePlayers();M.paused=false;},1400);
+   }else{
+    sc.classList.add("danger");sc.textContent="⚽";
+    res.textContent="THEY SCORE";res.style.color="var(--hot)";res.classList.add("on");
+    M.as++;
+    setTimeout(()=>{$("#penOv").classList.remove("on");
+     goalFX("them",`${M.o.n.toUpperCase()} ${clock()} PEN`);
+     say(`<b>${clock()}</b> <span class="c">PENALTY</span> — ${M.o.n} score from the spot.`);
+     bump();movePlayers();},1400);
+   }};
+  grid.appendChild(c);}
+ say(`<b>${clock()}</b> <span class="c">PENALTY TO ${M.o.n.toUpperCase()}</span> — you're in goal.`);
+ setTimeout(()=>$("#penOv").classList.add("on"),380);
+}
 function theirShot(){
  M.ball=0;M.theirShots++;
+ if(Math.random()<.2){theirPenalty();return;}
+ if(Math.random()<.18){theirPenalty();return;}
  const ch=clamp(.32+(M.them.att-M.me.def)/90+(M.tac==="A"?.07:M.tac==="D"?-.08:0),.15,.7);
+ M.theirOnT=(M.theirOnT||0)+1;
  if(Math.random()<ch){M.as++;goalFX("them",`${M.o.n.toUpperCase()} ${clock()}`);
   say(`<b>${clock()}</b> <span class="c">GOAL</span> — ${M.o.n} punish you.`);managerTip(true);}
  else{say(`<b>${clock()}</b> They blaze it over the bar.`);}
  bump();movePlayers();
 }
-function bump(){const sc=$("#sc");sc.textContent=M.hs+" - "+M.as;sc.classList.add("bump");setTimeout(()=>sc.classList.remove("bump"),320);}
+function bump(){statStrip();const sc=$("#sc");sc.textContent=M.hs+" - "+M.as;sc.classList.add("bump");setTimeout(()=>sc.classList.remove("bump"),320);}
 function goalFX(who,sub){
  M.paused=true;
+ const ar=$("#arena");
+ if(ar){ar.classList.add(who==="them"?"roar-foe":"roar");setTimeout(()=>ar.classList.remove("roar","roar-foe"),1800);}
  const g=$("#gfx");g.className="gfx"+(who==="them"?" foe":"");
  let conf="";
  if(who==="you")for(let i=0;i<26;i++)conf+=`<div class="conf" style="left:${Math.random()*100}%;background:${["#00e5a0","#38bdf8","#ffcf5c","#fff"][i%4]};animation-delay:${(Math.random()*.5).toFixed(2)}s"></div>`;
@@ -2632,6 +3074,51 @@ function shootKick(){
   };
   grid.appendChild(c);}
 }
+/* they win a spot kick — you go in goal */
+function theirPenalty(){
+ M.paused=true;
+ const gk=M.onPitch[0],gr=gk?gk.rating:80;
+ const reach=gr>=98?2:gr>=90?1:0;         /* a top keeper covers more of the goal */
+ const shot=Math.floor(Math.random()*9),grid=$("#ttt");
+ grid.innerHTML="";grid.dataset.done="";
+ $("#penres").className="penres";$("#penres").textContent="";
+ $("#penTtl").textContent="PENALTY AGAINST YOU";
+ $("#penSub").textContent="TAP WHERE YOU THINK IT'S GOING";
+ $("#shootBoard").innerHTML="";
+ $("#penTaker").innerHTML=`<span>${M.o.n.toUpperCase()} SPOT KICK</span><b>${gk?gk.name:"Your keeper"}</b>
+  <em>you cover ${reach+1} zone${reach?"s":""} — dive well</em>`;
+ for(let i=0;i<9;i++){
+  const c=document.createElement("div");c.className="cell";c.dataset.i=i;
+  c.onclick=()=>{
+   if(grid.dataset.done)return;grid.dataset.done="1";
+   const covered=[i];
+   for(let k=1;k<=reach;k++){
+    if(i%3!==0)covered.push(i-1);
+    if(i%3!==2)covered.push(i+1);
+    if(k===2){if(i>2)covered.push(i-3);if(i<6)covered.push(i+3);}
+   }
+   const saved=covered.includes(shot);
+   const sc=grid.querySelector('[data-i="'+shot+'"]');
+   covered.forEach(z=>{const cell=grid.querySelector('[data-i="'+z+'"]');
+    if(cell&&z!==shot){cell.classList.add("safe");cell.textContent="🧤";}});
+   const res=$("#penres");
+   if(saved){sc.classList.add("hit");sc.textContent="🧤";
+    res.textContent="SAVED!";res.style.color="var(--neon)";res.classList.add("on");
+    setTimeout(()=>{$("#penOv").classList.remove("on");
+     say(`<b>${clock()}</b> <span class="g">PENALTY SAVED</span> — ${gk?gk.name:"your keeper"} keeps it out!`);
+     managerTip(true);M.paused=false;},1400);
+   }else{
+    sc.classList.add("miss");sc.textContent="⚽";
+    res.textContent="THEY SCORE";res.style.color="var(--hot)";res.classList.add("on");
+    M.as++;bump();
+    setTimeout(()=>{$("#penOv").classList.remove("on");
+     goalFX("them",`${M.o.n.toUpperCase()} ${clock()} PEN`);
+     say(`<b>${clock()}</b> <span class="c">PENALTY</span> — ${M.o.n} score from the spot.`);},1400);
+   }};
+  grid.appendChild(c);}
+ say(`<b>${clock()}</b> <span class="c">PENALTY TO ${M.o.n.toUpperCase()}</span> — you're in goal.`);
+ setTimeout(()=>$("#penOv").classList.add("on"),380);
+}
 function finish(){
  const o=M.o,ctx=M.ctx,sh=M.sh&&M.sh.done?M.sh:null,divBefore=divOf(S.w);
  const won=sh?sh.win:M.hs>M.as,drew=sh?false:M.hs===M.as;
@@ -2681,7 +3168,9 @@ function finish(){
  S.form=(S.form||[]).concat([won?"W":drew?"D":"L"]).slice(-10);
  const rd=normDay();
  if(won)rd.wins++;rd.goals+=M.hs;if(M.as===0)rd.cs++;
- M.reward={pay,gems,before,fans:fanGain,promo:divOf(S.w)<divBefore?divOf(S.w):0};
+ const tokGain=won?(ctx?2:1):0;
+ S.tokens=(S.tokens||0)+tokGain;
+ M.reward={pay,gems,before,fans:fanGain,toks:tokGain,promo:divOf(S.w)<divBefore?divOf(S.w):0};
  $("#clk").textContent="FULL TIME";$("#clk").className="ck";
  $("#momTx").textContent="FULL TIME";$("#mom").className="mom";$("#arL").innerHTML="";$("#arR").innerHTML="";
  $("#matchHead").style.display="none";
@@ -2699,10 +3188,11 @@ function finish(){
   <div><span>Matchday income (${fmtK(attendance())} in)</span><b>${fmt(gate)}</b></div>
   ${gems?`<div><span>Gems</span><b>${gems}</b></div>`:""}
   <div><span>New supporters</span><b style="color:var(--neon2)">+${fmt(fanGain)}</b></div>
+  ${tokGain?`<div><span>Training tokens</span><b style="color:var(--gold)">+${tokGain}</b></div>`:""}
   <div><span>Total earned</span><b style="color:var(--neon)">${fmt(pay)} coins</b></div></div>
  ${packName?packPrize(packName,"Opens once you collect"):""}
  <button class="btn collect" id="mCollect"><span>COLLECT REWARDS</span>
-  <em>${fmt(pay)} coins${gems?` · ${gems} gem${gems>1?"s":""}`:""} · +${fmt(fanGain)} fans${packName?" · 1 pack":""}</em></button></div>`);
+  <em>${fmt(pay)} coins${gems?` · ${gems} gem${gems>1?"s":""}`:""}${tokGain?` · ${tokGain} token${tokGain>1?"s":""}`:""} · +${fmt(fanGain)} fans${packName?" · 1 pack":""}</em></button></div>`);
  const rb=$("#resBlock");if(rb&&rb.scrollIntoView)rb.scrollIntoView({behavior:"smooth",block:"end"});
  renderRivals();renderHome();renderWorld();save();
  const isWorld=!!(ctx&&ctx.world);
@@ -3120,6 +3610,48 @@ function mysteryBonus(){
    renderWorld();},1700);
  });
 }
+/* ---- training screen ---- */
+function trainSheet(p){
+ const draw=(anim)=>{
+  const lvl=upLvl(p.id),max=upMax(p),cost=upCost(lvl),done=lvl>=max,afford=(S.tokens||0)>=cost;
+  $("#trainBody").innerHTML=`
+   <div class="trainwrap">
+    <div class="tr-card" id="trCard">${cardHTML(p)}</div>
+    <div class="tr-info">
+     <b>${p.name}</b><span>${p.club} · ${p.pos}</span>
+     <div class="tr-pips">${Array.from({length:max},(_,i)=>`<i class="${i<lvl?"on":""}"></i>`).join("")}</div>
+     <span class="tr-lvl">${done?"Fully trained":"Training level "+lvl+" of "+max}</span>
+    </div>
+   </div>
+   <div class="tr-rows">
+    <div><span>Current rating</span><b>${p.rating}</b></div>
+    <div><span>After next session</span><b style="color:var(--neon)">${done?"—":p.rating+1}</b></div>
+    <div><span>Every stat</span><b>${done?"maxed":"+1"}</b></div>
+    <div><span>Tokens needed</span><b style="color:${afford?"var(--neon2)":"var(--hot)"}">${done?"—":cost}</b></div>
+   </div>
+   ${done?`<div class="tr-max">THIS PLAYER IS MAXED OUT</div>`:
+    `<button class="btn ${afford?"":"cancel"}" id="trGo">${afford?`Train · ${cost} tokens`:`Need ${cost-(S.tokens||0)} more tokens`}</button>`}
+   <button class="btn cancel" id="trClose">Back</button>`;
+  const go=$("#trGo");
+  if(go)go.onclick=()=>{
+   const l=upLvl(p.id),c=upCost(l);
+   if((S.tokens||0)<c){toast("Not enough training tokens");return;}
+   S.tokens-=c;S.up[p.id]=l+1;
+   const old=p.rating;
+   p.rating=clamp(p.rating+1,0,109);p.stats=p.stats.map(v=>clamp(v+1,38,109));p._up=l+1;
+   p.rarity=p.special?p.rarity:p.legend?"legend":p.rating>=97?"icon":p.rating>=93?"totw":p.rating>=85?"gold":p.rating>=76?"silver":"bronze";
+   save();renderTop();draw();
+   const card=$("#trCard");
+   if(card){card.classList.add("levelup");
+    const ovr=card.querySelector(".ovr");
+    if(ovr)countUp(ovr,old,p.rating,700,n=>n);
+    setTimeout(()=>card.classList.remove("levelup"),900);}
+   renderSquad();renderHome();toast(p.sur.charAt(0)+p.sur.slice(1).toLowerCase()+" is now "+p.rating+" rated");
+  };
+  $("#trClose").onclick=()=>$("#trainOv").classList.remove("on");
+ };
+ draw();$("#trainOv").classList.add("on");
+}
 /* ================= CAREER PROFILE ================= */
 function achievements(){
  const best=ownedPlayers().sort((a,b)=>b.rating-a.rating)[0];
@@ -3127,8 +3659,8 @@ function achievements(){
   {n:"First Whistle",d:"Play your first match",done:(S.mp||0)>=1},
   {n:"Winning Habit",d:"Win 5 matches",done:S.w>=5},
   {n:"Pack Fiend",d:"Open 15 packs",done:(S.packs||0)>=15},
-  {n:"Golden Touch",d:"Pack a 93+ rated player",done:!!best&&best.rating>=93},
-  {n:"Centurion",d:"Pack a 100+ rated card",done:!!best&&best.rating>=100},
+  {n:"Golden Touch",d:"Pack a 96+ rated player",done:!!best&&best.rating>=96},
+  {n:"Centurion",d:"Pack a 104+ rated card",done:!!best&&best.rating>=104},
   {n:"Sharp Shooter",d:"Score 50 career goals",done:(S.gf||0)>=50},
   {n:"Silverware",d:"Win a cup competition",done:(S.trophies||0)>=1},
   {n:"World Champion",d:"Win an international tournament",done:((S.world&&S.world.titles)||0)>=1},
@@ -3175,12 +3707,16 @@ function renderProfile(){
  $("#userAv").innerHTML=crestSVG(myBadge());}
 /* ================= BOOT ================= */
 document.querySelectorAll(".nav button").forEach(b=>{
- b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+ b.onclick=()=>{
+  const go=b.dataset.go;
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
-  const v=$("#v-"+b.dataset.go);v.scrollTop=0;v.classList.add("on");
-  if(b.dataset.go==="rivals")renderRivals();
-  if(b.dataset.go==="world")renderWorld();
-  if(b.dataset.go==="squad")renderSquad();};
+  const v=$("#v-"+go);v.scrollTop=0;v.classList.add("on");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   if(go==="rivals")renderRivals();
+   else if(go==="world")renderWorld();
+   else if(go==="squad")renderSquad();
+  }));};
 });
 $("#openOv").onclick=e=>{if(e.target.id!=="openX")stepOpen();};
 $("#openX").onclick=e=>{e.stopPropagation();openState="revealing";
@@ -3192,6 +3728,7 @@ $("#preX").onclick=()=>$("#preOv").classList.remove("on");
 $("#formX").onclick=()=>$("#formOv").classList.remove("on");
 $("#nameX").onclick=()=>$("#nameOv").classList.remove("on");
 $("#subX").onclick=closeSubs;
+$("#trainX").onclick=()=>$("#trainOv").classList.remove("on");
 $("#matchX").onclick=()=>{clearInterval(ticker);if(M)M.over=true;$("#matchOv").classList.remove("on");};
 $("#autoFill").onclick=autoFill;
 $("#userBtn").onclick=()=>{renderCareer();$("#careerOv").classList.add("on");};
@@ -3213,6 +3750,7 @@ $("#nameSave").onclick=()=>{const v=$("#nameInp").value.trim();if(!v){toast("Giv
 })();
 (async()=>{await load();if(!S.xi||S.xi.length!==11)S.xi=Array(11).fill(null);
  normWorld();if(!S.h2h)S.h2h={};if(!Array.isArray(S.form))S.form=[];
+ if(!S.up)S.up={};if(typeof S.tokens!=="number")S.tokens=6;applyUpgrades();
  renderProfile();renderTop();renderHome();renderSquad();renderRivals();renderWorld();})();
 </script>
 </body>
