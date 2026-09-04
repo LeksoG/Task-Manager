@@ -827,6 +827,9 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .tr-pips i{width:20px;height:6px;border-radius:99px;background:rgba(255,255,255,.14)}
 .tr-pips i.on{background:linear-gradient(90deg,var(--gold),#ffb02e);box-shadow:0 0 8px rgba(255,207,92,.6)}
 .tr-lvl{font-size:10.5px;color:var(--gold)!important;font-weight:900;letter-spacing:.6px}
+.tr-bar{position:relative;height:14px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin:9px 0 6px;width:150px}
+.tr-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ffb02e);box-shadow:0 0 10px rgba(255,207,92,.5);transition:width .5s}
+.tr-bar b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#1c1405}
 .tr-rows{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:4px 14px}
 .tr-rows div{display:flex;justify-content:space-between;padding:10px 0;font-size:12.5px;font-weight:800;border-bottom:1px solid var(--line)}
 .tr-rows div:last-child{border:0}
@@ -1171,6 +1174,44 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
 .wnat .fl{width:44px;height:31px;border-radius:6px;flex:0 0 44px;box-shadow:0 3px 8px rgba(0,0,0,.5)}
 .wnat h3{margin:0;font-size:17px;font-weight:900}
 .wnat p{margin:3px 0 0;font-size:11px;color:var(--dim);font-weight:800}
+/* ---- international page ---- */
+.whero{position:relative;display:flex;align-items:center;gap:14px;margin:14px 16px 0;padding:15px;border-radius:22px;overflow:hidden;
+ background:linear-gradient(125deg,#1b2444,#0c1020 58%,#141c33);border:1px solid var(--line);
+ box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.whero:after{content:"";position:absolute;right:-40px;top:-60px;width:180px;height:180px;border-radius:50%;
+ background:radial-gradient(closest-side,rgba(0,229,160,.22),transparent)}
+.wh-flag{width:52px;height:36px;border-radius:7px;flex:0 0 52px;box-shadow:0 4px 12px rgba(0,0,0,.6);position:relative}
+.wh-tx{flex:1;min-width:0;position:relative}
+.wh-tx span{font-size:8px;letter-spacing:2px;font-weight:900;color:var(--dim)}
+.wh-tx h3{margin:2px 0 0;font-size:21px;font-weight:900;letter-spacing:-.4px}
+.wh-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.wh-tags i{font-style:normal;font-size:10px;font-weight:900;padding:4px 9px;border-radius:99px;
+ background:rgba(255,255,255,.08);color:var(--dim);display:flex;align-items:center;gap:4px}
+.wh-tags i.tok{background:rgba(255,207,92,.16);color:var(--gold)}
+.wh-tags i.tok svg{width:10px;height:10px;fill:var(--gold);stroke:none}
+.wh-status{position:relative;text-align:right;flex:0 0 auto;padding-left:10px;border-left:1px solid var(--line)}
+.wh-status b{display:block;font-size:12px;font-weight:900;max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wh-status span{font-size:9.5px;color:var(--dim);font-weight:800}
+.wactions{display:flex;gap:9px;padding:10px 16px 0}
+.wactions button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;font-family:inherit;font-weight:900;
+ font-size:11.5px;padding:12px;border-radius:15px;cursor:pointer;color:var(--txt);
+ background:linear-gradient(120deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid var(--line)}
+.wactions button span{font-size:13px}
+.wactions button:active{transform:scale(.97)}
+.wbanner{position:relative;margin:14px 16px 0;padding:20px 18px;border-radius:22px;overflow:hidden;
+ background:linear-gradient(125deg,#17264a,#0a0e1c 60%,#122036);border:1px solid var(--line)}
+.wb-glow{position:absolute;left:-30px;top:-70px;width:220px;height:220px;border-radius:50%;
+ background:radial-gradient(closest-side,rgba(56,189,248,.28),transparent)}
+.wb-tx{position:relative}
+.wb-tx span{font-size:8px;letter-spacing:2.4px;font-weight:900;color:var(--neon)}
+.wb-tx h3{margin:5px 0 6px;font-size:22px;font-weight:900}
+.wb-tx p{margin:0;font-size:11.5px;color:var(--dim);font-weight:800;line-height:1.6}
+.itok{display:inline-flex;align-items:center;gap:5px;margin-top:7px;background:rgba(255,207,92,.14);
+ border:1px solid rgba(255,207,92,.4);border-radius:99px;padding:4px 10px;font-size:10px;font-weight:900;color:var(--gold)}
+.itok svg{width:11px;height:11px;fill:var(--gold);stroke:none}
+.xihint{display:block;font-style:normal;font-size:9.5px;font-weight:800;color:var(--gold);letter-spacing:.4px;margin-top:3px}
+.flytok{font-size:10px;letter-spacing:2px;font-weight:900;color:var(--gold);background:rgba(255,207,92,.14);
+ border:1px solid rgba(255,207,92,.45);border-radius:99px;padding:7px 14px}
 .wnat button{margin-left:auto;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
  border-radius:12px;padding:9px 12px;font-family:inherit;font-weight:900;font-size:11px;cursor:pointer}
 .natgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 16px}
@@ -1900,7 +1941,8 @@ const matchdayIncome=()=>Math.round((S.fans||0)*0.6);
 const fanMultiplier=()=>1+(S.trophies||0)*0.06+((S.world&&S.world.titles)||0)*0.1;
 const FAN_CAP=260000;
 /* ---- training: tokens turn into rating ---- */
-const upMax=p=>p.rating>=104?1:p.rating>=100?2:p.rating>=95?3:p.rating>=88?4:5;
+const upTier=r=>r>=104?4:r>=100?6:r>=95?8:r>=88?10:12;
+const upMax=p=>{const base=p.rating-upLvl(p.id);return clamp(Math.min(upTier(base),109-base),0,14);};
 const upLvl=id=>((S.up||{})[id]||0);
 const upCost=lvl=>2+lvl*2;
 function applyUpgrades(){
@@ -2103,7 +2145,7 @@ const baseRating=p=>p.rating-((S.up&&S.up[p.id])||0);
 const squadStats=()=>{const f=S.xi.filter(x=>x!==null&&x!==undefined).map(x=>ALL[x]);
  const rawAvg=f.length?f.reduce((a,p)=>a+baseRating(p),0)/f.length:0;
  const upAvg=f.length?f.reduce((a,p)=>a+((S.up&&S.up[p.id])||0),0)/f.length:0;
- return {ovr:f.length?clamp(Math.round(rawAvg)+Math.min(2,Math.round(upAvg)),0,109):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
+ return {ovr:f.length?clamp(Math.round(rawAvg+upAvg*0.8),0,109):0,chem:S.xi.reduce((a,_,i)=>a+chemOf(i),0),filled:f.length};};
 /* --- fixed best XI: global best-pair assignment --- */
 function bestXI(ids,formation){
  const sl=slotsOf(formation),players=[...new Set(ids.filter(x=>x!==null&&x!==undefined))].map(i=>ALL[i]).filter(Boolean);
@@ -3133,7 +3175,7 @@ function finish(){
  const won=sh?sh.win:M.hs>M.as,drew=sh?false:M.hs===M.as;
  const penTxt=sh?` (${shScore(sh.me)}-${shScore(sh.them)} on pens)`:"";
  let title,base,gems=0,goalB=M.hs*400,clean=M.as===0?1500:0,packName=null;
- let worldNext=false,worldDone=false;
+ let worldNext=false,worldDone=false,itokGain=0;
  if(ctx&&ctx.world){
   const w=normWorld(),h=HOSTS[w.host],i=ctx.stage,last=i===7,stagePay=worldPay(h,i);
   const ts=w.tstats;ts.gf+=M.hs;ts.ga+=M.as;if(M.as===0)ts.cs++;if(won)ts.wins++;
@@ -3141,12 +3183,13 @@ function finish(){
   (M.goalScorers||[]).forEach(n=>ts.scorers[n]=(ts.scorers[n]||0)+1);
   if(won){
    base=stagePay;S.w++;
+   itokGain+=i<3?25:i===7?150:45;
    if(last){title="WORLD CHAMPIONS";base+=h.pay;gems=h.gems||0;packName=h.pack||"TOTW Pack";
     S.trophies=(S.trophies||0)+1;w.titles=(w.titles||0)+1;
     if(!w.cabinet.includes(w.host))w.cabinet.push(w.host);
     w.host=null;w.stage=0;w.opps=[];w.streak=0;worldDone=true;}
    else{title=WROUNDS[i].toUpperCase()+" WON";w.stage=i+1;worldNext=true;gems=i<3?1:2;}
-  }else if(drew&&i<3){S.d++;title="GROUP DRAW";base=Math.round(stagePay*.45);w.stage=i+1;worldNext=true;}
+  }else if(drew&&i<3){S.d++;title="GROUP DRAW";base=Math.round(stagePay*.45);itokGain+=10;w.stage=i+1;worldNext=true;}
   else if(i<3){S.l++;title="GROUP DEFEAT";base=Math.round(stagePay*.2);goalB=Math.round(goalB/2);w.stage=i+1;worldNext=true;}
   else{drew?S.d++:S.l++;title="ELIMINATED";base=Math.round(stagePay*.3);goalB=Math.round(goalB/2);
    w.host=null;w.stage=0;w.opps=[];}
@@ -3161,7 +3204,8 @@ function finish(){
   if(won){S.w++;title="WIN";base=o.pay;gems=o.gems||0;packName=o.pack||null;}
   else if(drew){S.d++;title="DRAW";base=Math.round(o.pay*.35);}
   else{S.l++;title="LOSS";base=Math.round(o.pay*.12);goalB=Math.round(goalB/2);}}
- if(ctx&&ctx.world){const bonus=checkWorldObjectives();base+=bonus.coins;gems+=bonus.gems;}
+ if(ctx&&ctx.world){const bonus=checkWorldObjectives();base+=bonus.coins;gems+=bonus.gems;itokGain+=bonus.itok||0;}
+ if(itokGain)S.itokens=(S.itokens||0)+itokGain;
  /* streak, gate money and new supporters */
  if(won)S.streak=(S.streak||0)+1;else S.streak=0;
  const streakBonus=won?Math.round(base*Math.min(.5,(S.streak-1)*0.1)):0;
@@ -3177,7 +3221,7 @@ function finish(){
  S.form=(S.form||[]).concat([won?"W":drew?"D":"L"]).slice(-10);
  const rd=normDay();
  if(won)rd.wins++;rd.goals+=M.hs;if(M.as===0)rd.cs++;
- const tokGain=won?(ctx?2:1):0;
+ const tokGain=(ctx&&ctx.world)?0:(won?(ctx?2:1):0);
  S.tokens=(S.tokens||0)+tokGain;
  M.reward={pay,gems,before,fans:fanGain,toks:tokGain,promo:divOf(S.w)<divBefore?divOf(S.w):0};
  $("#clk").textContent="FULL TIME";$("#clk").className="ck";
@@ -3198,11 +3242,16 @@ function finish(){
   ${gems?`<div><span>Gems</span><b>${gems}</b></div>`:""}
   <div><span>New supporters</span><b style="color:var(--neon2)">+${fmt(fanGain)}</b></div>
   ${tokGain?`<div><span>Training tokens</span><b style="color:var(--gold)">+${tokGain}</b></div>`:""}
+  ${itokGain?`<div><span>International tokens</span><b style="color:var(--gold)">+${itokGain}</b></div>`:""}
   <div><span>Total earned</span><b style="color:var(--neon)">${fmt(pay)} coins</b></div></div>
  ${packName?packPrize(packName,"Opens once you collect"):""}
  <button class="btn collect" id="mCollect"><span>COLLECT REWARDS</span>
-  <em>${fmt(pay)} coins${gems?` · ${gems} gem${gems>1?"s":""}`:""}${tokGain?` · ${tokGain} token${tokGain>1?"s":""}`:""} · +${fmt(fanGain)} fans${packName?" · 1 pack":""}</em></button></div>`);
- const rb=$("#resBlock");if(rb&&rb.scrollIntoView)rb.scrollIntoView({behavior:"smooth",block:"end"});
+  <em>${fmt(pay)} coins${gems?` · ${gems} gem${gems>1?"s":""}`:""}${tokGain?` · ${tokGain} token${tokGain>1?"s":""}`:""}${itokGain?` · ${itokGain} int. tokens`:""} · +${fmt(fanGain)} fans${packName?" · 1 pack":""}</em></button></div>`);
+ const body=$("#matchBody");
+ const toBottom=()=>{if(!body)return;
+  if(body.scrollTo)body.scrollTo({top:body.scrollHeight,behavior:"smooth"});
+  else body.scrollTop=body.scrollHeight;};
+ [60,420,900].forEach(t=>setTimeout(toBottom,t));
  renderRivals();renderHome();renderWorld();save();
  const isWorld=!!(ctx&&ctx.world);
  $("#mCollect").onclick=()=>{
@@ -3225,6 +3274,7 @@ const OPP_NATIONS=["Croatia","Uruguay","Nigeria","Japan","Mexico","Belgium","Col
  "Switzerland","Serbia","Poland","Egypt","Sweden","Canada","Ecuador","Austria","Turkiye","Norway","Scotland","Algeria"];
 const basePay=(h,i)=>Math.round(h.pay*0.25*Math.pow(1.32,i)/100)*100;
 const worldPay=(h,i)=>basePay(h,i)*(normWorld().prime===i?2:1);
+const worldTok=i=>i<3?25:i===7?150:45;
 const isPrime=i=>normWorld().prime===i;
 const momentum=()=>Math.min(3,normWorld().streak||0);
 const worldRating=(h,i)=>Math.round(h.r-6+i*1.3);
@@ -3235,6 +3285,7 @@ function normWorld(){
  if(typeof w.stage!=="number")w.stage=0;
  if(!Array.isArray(w.opps))w.opps=[];
  if(typeof w.titles!=="number")w.titles=0;
+ if(typeof S.itokens!=="number")S.itokens=0;
  if(!Array.isArray(w.cabinet))w.cabinet=[];
  if(!w.tstats)w.tstats={gf:0,ga:0,cs:0,wins:0,scorers:{}};
  if(typeof w.streak!=="number")w.streak=0;
@@ -3255,9 +3306,11 @@ const MAP_SVG=`<svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
 function renderWorld(){
  const w=normWorld(),b=$("#worldBody");
  if(!w.nation){
-  b.innerHTML=`<div class="h2"><i></i>Choose your nation<em>you'll manage them abroad</em></div>
-   <div class="empty" style="padding:0 16px 14px;text-align:left">Pick a country to represent. Your international XI is picked
-   automatically from that nation's real players — nothing to do with your club squad.</div>
+  b.innerHTML=`<div class="wbanner pick">
+    <div class="wb-glow"></div>
+    <div class="wb-tx"><span>INTERNATIONAL MANAGEMENT</span><h3>Choose your nation</h3>
+     <p>Your XI is picked automatically from that country's real players — separate from your club.</p></div></div>
+   <div class="h2"><i></i>Available nations<em>${NATIONS.length} countries</em></div>
    <div class="natgrid" id="natGrid"></div>`;
   const g=$("#natGrid");
   NATIONS.forEach(nt=>{
@@ -3279,10 +3332,17 @@ function renderWorld(){
   return;
  }
  const inf=natInfo(w.nation);
- let html=`<div class="h2"><i></i>Your nation<em>international duty</em></div>
-  <div class="wnat"><div class="fl" style="background:${flagBG(w.nation)}"></div>
-   <div><h3>${w.nation}</h3><p>${inf.ovr} OVR · ${w.titles||0} world title${(w.titles||0)===1?"":"s"}</p></div>
-   <div class="wbtns"><button id="wXI">View XI</button><button id="wChange">Change</button></div></div>`;
+ const onTour=w.host!==null&&HOSTS[w.host];
+ let html=`<div class="whero">
+   <div class="wh-flag" style="background:${flagBG(w.nation)}"></div>
+   <div class="wh-tx"><span>YOU MANAGE</span><h3>${w.nation}</h3>
+    <div class="wh-tags"><i>${inf.ovr} OVR</i><i>${w.titles||0} title${(w.titles||0)===1?"":"s"}</i>
+     <i class="tok"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>${S.itokens||0}</i></div></div>
+   <div class="wh-status">${onTour?`<b>${HOSTS[w.host].city}</b><span>game ${w.stage+1} of 8</span>`
+     :`<b>At home</b><span>pick a destination</span>`}</div>
+  </div>
+  <div class="wactions"><button id="wXI"><span>👥</span>Squad &amp; training</button>
+   <button id="wChange"><span>⇄</span>Change nation</button></div>`;
  if(w.host!==null&&HOSTS[w.host]){
   const h=HOSTS[w.host],i=w.stage,opp=w.opps[i],pay=worldPay(h,i);
   html+=`<div class="h2"><i></i>${h.city} tournament<em>game ${i+1} of 8</em></div>
@@ -3299,11 +3359,12 @@ function renderWorld(){
       <div class="pay">${fmt(pay)}<br><span style="font-size:9px;color:var(--dim)">COINS</span></div></div>
      <button class="btn" id="wPlay">${i===7?"Play the final":"Play "+WROUNDS[i].toLowerCase()}</button></div></div>
    ${isPrime(i)?`<div class="primebar"><span>⚡ PRIME TIME</span><b>This round pays double coins</b></div>`:""}
-   <div class="h2"><i></i>Win this game and you get<em>game ${i+1} of 8</em></div>
+   <div class="h2"><i></i>Match rewards<em>game ${i+1} of 8</em></div>
    ${rewardBox(h,i)}
    <div class="h2"><i></i>Scout report<em>${opp}</em></div>
    ${scoutHTML(opp,worldRating(h,i))}
-   <div class="grid" style="padding:14px 16px 0">
+   <div class="h2"><i></i>Your edge<em>boosts in this match</em></div>
+   <div class="grid">
     <div class="tile"><b>${w.streak||0}</b><span>win streak</span></div>
     <div class="tile"><b>+${momentum()}</b><span>momentum boost</span></div>
     <div class="tile"><b>${HOSTS[w.host].n===w.nation?"+2":"–"}</b><span>home crowd</span></div></div>
@@ -3317,7 +3378,7 @@ function renderWorld(){
    <div class="h2"><i></i>Objectives<em>bonus rewards</em></div>
    ${objectivesHTML()}`;
  } else {
-  html+=`<div class="h2"><i></i>World map<em>tap a destination</em></div>
+  html+=`<div class="h2"><i></i>Destinations<em>tap a pin to travel</em></div>
    <div class="mapwrap" id="mapWrap">${MAP_SVG}<div class="stars"></div></div>
    <div class="empty" style="padding:14px 16px 0;text-align:left">Eight games at every destination: three group games,
    then straight knockout. Win the eighth and you're world champions.</div>
@@ -3344,14 +3405,14 @@ function renderWorld(){
   mw.appendChild(pin);});
 }
 const WORLD_OBJ=[
- {n:"Score 12 goals",d:"across this tournament",t:12,k:"gf",coins:12000,gems:0},
- {n:"Keep 3 clean sheets",d:"shut them out three times",t:3,k:"cs",coins:0,gems:4},
- {n:"Win 5 games",d:"five wins in one run",t:5,k:"wins",coins:20000,gems:2}];
+ {n:"Score 12 goals",d:"across this tournament",t:12,k:"gf",coins:12000,gems:0,itok:60},
+ {n:"Keep 3 clean sheets",d:"shut them out three times",t:3,k:"cs",coins:0,gems:4,itok:80},
+ {n:"Win 5 games",d:"five wins in one run",t:5,k:"wins",coins:20000,gems:2,itok:120}];
 function checkWorldObjectives(){
- const w=normWorld(),out={coins:0,gems:0};
+ const w=normWorld(),out={coins:0,gems:0,itok:0};
  WORLD_OBJ.forEach((o,i)=>{
-  if(!w.tobj[i]&&(w.tstats[o.k]||0)>=o.t){w.tobj[i]=true;out.coins+=o.coins;out.gems+=o.gems;
-   setTimeout(()=>toast("Objective complete — "+o.n),900+i*400);}});
+  if(!w.tobj[i]&&(w.tstats[o.k]||0)>=o.t){w.tobj[i]=true;out.coins+=o.coins;out.gems+=o.gems;out.itok+=o.itok||0;
+   setTimeout(()=>toast("Objective complete — "+o.n+" · +"+(o.itok||0)+" int. tokens"),900+i*400);}});
  return out;
 }
 function goldenBoot(){
@@ -3385,22 +3446,25 @@ function rankingsHTML(){
 }
 function viewNationXI(){
  const w=normWorld(),sq=nationSquad(w.nation);
- $("#pickTitle").textContent=w.nation+" squad · "+sq.ovr+" OVR";
+ $("#pickTitle").innerHTML=`${w.nation} squad · ${sq.ovr} OVR
+  <em class="xihint">${S.itokens||0} international tokens · tap a player to train him</em>`;
+ const ov=$("#pickOv");
+ /* clear anything an earlier visit left behind */
+ [...ov.children].forEach(el=>{if(el!==$("#pickBody")&&!el.classList.contains("ov-head"))el.remove();});
  const b=$("#pickBody");b.innerHTML="";
  let n=0;
  rowsOf(S.formation).forEach(row=>{
   const r=document.createElement("div");r.className="prow";
   row.forEach(pos=>{const id=sq.xi[n++],pl=id===null||id===undefined?null:ALL[id];
    const c=document.createElement("div");c.className="pslot";
-   c.innerHTML=(pl?cardHTML(pl):`<div class="mini-empty">+</div>`)+`<div class="lab">${pos}</div>`;
+   c.innerHTML=(pl?cardHTML(pl):`<div class="mini-empty">+</div>`)+
+    `<div class="lab">${pos}${pl?` · ${upLvl(pl.id)}/${upMax(pl)}`:""}</div>`;
+   if(pl)c.onclick=()=>{ov.classList.remove("on");b.classList.remove("pitch");b.style.borderRadius="";
+    setTimeout(()=>trainSheet(pl,true),240);};
    r.appendChild(c);});
   b.appendChild(r);});
  b.classList.add("pitch");b.style.borderRadius="20px";
- const back=document.createElement("button");back.className="btn";back.textContent="Close";
- back.onclick=()=>{$("#pickOv").classList.remove("on");b.classList.remove("pitch");b.style.borderRadius="";};
- const wrap=document.createElement("div");wrap.appendChild(back);
- setTimeout(()=>{const bd=$("#pickBody");if(bd)bd.parentElement.appendChild(back);},0);
- $("#pickOv").classList.add("on");
+ ov.classList.add("on");
 }
 function rewardBox(h,i,flat){
  const pay=worldPay(h,i),last=i===7;
@@ -3408,7 +3472,8 @@ function rewardBox(h,i,flat){
   <div class="rb-top"><span class="rb-tag">${last?"WIN THE FINAL":"WIN THIS GAME"}</span>
    <span class="rb-round">${WROUNDS[i]}</span></div>
   <div class="rb-main"><i class="coin big"></i><b>${fmt(pay+(last?h.pay:0))}</b><small>COINS</small></div>
-  <div class="rb-chips"><span class="rb-chip">+400 per goal</span><span class="rb-chip">+1,500 clean sheet</span>
+  <div class="rb-chips"><span class="rb-chip gold">+${worldTok(i)} int. tokens</span>
+   <span class="rb-chip">+400 per goal</span><span class="rb-chip">+1,500 clean sheet</span>
    ${last?`<span class="rb-chip gold">+${h.gems} gems</span>`:`<span class="rb-chip">next: ${WROUNDS[i+1]}</span>`}</div>
   ${last&&h.pack?`<div class="rb-pack">${pkMini(h.pack)}<div><b>${h.pack}</b><span>free for the champions</span></div></div>`:""}
   <div class="rb-foot">${i<3?"Group stage — a draw or defeat still takes you through":"Knockout — lose and you fly home"}</div></div>`;
@@ -3444,12 +3509,14 @@ function previewHost(i){
 function flyTo(i){
  const h=HOSTS[i],w=normWorld();
  const pool=OPP_NATIONS.filter(n=>n!==w.nation&&n!==h.n).sort(()=>Math.random()-.5);
+ S.itokens=(S.itokens||0)+150;
  w.host=i;w.stage=0;w.streak=0;w.prime=3+Math.floor(Math.random()*4);w.opps=pool.slice(0,7).concat([h.n]);
  w.tstats={gf:0,ga:0,cs:0,wins:0,scorers:{}};w.tobj=[false,false,false];save();
  $("#flyBody").innerHTML=`<div class="fl" style="background:${flagBG(h.n)}"></div>
   <h3>${h.city}</h3><p>NOW BOARDING</p>
   <div class="flypath"><div class="dash"></div><div class="plane">✈</div></div>
-  <p style="color:var(--dim);letter-spacing:1px">${w.nation} arrive for the ${h.n} ${h.final?"World Finals":"Invitational"}</p>`;
+  <p style="color:var(--dim);letter-spacing:1px">${w.nation} arrive for the ${h.n} ${h.final?"World Finals":"Invitational"}</p>
+  <div class="flytok">+150 INTERNATIONAL TRAINING TOKENS</div>`;
  $("#flyOv").classList.add("on");
  setTimeout(()=>{$("#flyOv").classList.remove("on");renderWorld();toast("Welcome to "+h.city);},2300);
 }
@@ -3481,6 +3548,8 @@ function previewWorld(){
  <div class="rew">${HOSTS[w.host].n===w.nation?`<div><span>Home crowd</span><b style="color:var(--neon)">+2 to every zone</b></div>`:""}
   ${momentum()?`<div><span>Momentum (${w.streak} wins)</span><b style="color:var(--neon)">+${momentum()} to every zone</b></div>`:""}
   <div><span>${WROUNDS[i]} reward</span><b>${fmt(pay)} coins</b></div>
+  <div><span>International tokens</span><b style="color:var(--gold)">+${worldTok(i)}</b></div>
+  ${i<3?`<div><span>Tokens for a draw</span><b style="color:var(--gold)">+10</b></div>`:""}
   <div><span>Per goal scored</span><b>400 coins</b></div>
   <div><span>Clean sheet bonus</span><b>1,500 coins</b></div>
   ${last?`<div><span>Champions bonus</span><b style="color:var(--gold)">${fmt(h.pay)} coins · ${h.gems} gems</b></div>`:
@@ -3620,15 +3689,19 @@ function mysteryBonus(){
  });
 }
 /* ---- training screen ---- */
-function trainSheet(p){
+function trainSheet(p,intl){
+ const bank=()=>intl?(S.itokens||0):(S.tokens||0);
+ const label=intl?"international tokens":"tokens";
  const draw=(anim)=>{
-  const lvl=upLvl(p.id),max=upMax(p),cost=upCost(lvl),done=lvl>=max,afford=(S.tokens||0)>=cost;
+  const lvl=upLvl(p.id),max=upMax(p),cost=upCost(lvl),done=lvl>=max,afford=bank()>=cost;
   $("#trainBody").innerHTML=`
    <div class="trainwrap">
     <div class="tr-card" id="trCard">${cardHTML(p)}</div>
     <div class="tr-info">
      <b>${p.name}</b><span>${p.club} · ${p.pos}</span>
-     <div class="tr-pips">${Array.from({length:max},(_,i)=>`<i class="${i<lvl?"on":""}"></i>`).join("")}</div>
+     ${max<=6
+      ?`<div class="tr-pips">${Array.from({length:max},(_,i)=>`<i class="${i<lvl?"on":""}"></i>`).join("")}</div>`
+      :`<div class="tr-bar"><i style="width:${Math.round(lvl/max*100)}%"></i><b>${lvl}/${max}</b></div>`}
      <span class="tr-lvl">${done?"Fully trained":"Training level "+lvl+" of "+max}</span>
     </div>
    </div>
@@ -3636,16 +3709,19 @@ function trainSheet(p){
     <div><span>Current rating</span><b>${p.rating}</b></div>
     <div><span>After next session</span><b style="color:var(--neon)">${done?"—":p.rating+1}</b></div>
     <div><span>Every stat</span><b>${done?"maxed":"+1"}</b></div>
-    <div><span>Tokens needed</span><b style="color:${afford?"var(--neon2)":"var(--hot)"}">${done?"—":cost}</b></div>
+    <div><span>${intl?"International tokens":"Tokens"} needed</span>
+     <b style="color:${afford?"var(--neon2)":"var(--hot)"}">${done?"—":cost}</b></div>
+    <div><span>You have</span><b>${bank()} ${intl?"int. tokens":"tokens"}</b></div>
    </div>
    ${done?`<div class="tr-max">THIS PLAYER IS MAXED OUT</div>`:
-    `<button class="btn ${afford?"":"cancel"}" id="trGo">${afford?`Train · ${cost} tokens`:`Need ${cost-(S.tokens||0)} more tokens`}</button>`}
+    `<button class="btn ${afford?"":"cancel"}" id="trGo">${afford?`Train · ${cost} ${label}`:`Need ${cost-bank()} more ${label}`}</button>`}
    <button class="btn cancel" id="trClose">Back</button>`;
   const go=$("#trGo");
   if(go)go.onclick=()=>{
    const l=upLvl(p.id),c=upCost(l);
-   if((S.tokens||0)<c){toast("Not enough training tokens");return;}
-   S.tokens-=c;S.up[p.id]=l+1;
+   if(bank()<c){toast("Not enough "+label);return;}
+   if(intl)S.itokens=(S.itokens||0)-c;else S.tokens-=c;
+   S.up[p.id]=l+1;
    const old=p.rating;
    p.rating=clamp(p.rating+1,0,109);p.stats=p.stats.map(v=>clamp(v+1,38,109));p._up=l+1;
    p.rarity=p.special?p.rarity:p.legend?"legend":p.rating>=97?"icon":p.rating>=93?"totw":p.rating>=85?"gold":p.rating>=76?"silver":"bronze";
@@ -3655,7 +3731,8 @@ function trainSheet(p){
     const ovr=card.querySelector(".ovr");
     if(ovr)countUp(ovr,old,p.rating,700,n=>n);
     setTimeout(()=>card.classList.remove("levelup"),900);}
-   renderSquad();renderHome();toast(p.sur.charAt(0)+p.sur.slice(1).toLowerCase()+" is now "+p.rating+" rated");
+   if(intl)renderWorld();else{renderSquad();renderHome();}
+   toast(p.sur.charAt(0)+p.sur.slice(1).toLowerCase()+" is now "+p.rating+" rated");
   };
   $("#trClose").onclick=()=>$("#trainOv").classList.remove("on");
  };
@@ -3731,7 +3808,8 @@ $("#openOv").onclick=e=>{if(e.target.id!=="openX")stepOpen();};
 $("#openX").onclick=e=>{e.stopPropagation();openState="revealing";
  while(openI<openQ.length){const p=openQ[openI++];S.owned.push(p.id);S.latest.unshift(p.id);}
  S.latest=S.latest.slice(0,12);$("#openOv").classList.remove("on");renderHome();renderSquad();save();};
-$("#pickX").onclick=()=>$("#pickOv").classList.remove("on");
+$("#pickX").onclick=()=>{$("#pickOv").classList.remove("on");
+ const b=$("#pickBody");if(b){b.classList.remove("pitch");b.style.borderRadius="";}};
 $("#detailX").onclick=()=>$("#detailOv").classList.remove("on");
 $("#preX").onclick=()=>$("#preOv").classList.remove("on");
 $("#formX").onclick=()=>$("#formOv").classList.remove("on");
